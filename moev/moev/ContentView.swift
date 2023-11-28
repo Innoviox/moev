@@ -28,43 +28,51 @@ struct ContentView: View {
                     
                 }
                 
-                VStack(alignment: .leading) {
-                    HStack {
+                HStack {
+                    VStack {
                         TextField("Next city...", text: $searchText)
                             .textFieldStyle(.roundedBorder)
-                            .onChange(of: searchText) { (oldValue, newValue) in
-                                APIHandler.shared.autocomplete(query: searchText) { data, response, error in
-                                    
-                                    guard let d = data else {
-                                        print(error)
-                                        return
-                                    }
-                                    
-                                    let cities = try! JSONSerialization.jsonObject(with: d, options: []) as! [String : Any]
-                                    
-                                    possibilities = (cities["predictions"] as! [[String: Any]]).map { city in
-                                        return Place(name: city["description"] as! String)
-                                    }
-                                }
+                            .onChange(of: searchText, updatePossibilities)
+                        
+                        ForEach(possibilities) { i in
+                            HStack {
+                                Text(i.name)
+                                    .frame(maxWidth: .infinity)
+                                    .border(.black)
+                                    .background(.white)
+                                Spacer()
                             }
-                        Image(systemName: "location.magnifyingglass")
+                        }
+                        Spacer()
                     }
                     
-                    ForEach(possibilities) { i in
-                        HStack {
-                            Text(i.name)
-                            Spacer()
-                        }
+                    VStack {
+                        Image(systemName: "location.magnifyingglass")
+                        
+                        Spacer()
                     }
-
-                    Spacer()
                 }
             }
         }
         .padding()
     }
+    
+    func updatePossibilities(oldValue: any Equatable, newValue: any Equatable) {
+        APIHandler.shared.autocomplete(query: searchText) { data, response, error in
+            guard let d = data else {
+                print(error)
+                return
+            }
+            
+            let cities = try! JSONSerialization.jsonObject(with: d, options: []) as! [String : Any]
+            
+            possibilities = (cities["predictions"] as! [[String: Any]]).map { city in
+                return Place(name: city["description"] as! String)
+            }
+        }
+    }
 }
 
 #Preview {
-    ContentView()
+    ContentView(possibilities: [Place(name: "a"), Place(name: "b")])
 }
