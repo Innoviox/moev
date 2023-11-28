@@ -19,7 +19,6 @@ struct ContentView: View {
     
     @State public var selection: UUID?
 
-    
     let possibilities = [Place(name: "place 1"), Place(name: "Place 2")]
 
     var body: some View {
@@ -34,10 +33,15 @@ struct ContentView: View {
                     
                 }
                 
-                VStack {
-                    ForEach(possibilities) {
-                        Text($0.name)
+                VStack(alignment: .leading) {
+                    ForEach(possibilities) { i in
+                        HStack {
+                            Text(i.name)
+                            Spacer()
+                        }
                     }
+
+                    Spacer()
                 }
             }
         }
