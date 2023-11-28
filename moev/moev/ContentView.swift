@@ -21,7 +21,7 @@ struct ContentView: View {
 
     
     let possibilities = [Place(name: "place 1"), Place(name: "Place 2")]
-    
+
     var body: some View {
         VStack {
             HStack {
@@ -29,12 +29,16 @@ struct ContentView: View {
                 Image(systemName: "location.magnifyingglass")
             }
             
-            List(possibilities, selection: $selection) {
-                Text($0.name)
-            }
-            
-            Map {
+            ZStack {
+                Map {
+                    
+                }
                 
+                VStack {
+                    ForEach(possibilities) {
+                        Text($0.name)
+                    }
+                }
             }
         }
         .padding()
