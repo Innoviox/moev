@@ -12,6 +12,7 @@ struct Place: Identifiable {
     var id = UUID()
     
     var name: String
+    var placeID: String
 }
 
 struct ContentView: View {
@@ -67,12 +68,13 @@ struct ContentView: View {
             let cities = try! JSONSerialization.jsonObject(with: d, options: []) as! [String : Any]
             
             possibilities = (cities["predictions"] as! [[String: Any]]).map { city in
-                return Place(name: city["description"] as! String)
+                return Place(name: city["description"] as! String,
+                             placeID: city["place_id"] as! String)
             }
         }
     }
 }
 
 #Preview {
-    ContentView(possibilities: [Place(name: "a"), Place(name: "b")])
+    ContentView(possibilities: [Place(name: "a", placeID: ""), Place(name: "b", placeID: "")])
 }

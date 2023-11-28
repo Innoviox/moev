@@ -117,7 +117,7 @@ class APIHandler {
             start_session()
         }
         
-        _get_request(baseurl: "https://maps.googleapis.com/maps/api/place/queryautocomplete/json?", params: [
+        _get_request(baseurl: "https://maps.googleapis.com/maps/api/place/autocomplete/json?", params: [
             "input": query,
             "sessiontoken": session!.uuidString,
             "key": GMAK
