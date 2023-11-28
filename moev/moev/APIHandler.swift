@@ -25,6 +25,51 @@ struct NearbyPlacesBody: Encodable {
 
 struct Empty: Encodable {}
 
+struct AutocompleteResult {
+    public let description: String
+    public let place_id: String
+    // todo types? matches?
+    
+    init(json: [String: Any]) throws {
+        description = json["description"] as! String
+        place_id = json["place_id"] as! String
+    }
+}
+
+struct AutocompleteResults {
+    public let predictions: [AutocompleteResult]
+    
+    init(json: [String: Any]) throws {
+        predictions = (json["predictions"] as! [[String: Any]]).map { place in
+            return try! AutocompleteResult(json: place)
+        }
+    }
+}
+
+struct LocationResult {
+    public let lat: String
+    public let lng: String
+    
+    init(json: [String: Any]) throws {
+        lat = json["lat"] as! String
+        lng = json["lng"] as! String
+    }
+}
+
+struct GeometryResult {
+    public let location: LocationResult
+    // todo viewport
+    
+    init(json: [String: Any]) throws {
+        location = try! LocationResult(json: json["location"] as! [String: Any])
+    }
+}
+
+struct DetailsResults {
+    public let result: GeometryResult
+    public let name: String
+}
+
 typealias RequestHandler = (Data?, URLResponse?, Error?) -> Void
 
 class APIHandler {
@@ -112,7 +157,7 @@ class APIHandler {
         session = UUID()
     }
     
-    func autocomplete(query: String, handler: @escaping RequestHandler) {
+    func autocomplete(query: String, handler: @escaping (AutocompleteResults?, Error?) -> Void) {
         if session == nil {
             start_session()
         }
@@ -121,7 +166,16 @@ class APIHandler {
             "input": query,
             "sessiontoken": session!.uuidString,
             "key": GMAK
-        ], handler: handler)
+        ]) { data, response, error in
+            guard let d = data else {
+                return handler(nil, error)
+            }
+            
+            let places = try! JSONSerialization.jsonObject(with: d, options: []) as! [String : Any]
+            let results = try! AutocompleteResults(json: places)
+            
+            handler(results, error)
+        }
     }
     
     func get_info(place_id: String, handler: @escaping RequestHandler) {

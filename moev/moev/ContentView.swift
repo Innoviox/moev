@@ -15,18 +15,33 @@ struct Place: Identifiable {
     var placeID: String
 }
 
-struct ContentView: View {
-    @State public var searchText: String = ""
+struct Annotation: Identifiable {
+    var id = UUID()
     
-    @State public var selection: UUID?
+    var location: CLLocationCoordinate2D
+}
 
-    @State public var possibilities: [Place] = []
+struct ContentView: View {
+    @State private var searchText: String = ""
+    
+    @State private var selection: UUID?
+
+    @State private var possibilities: [Place] = []
+    
+    @State private var annotations: [Annotation] = []
+    
+    @State private var region = MKMapRect()
+     
 
     var body: some View {
         VStack {
             ZStack {
                 Map {
-                    
+                    ForEach(annotations) { a in
+                        Marker(coordinate: a.location) {
+                            Image(systemName: "mappin")
+                        }
+                    }
                 }
                 
                 HStack {
@@ -35,12 +50,16 @@ struct ContentView: View {
                             .textFieldStyle(.roundedBorder)
                             .onChange(of: searchText, updatePossibilities)
                         
-                        ForEach(possibilities) { i in
+                        ForEach(possibilities) { place in
                             HStack {
-                                Text(i.name)
+                                Text(place.name)
                                     .frame(maxWidth: .infinity)
                                     .border(.black)
                                     .background(.white)
+                                    .lineLimit(1)
+                                    .onTapGesture {
+                                        addMarker(p: place)
+                                    }
                                 Spacer()
                             }
                         }
@@ -59,22 +78,37 @@ struct ContentView: View {
     }
     
     func updatePossibilities(oldValue: any Equatable, newValue: any Equatable) {
-        APIHandler.shared.autocomplete(query: searchText) { data, response, error in
+        APIHandler.shared.autocomplete(query: searchText) { data, error in
+            guard let places = data else {
+                print(error)
+                return
+            }
+            
+            possibilities = places.predictions.map { place in
+                return Place(name: place.description, placeID: place.place_id)
+            }
+        }
+    }
+    
+    func addMarker(p: Place) {
+        APIHandler.shared.get_info(place_id: p.placeID) { data, response, error in
             guard let d = data else {
                 print(error)
                 return
             }
             
-            let cities = try! JSONSerialization.jsonObject(with: d, options: []) as! [String : Any]
+            let place = try! JSONSerialization.jsonObject(with: d, options: []) as! [String: Any]
             
-            possibilities = (cities["predictions"] as! [[String: Any]]).map { city in
-                return Place(name: city["description"] as! String,
-                             placeID: city["place_id"] as! String)
-            }
+            // todo viewport
+            print(place)
+//            let geom = place["result"]!["geometry"]!["location"]!
+//            let location = CLLocationCoordinate2D(latitude: Double(geom["lat"]!)!,
+//                                                  longitude: Double(geom["lng"]!)!)
+//            annotations.append(Annotation(location: location))
         }
     }
 }
 
 #Preview {
-    ContentView(possibilities: [Place(name: "a", placeID: ""), Place(name: "b", placeID: "")])
+    ContentView()
 }
