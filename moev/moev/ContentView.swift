@@ -9,12 +9,16 @@ import SwiftUI
 import MapKit
 
 struct ContentView: View {
+    @State private var searchText: String = ""
     var body: some View {
         VStack {
-            Map {
-                        
+            HStack {
+                TextField("Next city...", text: $searchText)
+                Image(systemName: "location.magnifyingglass")
             }
-//            .mapControlVisibility(.hidden)
+            Map {
+                
+            }
         }
         .padding()
     }
