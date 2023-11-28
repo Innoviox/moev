@@ -18,13 +18,7 @@ struct Place: Identifiable {
 struct Annotation: Identifiable {
     var id = UUID()
     
-    var location: CLLocationCoordinate2D
-    var name: String
-}
-
-struct SearchResult: Identifiable {
-    var id = UUID()
-    
+    var location: CLLocationCoordinate2D?
     var name: String
 }
 
@@ -37,8 +31,7 @@ struct ContentView: View {
     
     @State private var userLocation: CLLocationCoordinate2D?
     
-    @State private var annotations: [Annotation] = []
-    @State private var searches: [SearchResult] = [SearchResult(name: "")]
+    @State private var annotations: [Annotation] = [Annotation(name: "")]
     
     @State private var region = MKMapRect()
      
@@ -47,8 +40,8 @@ struct ContentView: View {
         VStack {
             ZStack {
                 Map {
-                    ForEach(annotations) { a in
-                        Marker(coordinate: a.location) {
+                    ForEach(annotations.filter { i in i.location != nil }) { a in
+                        Marker(coordinate: a.location!) {
                             Image(systemName: "mappin")
                         }
                     }
@@ -60,8 +53,8 @@ struct ContentView: View {
                     VStack {
                         TextDisplay(placeHolder: "Current location")
                         
-                        ForEach(searches) { a in
-                            TextDisplay(searchText: a.name, addMarker: addMarker)
+                        ForEach(annotations.indices) { i in
+                            TextDisplay(searchText: annotations[i].name, addMarker: addMarker(i: i))
                         }
                         
                         Spacer()
@@ -78,18 +71,20 @@ struct ContentView: View {
         .padding()
     }
     
-    func addMarker(p: Place) {
-        APIHandler.shared.get_info(place_id: p.placeID) { data, error in
-            guard let d = data else {
-                print(error)
-                return
-            }
+    func addMarker(i: Int) -> (Place) -> Void {
+        return { p in
+            APIHandler.shared.get_info(place_id: p.placeID) { data, error in
+                guard let d = data else {
+                    print(error)
+                    return
+                }
 
-            let geom = d.result.geometry.location
-            let location = CLLocationCoordinate2D(latitude: geom.lat,
-                                                  longitude: geom.lng)
-            
-            annotations.append(Annotation(location: location, name: d.result.name))
+                let geom = d.result.geometry.location
+                let location = CLLocationCoordinate2D(latitude: geom.lat,
+                                                      longitude: geom.lng)
+                
+                annotations[i].location = location
+            }
         }
     }
 }
