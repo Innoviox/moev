@@ -23,12 +23,16 @@ struct NearbyPlacesBody: Encodable {
     let locationRestriction: LocationRestriction
 }
 
+struct Empty: Encodable {}
+
 typealias RequestHandler = (Data?, URLResponse?, Error?) -> Void
 
 class APIHandler {
     static let shared = APIHandler()
     
     let GMAK: String
+    
+    var session: UUID? = nil
     
     init() {
         GMAK = Bundle.main.infoDictionary!["GOOGLE_MAPS_API_KEY"] as! String
@@ -50,6 +54,22 @@ class APIHandler {
         } catch {
             
         }
+    }
+    
+    func _get_request(baseurl: String, params: [String: String], handler: @escaping RequestHandler) {
+        var first = true
+        var url = baseurl
+        for (key, value) in params {
+            if (!first) {
+                url += "&"
+            } else {
+                first = false
+            }
+            
+            url += "\(key)=\(value)"
+        }
+        
+        _request(url: url, headers: [:], body: Empty(), method: "GET", handler: handler)
     }
     
     func nearbyPlaces(center: CLLocationCoordinate2D, radius: Int = 100, url: String = "https://places.googleapis.com/v1/places:searchNearby", handler: @escaping RequestHandler) {
@@ -74,8 +94,39 @@ class APIHandler {
     }
     
     func directions(origin: String, destination: String, handler: @escaping RequestHandler) {
-        let url = "https://maps.googleapis.com/maps/api/directions/json?mode=transit&origin=place_id:\(origin)&destination=place_id:\(destination)"
+        _get_request(baseurl: "https://maps.googleapis.com/maps/api/directions/json?", params: [
+            "mode": "transit",
+            "origin": "place_id:\(origin)",
+            "destination": "place_id:\(destination)",
+            "key": GMAK
+        ], handler: handler)
+    }
+    
+    func start_session() {
+        session = UUID()
+    }
+    
+    func autocomplete(query: String, handler: @escaping RequestHandler) {
+        if session == nil {
+            start_session()
+        }
         
-        _request(url: url, headers: headers, body: body, method: "GET", handler: handler)
+        _get_request(baseurl: "https://maps.googleapis.com/maps/api/place/queryautocomplete/json?", params: [
+            "input": query,
+            "sessiontoken": session!.uuidString,
+            "key": GMAK
+        ], handler: handler)
+    }
+    
+    func get_info(place_id: String, handler: @escaping RequestHandler) {
+        _get_request(baseurl: "https://maps.googleapis.com/maps/api/place/details/json?", params: [
+            "place_id": place_id,
+            "fields": "geometry,name",
+            "sessiontoken": session!.uuidString,
+            "key": GMAK
+        ]) { [self] (d, u, e) in
+            session = nil
+            handler(d, u, e)
+        }
     }
 }
