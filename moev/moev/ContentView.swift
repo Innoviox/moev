@@ -18,53 +18,8 @@ struct Place: Identifiable {
 struct Annotation: Identifiable {
     var id = UUID()
     
-    var location: CLLocationCoordinate2D?
+    var location: CLLocationCoordinate2D
     var name: String
-}
-
-struct TextDisplay: View {
-    @State public var searchText: String
-    @State private var possibilities: [Place] = []
-    
-    public var placeHolder: String = "Next city..."
-    public var addMarker: (Place) -> Void
-    
-    var body: some View {
-        VStack {
-            TextField(placeHolder, text: $searchText)
-                .textFieldStyle(.roundedBorder)
-                .onChange(of: searchText, updatePossibilities)
-            
-            ForEach(possibilities) { place in
-                HStack {
-                    Text(place.name)
-                        .frame(maxWidth: .infinity)
-                        .border(.black)
-                        .background(.white)
-                        .lineLimit(1)
-                        .onTapGesture {
-                            addMarker(place)
-                            possibilities.removeAll()
-                        }
-                    Spacer()
-                }
-            }
-            Spacer()
-        }
-    }
-    
-    func updatePossibilities(oldValue: any Equatable, newValue: any Equatable) {
-        APIHandler.shared.autocomplete(query: searchText) { data, error in
-            guard let places = data else {
-                print(error)
-                return
-            }
-            
-            possibilities = places.predictions.map { place in
-                return Place(name: place.description, placeID: place.place_id)
-            }
-        }
-    }
 }
 
 struct ContentView: View {
@@ -76,10 +31,7 @@ struct ContentView: View {
     
     @State private var userLocation: CLLocationCoordinate2D?
     
-    @State private var locations: [Annotation] = [
-        Annotation(location: nil, name: "Current location"),
-//        Annotation(
-    ]
+    @State private var locations: [Annotation] = []
     
     @State private var region = MKMapRect()
      
@@ -88,8 +40,8 @@ struct ContentView: View {
         VStack {
             ZStack {
                 Map {
-                    ForEach(locations.filter { i in i.location != nil}) { a in
-                        Marker(coordinate: a.location!) {
+                    ForEach(locations) { a in
+                        Marker(coordinate: a.location) {
                             Image(systemName: "mappin")
                         }
                     }
@@ -99,6 +51,8 @@ struct ContentView: View {
                 
                 HStack {
                     VStack {
+                        TextDisplay(placeHolder: "Current location")
+                        
                         ForEach(locations) { a in
                             TextDisplay(searchText: a.name, addMarker: addMarker)
                         }
@@ -129,6 +83,18 @@ struct ContentView: View {
                                                   longitude: geom.lng)
             
             locations.append(Annotation(location: location, name: d.result.name))
+        }
+    }
+}
+
+// https://stackoverflow.com/questions/56517610/conditionally-use-view-in-swiftui
+extension View {
+   @ViewBuilder
+   func `if`<Content: View>(_ conditional: Bool, content: (Self) -> Content) -> some View {
+        if conditional {
+            content(self)
+        } else {
+            self
         }
     }
 }
