@@ -47,12 +47,12 @@ struct AutocompleteResults {
 }
 
 struct LocationResult {
-    public let lat: String
-    public let lng: String
+    public let lat: Double
+    public let lng: Double
     
     init(json: [String: Any]) {
-        lat = json["lat"] as! String
-        lng = json["lng"] as! String
+        lat = Double(truncating: json["lat"] as! NSNumber)
+        lng = Double(truncating: json["lng"] as! NSNumber)
     }
 }
 
@@ -67,19 +67,20 @@ struct GeometryResult {
 
 struct Result {
     public let geometry: GeometryResult
+    public let name: String
     
     init(json: [String: Any]) {
         geometry = GeometryResult(json: json["geometry"] as! [String: Any])
+        name = json["name"] as! String
     }
 }
 
 struct DetailsResults {
     public let result: Result
-    public let name: String
     
     init(json: [String: Any]) {
         result = Result(json: json["result"] as! [String: Any])
-        name = json["name"] as! String
+        // todo html attributions?
     }
 }
 
@@ -185,7 +186,7 @@ class APIHandler {
             }
             
             let places = try! JSONSerialization.jsonObject(with: d, options: []) as! [String : Any]
-            let results = try! AutocompleteResults(json: places)
+            let results = AutocompleteResults(json: places)
             
             handler(results, error)
         }
@@ -199,10 +200,15 @@ class APIHandler {
             "key": GMAK
         ]) { [self] (d, u, e) in
             session = nil
-//            handler(d, u, e)
+
             guard let j = d else {
                 return handler(nil, e)
             }
+            
+            let data = try! JSONSerialization.jsonObject(with: j, options: []) as! [String : Any]
+            let results = DetailsResults(json: data)
+            
+            handler(results, e)
         }
     }
 }

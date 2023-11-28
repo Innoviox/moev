@@ -42,6 +42,8 @@ struct ContentView: View {
                             Image(systemName: "mappin")
                         }
                     }
+                    
+                    UserAnnotation()
                 }
                 
                 HStack {
@@ -59,6 +61,7 @@ struct ContentView: View {
                                     .lineLimit(1)
                                     .onTapGesture {
                                         addMarker(p: place)
+                                        possibilities.removeAll()
                                     }
                                 Spacer()
                             }
@@ -91,20 +94,17 @@ struct ContentView: View {
     }
     
     func addMarker(p: Place) {
-        APIHandler.shared.get_info(place_id: p.placeID) { data, response, error in
+        APIHandler.shared.get_info(place_id: p.placeID) { data, error in
             guard let d = data else {
                 print(error)
                 return
             }
+
+            let geom = d.result.geometry.location
+            let location = CLLocationCoordinate2D(latitude: geom.lat,
+                                                  longitude: geom.lng)
             
-            let place = try! JSONSerialization.jsonObject(with: d, options: []) as! [String: Any]
-            
-            // todo viewport
-            print(place)
-//            let geom = place["result"]!["geometry"]!["location"]!
-//            let location = CLLocationCoordinate2D(latitude: Double(geom["lat"]!)!,
-//                                                  longitude: Double(geom["lng"]!)!)
-//            annotations.append(Annotation(location: location))
+            annotations.append(Annotation(location: location))
         }
     }
 }
