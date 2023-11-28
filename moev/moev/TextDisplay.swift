@@ -20,6 +20,8 @@ struct TextDisplay: View {
                 .textFieldStyle(.roundedBorder)
                 .onChange(of: searchText, updatePossibilities)
             
+//            Spacer()
+            
             ForEach(possibilities) { place in
                 HStack {
                     Text(place.name)
@@ -33,8 +35,9 @@ struct TextDisplay: View {
                         }
                     Spacer()
                 }
+//                Spacer()
             }
-            Spacer()
+//            Spacer()
         }
     }
     
@@ -51,7 +54,3 @@ struct TextDisplay: View {
         }
     }
 }
-
-//struct TopTextDisplay: TextDisplay {
-//    public var placeHolder
-//}

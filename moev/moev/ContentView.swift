@@ -22,16 +22,23 @@ struct Annotation: Identifiable {
     var name: String
 }
 
+struct SearchResult: Identifiable {
+    var id = UUID()
+    
+    var name: String
+}
+
 struct ContentView: View {
     @State private var searchText: String = ""
     
     @State private var selection: UUID?
     
-//    @StateObject var locationManager = LocationManager { l in userLocation = l}
+    @StateObject var locationManager = LocationManager()
     
     @State private var userLocation: CLLocationCoordinate2D?
     
-    @State private var locations: [Annotation] = []
+    @State private var annotations: [Annotation] = []
+    @State private var searches: [SearchResult] = [SearchResult(name: "")]
     
     @State private var region = MKMapRect()
      
@@ -40,7 +47,7 @@ struct ContentView: View {
         VStack {
             ZStack {
                 Map {
-                    ForEach(locations) { a in
+                    ForEach(annotations) { a in
                         Marker(coordinate: a.location) {
                             Image(systemName: "mappin")
                         }
@@ -53,7 +60,7 @@ struct ContentView: View {
                     VStack {
                         TextDisplay(placeHolder: "Current location")
                         
-                        ForEach(locations) { a in
+                        ForEach(searches) { a in
                             TextDisplay(searchText: a.name, addMarker: addMarker)
                         }
                         
@@ -82,7 +89,7 @@ struct ContentView: View {
             let location = CLLocationCoordinate2D(latitude: geom.lat,
                                                   longitude: geom.lng)
             
-            locations.append(Annotation(location: location, name: d.result.name))
+            annotations.append(Annotation(location: location, name: d.result.name))
         }
     }
 }
