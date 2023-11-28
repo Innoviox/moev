@@ -18,66 +18,39 @@ struct Place: Identifiable {
 struct Annotation: Identifiable {
     var id = UUID()
     
-    var location: CLLocationCoordinate2D
+    var location: CLLocationCoordinate2D?
+    var name: String
 }
 
-struct ContentView: View {
-    @State private var searchText: String = ""
-    
-    @State private var selection: UUID?
-
+struct TextDisplay: View {
+    @State public var searchText: String
     @State private var possibilities: [Place] = []
     
-    @State private var annotations: [Annotation] = []
+    public var placeHolder: String = "Next city..."
+    public var addMarker: (Place) -> Void
     
-    @State private var region = MKMapRect()
-     
-
     var body: some View {
         VStack {
-            ZStack {
-                Map {
-                    ForEach(annotations) { a in
-                        Marker(coordinate: a.location) {
-                            Image(systemName: "mappin")
-                        }
-                    }
-                    
-                    UserAnnotation()
-                }
-                
+            TextField(placeHolder, text: $searchText)
+                .textFieldStyle(.roundedBorder)
+                .onChange(of: searchText, updatePossibilities)
+            
+            ForEach(possibilities) { place in
                 HStack {
-                    VStack {
-                        TextField("Next city...", text: $searchText)
-                            .textFieldStyle(.roundedBorder)
-                            .onChange(of: searchText, updatePossibilities)
-                        
-                        ForEach(possibilities) { place in
-                            HStack {
-                                Text(place.name)
-                                    .frame(maxWidth: .infinity)
-                                    .border(.black)
-                                    .background(.white)
-                                    .lineLimit(1)
-                                    .onTapGesture {
-                                        addMarker(p: place)
-                                        possibilities.removeAll()
-                                    }
-                                Spacer()
-                            }
+                    Text(place.name)
+                        .frame(maxWidth: .infinity)
+                        .border(.black)
+                        .background(.white)
+                        .lineLimit(1)
+                        .onTapGesture {
+                            addMarker(place)
+                            possibilities.removeAll()
                         }
-                        Spacer()
-                    }
-                    
-                    VStack {
-                        Image(systemName: "location.magnifyingglass")
-                        
-                        Spacer()
-                    }
+                    Spacer()
                 }
             }
+            Spacer()
         }
-        .padding()
     }
     
     func updatePossibilities(oldValue: any Equatable, newValue: any Equatable) {
@@ -92,6 +65,57 @@ struct ContentView: View {
             }
         }
     }
+}
+
+struct ContentView: View {
+    @State private var searchText: String = ""
+    
+    @State private var selection: UUID?
+    
+//    @StateObject var locationManager = LocationManager { l in userLocation = l}
+    
+    @State private var userLocation: CLLocationCoordinate2D?
+    
+    @State private var locations: [Annotation] = [
+        Annotation(location: nil, name: "Current location"),
+//        Annotation(
+    ]
+    
+    @State private var region = MKMapRect()
+     
+
+    var body: some View {
+        VStack {
+            ZStack {
+                Map {
+                    ForEach(locations.filter { i in i.location != nil}) { a in
+                        Marker(coordinate: a.location!) {
+                            Image(systemName: "mappin")
+                        }
+                    }
+                    
+                    UserAnnotation()
+                }
+                
+                HStack {
+                    VStack {
+                        ForEach(locations) { a in
+                            TextDisplay(searchText: a.name, addMarker: addMarker)
+                        }
+                        
+                        Spacer()
+                    }
+                    
+                    VStack {
+                        Image(systemName: "location.magnifyingglass")
+                        
+                        Spacer()
+                    }
+                }
+            }
+        }
+        .padding()
+    }
     
     func addMarker(p: Place) {
         APIHandler.shared.get_info(place_id: p.placeID) { data, error in
@@ -104,7 +128,7 @@ struct ContentView: View {
             let location = CLLocationCoordinate2D(latitude: geom.lat,
                                                   longitude: geom.lng)
             
-            annotations.append(Annotation(location: location))
+            locations.append(Annotation(location: location, name: d.result.name))
         }
     }
 }

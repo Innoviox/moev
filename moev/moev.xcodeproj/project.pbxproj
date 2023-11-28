@@ -15,6 +15,7 @@
 		20400EC52B145A6E00CA7D7A /* moevTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20400EC42B145A6E00CA7D7A /* moevTests.swift */; };
 		20400ECF2B145A6E00CA7D7A /* moevUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20400ECE2B145A6E00CA7D7A /* moevUITests.swift */; };
 		20400ED12B145A6E00CA7D7A /* moevUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20400ED02B145A6E00CA7D7A /* moevUITestsLaunchTests.swift */; };
+		20F70B252B1679F100B363FA /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F70B242B1679F100B363FA /* LocationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		20400ED02B145A6E00CA7D7A /* moevUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = moevUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		20A381322B15AECE00172E8A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		20AFC92F2B14ED7700F5B3CC /* API_KEY.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = API_KEY.xcconfig; sourceTree = "<group>"; };
+		20F70B242B1679F100B363FA /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 				20400EB72B145A6D00CA7D7A /* Assets.xcassets */,
 				20400EB92B145A6D00CA7D7A /* Preview Content */,
 				20202B302B14F0DD007CC8AA /* APIHandler.swift */,
+				20F70B242B1679F100B363FA /* LocationManager.swift */,
 			);
 			path = moev;
 			sourceTree = "<group>";
@@ -264,6 +267,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20F70B252B1679F100B363FA /* LocationManager.swift in Sources */,
 				20202B312B14F0DD007CC8AA /* APIHandler.swift in Sources */,
 				20400EB62B145A6D00CA7D7A /* ContentView.swift in Sources */,
 				20400EB42B145A6D00CA7D7A /* moevApp.swift in Sources */,
