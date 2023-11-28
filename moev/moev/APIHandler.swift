@@ -30,7 +30,7 @@ struct AutocompleteResult {
     public let place_id: String
     // todo types? matches?
     
-    init(json: [String: Any]) throws {
+    init(json: [String: Any]) {
         description = json["description"] as! String
         place_id = json["place_id"] as! String
     }
@@ -39,9 +39,9 @@ struct AutocompleteResult {
 struct AutocompleteResults {
     public let predictions: [AutocompleteResult]
     
-    init(json: [String: Any]) throws {
+    init(json: [String: Any]) {
         predictions = (json["predictions"] as! [[String: Any]]).map { place in
-            return try! AutocompleteResult(json: place)
+            return AutocompleteResult(json: place)
         }
     }
 }
@@ -50,7 +50,7 @@ struct LocationResult {
     public let lat: String
     public let lng: String
     
-    init(json: [String: Any]) throws {
+    init(json: [String: Any]) {
         lat = json["lat"] as! String
         lng = json["lng"] as! String
     }
@@ -60,14 +60,27 @@ struct GeometryResult {
     public let location: LocationResult
     // todo viewport
     
-    init(json: [String: Any]) throws {
-        location = try! LocationResult(json: json["location"] as! [String: Any])
+    init(json: [String: Any]) {
+        location = LocationResult(json: json["location"] as! [String: Any])
+    }
+}
+
+struct Result {
+    public let geometry: GeometryResult
+    
+    init(json: [String: Any]) {
+        geometry = GeometryResult(json: json["geometry"] as! [String: Any])
     }
 }
 
 struct DetailsResults {
-    public let result: GeometryResult
+    public let result: Result
     public let name: String
+    
+    init(json: [String: Any]) {
+        result = Result(json: json["result"] as! [String: Any])
+        name = json["name"] as! String
+    }
 }
 
 typealias RequestHandler = (Data?, URLResponse?, Error?) -> Void
@@ -178,7 +191,7 @@ class APIHandler {
         }
     }
     
-    func get_info(place_id: String, handler: @escaping RequestHandler) {
+    func get_info(place_id: String, handler: @escaping (DetailsResults?, Error?) -> Void) {
         _get_request(baseurl: "https://maps.googleapis.com/maps/api/place/details/json?", params: [
             "place_id": place_id,
             "fields": "geometry,name",
@@ -186,7 +199,10 @@ class APIHandler {
             "key": GMAK
         ]) { [self] (d, u, e) in
             session = nil
-            handler(d, u, e)
+//            handler(d, u, e)
+            guard let j = d else {
+                return handler(nil, e)
+            }
         }
     }
 }
