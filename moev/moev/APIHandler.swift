@@ -38,7 +38,7 @@ class APIHandler {
         GMAK = Bundle.main.infoDictionary!["GOOGLE_MAPS_API_KEY"] as! String
     }
     
-    func _request(url: String, headers: [String: String], body: Encodable, method: String, handler: @escaping RequestHandler) {
+    func _request(url: String, headers: [String: String], body: Encodable?, method: String, handler: @escaping RequestHandler) {
         do {
             let url = URL(string: url)!
             var request = URLRequest(url: url)
@@ -47,10 +47,14 @@ class APIHandler {
             }
             request.httpMethod = method
             let encoder = JSONEncoder()
-            let data = try encoder.encode(body)
-            request.httpBody = data
+            
+            if let b = body {
+                let data = try encoder.encode(b)
+                request.httpBody = data
+            }
 
             let task = URLSession.shared.dataTask(with: request, completionHandler: handler)
+            task.resume()
         } catch {
             
         }
@@ -69,7 +73,9 @@ class APIHandler {
             url += "\(key)=\(value)"
         }
         
-        _request(url: url, headers: [:], body: Empty(), method: "GET", handler: handler)
+//        print("GET REQUESTING", url)
+        
+        _request(url: url, headers: [:], body: nil, method: "GET", handler: handler)
     }
     
     func nearbyPlaces(center: CLLocationCoordinate2D, radius: Int = 100, url: String = "https://places.googleapis.com/v1/places:searchNearby", handler: @escaping RequestHandler) {

@@ -46,6 +46,7 @@
 		20400ECA2B145A6E00CA7D7A /* moevUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = moevUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		20400ECE2B145A6E00CA7D7A /* moevUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = moevUITests.swift; sourceTree = "<group>"; };
 		20400ED02B145A6E00CA7D7A /* moevUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = moevUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		20A381322B15AECE00172E8A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		20AFC92F2B14ED7700F5B3CC /* API_KEY.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = API_KEY.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -98,6 +99,7 @@
 		20400EB22B145A6D00CA7D7A /* moev */ = {
 			isa = PBXGroup;
 			children = (
+				20A381322B15AECE00172E8A /* Info.plist */,
 				20400EB32B145A6D00CA7D7A /* moevApp.swift */,
 				20400EB52B145A6D00CA7D7A /* ContentView.swift */,
 				20400EB72B145A6D00CA7D7A /* Assets.xcassets */,
@@ -434,6 +436,7 @@
 				DEVELOPMENT_TEAM = SM7F898GQH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = moev/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -464,6 +467,7 @@
 				DEVELOPMENT_TEAM = SM7F898GQH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = moev/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

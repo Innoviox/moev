@@ -25,6 +25,14 @@ struct ContentView: View {
         VStack {
             HStack {
                 TextField("Next city...", text: $searchText)
+                    .textFieldStyle(.roundedBorder)
+                    .onChange(of: searchText) { (oldValue, newValue) in
+                        APIHandler.shared.autocomplete(query: searchText) { data, response, error in
+                            print(data)
+                            print(response)
+                            print(error)
+                        }
+                    }
                 Image(systemName: "location.magnifyingglass")
             }
             
