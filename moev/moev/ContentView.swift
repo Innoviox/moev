@@ -22,7 +22,7 @@ struct Annotation: Identifiable {
     var name: String
 }
 
-struct ContentView: View {    
+struct ContentView: View {
     @State private var selection: UUID?
     
     @StateObject var locationManager = LocationManager()
@@ -51,7 +51,7 @@ struct ContentView: View {
                     VStack {
                         TextDisplay(placeHolder: "Current location")
                         
-                        ForEach(annotations.indices) { i in
+                        ForEach(annotations.indices, id: \.self) { i in
                             TextDisplay(searchText: annotations[i].name, addMarker: addMarker(i: i))
                         }
                         
@@ -60,6 +60,11 @@ struct ContentView: View {
                     
                     VStack {
                         Image(systemName: "location.magnifyingglass")
+                        Button(action: {
+                            annotations.append(Annotation(name: ""))
+                        }, label: {
+                            Image(systemName: "plus.app")
+                        })
                         
                         Spacer()
                     }
@@ -82,6 +87,7 @@ struct ContentView: View {
                                                       longitude: geom.lng)
                 
                 annotations[i].location = location
+                annotations[i].name = d.result.name
             }
         }
     }
