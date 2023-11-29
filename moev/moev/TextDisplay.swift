@@ -21,6 +21,7 @@ struct TextDisplay: View {
     @State private var possibilities: [Place] = []
     
     public var placeHolder: String = "Next location..."
+    public var getDirections: () -> Void
     
     @State private var justChanged: Bool = false
     
@@ -35,10 +36,6 @@ struct TextDisplay: View {
                         updatePossibilities()
                     }
                 }
-//                .onKeyPress { k in
-//                    updatePossibilities()
-//                    return .ignored
-//                }
                 .overlay(alignment: .topLeading) {
                     VStack {
                         ForEach(possibilities) { place in
@@ -89,8 +86,11 @@ struct TextDisplay: View {
             
             annotation.name = d.result.name
             annotation.location = location
+            annotation.placeID = p.placeID
             
             justChanged = true
+            
+            getDirections()
         }
     }
 }

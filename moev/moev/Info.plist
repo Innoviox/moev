@@ -6,6 +6,10 @@
 	<array>
 		<dict/>
 	</array>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>please</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>pretty please</string>
 	<key>GOOGLE_MAPS_API_KEY</key>
 	<string>$(GOOGLE_MAPS_API_KEY)</string>
 </dict>

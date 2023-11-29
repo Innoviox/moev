@@ -13,15 +13,14 @@ struct Annotation: Identifiable {
     
     var location: CLLocationCoordinate2D?
     var name: String
+    var placeID: String = ""
 }
 
 struct ContentView: View {
     @State private var selection: UUID?
     
     @StateObject var locationManager = LocationManager()
-    
-    @State private var userLocation: CLLocationCoordinate2D?
-    
+        
     @State private var topAnnotation = Annotation(name: "")
     @State private var annotations: [Annotation] = [Annotation(name: "")]
     
@@ -39,14 +38,19 @@ struct ContentView: View {
                     
                     UserAnnotation()
                 }
+                .mapControls {
+                    MapUserLocationButton()
+                    MapCompass()
+                    MapScaleView()
+                }
                 
                 HStack {
                     VStack {
                         TextDisplay(annotation: $topAnnotation,
-                                    placeHolder: "Current location")
+                                    placeHolder: "Current location", getDirections: getDirections)
                         
                         ForEach($annotations) { $a in
-                            TextDisplay(annotation: $a)
+                            TextDisplay(annotation: $a, getDirections: getDirections)
                         }
                         
                         Spacer()
@@ -64,6 +68,12 @@ struct ContentView: View {
                 }
                 .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
             }
+        }
+    }
+    
+    func getDirections() {
+        APIHandler.shared.directions(origin: locationManager.lastLocation!.coordinate, destination: annotations[0].placeID) { results, e in
+            
         }
     }
 }

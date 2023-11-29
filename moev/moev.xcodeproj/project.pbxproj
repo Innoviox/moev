@@ -50,6 +50,8 @@
 		20400ED02B145A6E00CA7D7A /* moevUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = moevUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		20A381322B15AECE00172E8A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		20AFC92F2B14ED7700F5B3CC /* API_KEY.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = API_KEY.xcconfig; sourceTree = "<group>"; };
+		20E272432B1791BE00534C2F /* moev.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = moev.xctestplan; sourceTree = "<group>"; };
+		20E272442B1792AA00534C2F /* test.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = test.gpx; path = ../test.gpx; sourceTree = "<group>"; };
 		20F70B242B1679F100B363FA /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		20F70B262B16AB8B00B363FA /* TextDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDisplay.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -82,6 +84,8 @@
 		20400EA72B145A6D00CA7D7A = {
 			isa = PBXGroup;
 			children = (
+				20E272442B1792AA00534C2F /* test.gpx */,
+				20E272432B1791BE00534C2F /* moev.xctestplan */,
 				20AFC92F2B14ED7700F5B3CC /* API_KEY.xcconfig */,
 				20400EB22B145A6D00CA7D7A /* moev */,
 				20400EC32B145A6E00CA7D7A /* moevTests */,

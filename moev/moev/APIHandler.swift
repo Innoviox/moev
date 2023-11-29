@@ -84,6 +84,14 @@ struct DetailsResults {
     }
 }
 
+struct Waypoint {
+    
+}
+
+struct DirectionsResults {
+    
+}
+
 typealias RequestHandler = (Data?, URLResponse?, Error?) -> Void
 
 class APIHandler {
@@ -132,7 +140,7 @@ class APIHandler {
             url += "\(key)=\(value)"
         }
         
-//        print("GET REQUESTING", url)
+        print("GET REQUESTING", url)
         
         _request(url: url, headers: [:], body: nil, method: "GET", handler: handler)
     }
@@ -158,14 +166,41 @@ class APIHandler {
         _request(url: url, headers: headers, body: body, method: "POST", handler: handler)
     }
     
-    func directions(origin: String, destination: String, handler: @escaping RequestHandler) {
-        _get_request(baseurl: "https://maps.googleapis.com/maps/api/directions/json?", params: [
-            "mode": "transit",
-            "origin": "place_id:\(origin)",
-            "destination": "place_id:\(destination)",
-            "key": GMAK
-        ], handler: handler)
+    func _directions(origin: Waypoint, destination: Waypoint, handler: @escaping(DirectionsResults?, Error?) -> Void) {
+        
     }
+    
+//    func _directions(origin: String, destination: String, handler: @escaping (DirectionsResults?, Error?) -> Void) {
+//        _get_request(baseurl: "https://maps.googleapis.com/maps/api/directions/json?", params: [
+//            "mode": "transit",
+//            "origin": origin,
+//            "destination": destination,
+//            "key": GMAK
+//        ]) { d, u, e in
+//            guard let j = d else {
+//                return handler(nil, e)
+//            }
+//            
+//            let directions = try! JSONSerialization.jsonObject(with: j, options: []) as! [String : Any]
+//            print(directions)
+//        }
+//    }
+//    
+//    func directions(origin: String, destination: String, handler: @escaping (DirectionsResults?, Error?) -> Void) {
+//        _directions(origin: "place_id:\(origin)", destination: "place_id:\(destination)", handler: handler)
+//    }
+//    
+//    func directions(origin: CLLocationCoordinate2D, destination: String, handler: @escaping (DirectionsResults?, Error?) -> Void) {
+//        _directions(origin: origin.toGMapsString(), destination: "place_id:\(destination)", handler: handler)
+//    }
+//    
+//    func directions(origin: String, destination: CLLocationCoordinate2D, handler: @escaping (DirectionsResults?, Error?) -> Void) {
+//        _directions(origin: "place_id:\(origin)", destination: destination.toGMapsString(), handler: handler)
+//    }
+//    
+//    func directions(origin: CLLocationCoordinate2D, destination: CLLocationCoordinate2D, handler: @escaping (DirectionsResults?, Error?) -> Void) {
+//        _directions(origin: origin.toGMapsString(), destination: destination.toGMapsString(), handler: handler)
+//    }
     
     func start_session() {
         session = UUID()
@@ -210,5 +245,11 @@ class APIHandler {
             
             handler(results, e)
         }
+    }
+}
+
+extension CLLocationCoordinate2D {
+    func toGMapsString() -> String {
+        return "\(latitude),\(longitude)"
     }
 }

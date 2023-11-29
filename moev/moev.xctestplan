@@ -1,0 +1,41 @@
+{
+  "configurations" : [
+    {
+      "id" : "099175C7-2E9B-451A-8FB4-F52E061A4090",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "locationScenario" : {
+      "identifier" : "New York, NY, USA",
+      "referenceType" : "built-in"
+    },
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:moev.xcodeproj",
+      "identifier" : "20400EAF2B145A6D00CA7D7A",
+      "name" : "moev"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:moev.xcodeproj",
+        "identifier" : "20400EBF2B145A6E00CA7D7A",
+        "name" : "moevTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:moev.xcodeproj",
+        "identifier" : "20400EC92B145A6E00CA7D7A",
+        "name" : "moevUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
