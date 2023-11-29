@@ -80,9 +80,8 @@ struct ContentView: View {
                 let geom = d.result.geometry.location
                 let location = CLLocationCoordinate2D(latitude: geom.lat,
                                                       longitude: geom.lng)
-                
-                annotations[i].location = location
-                annotations[i].name = d.result.name
+
+                annotations[i] = Annotation(location: location, name: d.result.name)
             }
         }
     }

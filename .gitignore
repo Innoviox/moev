@@ -91,3 +91,4 @@ iOSInjectionProject/
 moev/API_KEY.xcconfig
 *.xcconfig
 apikey
+moev/.DS_Store
