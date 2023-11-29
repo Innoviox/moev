@@ -22,9 +22,7 @@ struct Annotation: Identifiable {
     var name: String
 }
 
-struct ContentView: View {
-    @State private var searchText: String = ""
-    
+struct ContentView: View {    
     @State private var selection: UUID?
     
     @StateObject var locationManager = LocationManager()

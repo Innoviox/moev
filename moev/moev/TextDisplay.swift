@@ -21,22 +21,28 @@ struct TextDisplay: View {
                 .onChange(of: searchText, updatePossibilities)
             
 //            Spacer()
-            
-            ForEach(possibilities) { place in
-                HStack {
-                    Text(place.name)
-                        .frame(maxWidth: .infinity)
-                        .border(.black)
-                        .background(.white)
-                        .lineLimit(1)
-                        .onTapGesture {
-                            addMarker(place)
-                            possibilities.removeAll()
+                .overlay(alignment: .topLeading) {
+                    VStack {
+                        ForEach(possibilities) { place in
+                            HStack {
+                                Text(place.name)
+                                    .frame(maxWidth: .infinity)
+                                    .border(.black)
+                                    .background(.white)
+                                    .lineLimit(1)
+                                    .onTapGesture {
+                                        addMarker(place)
+                                        possibilities.removeAll()
+                                    }
+                                Spacer()
+                            }
+                            .zIndex(2)
+                            //                Spacer()
                         }
-                    Spacer()
+                    }
+                    .offset(x: 0, y: 20)
+//                    .zIndex(2)
                 }
-//                Spacer()
-            }
 //            Spacer()
         }
     }
