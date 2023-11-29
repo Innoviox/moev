@@ -50,6 +50,7 @@ struct TextDisplay: View {
     }
     
     func updatePossibilities(oldValue: any Equatable, newValue: any Equatable) {
+        print("updating", annotation, annotation.name, oldValue, newValue)
         APIHandler.shared.autocomplete(query: annotation.name) { data, error in
             guard let places = data else {
                 print(error)

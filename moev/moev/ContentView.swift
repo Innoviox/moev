@@ -44,8 +44,11 @@ struct ContentView: View {
                     VStack {
                         TextDisplay(annotation: topAnnotation, placeHolder: "Current location")
                         
-                        ForEach(annotations) { a in
-                            TextDisplay(annotation: a) //, addMarker: addMarker(i: a.i))
+                        ForEach(annotations.map { i in
+                            print(i.name)
+                            return i
+                        }) { a in
+                            TextDisplay(annotation: a, addMarker: addMarker(i: 0))
                         }
                         
                         Spacer()
