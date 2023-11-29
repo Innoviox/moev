@@ -42,13 +42,11 @@ struct ContentView: View {
                 
                 HStack {
                     VStack {
-                        TextDisplay(annotation: topAnnotation, placeHolder: "Current location")
+                        TextDisplay(annotation: $topAnnotation,
+                                    placeHolder: "Current location")
                         
-                        ForEach(annotations.map { i in
-                            print(i.name)
-                            return i
-                        }) { a in
-                            TextDisplay(annotation: a, addMarker: addMarker(i: 0))
+                        ForEach($annotations) { $a in
+                            TextDisplay(annotation: $a)
                         }
                         
                         Spacer()
@@ -65,23 +63,6 @@ struct ContentView: View {
                     }
                 }
                 .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
-            }
-        }
-    }
-    
-    func addMarker(i: Int) -> (Place) -> Void {
-        return { p in
-            APIHandler.shared.get_info(place_id: p.placeID) { data, error in
-                guard let d = data else {
-                    print(error)
-                    return
-                }
-
-                let geom = d.result.geometry.location
-                let location = CLLocationCoordinate2D(latitude: geom.lat,
-                                                      longitude: geom.lng)
-
-                annotations[i] = Annotation(location: location, name: d.result.name)
             }
         }
     }

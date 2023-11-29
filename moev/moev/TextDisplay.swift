@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct Place: Identifiable {
     var id = UUID()
@@ -16,17 +17,28 @@ struct Place: Identifiable {
 
 
 struct TextDisplay: View {
-    @State public var annotation: Annotation
+    @Binding public var annotation: Annotation
     @State private var possibilities: [Place] = []
     
     public var placeHolder: String = "Next location..."
-    public var addMarker: (Place) -> Void = { p in }
+    
+    @State private var justChanged: Bool = false
     
     var body: some View {
         VStack {
             TextField(placeHolder, text: $annotation.name)
                 .textFieldStyle(.roundedBorder)
-                .onChange(of: annotation.name, updatePossibilities)
+                .onChange(of: annotation.name) { o, n in
+                    if justChanged {
+                        justChanged = false
+                    } else {
+                        updatePossibilities()
+                    }
+                }
+//                .onKeyPress { k in
+//                    updatePossibilities()
+//                    return .ignored
+//                }
                 .overlay(alignment: .topLeading) {
                     VStack {
                         ForEach(possibilities) { place in
@@ -37,20 +49,21 @@ struct TextDisplay: View {
                                     .background(.white)
                                     .lineLimit(1)
                                     .onTapGesture {
-                                        addMarker(place)
+                                        addMarker(p: place)
                                         possibilities.removeAll()
                                     }
+                                
                                 Spacer()
                             }
                         }
                     }
                     .offset(x: 0, y: 34)
                 }
-        }.zIndex(Double(possibilities.count))
+        }
+        .zIndex(Double(possibilities.count))
     }
     
-    func updatePossibilities(oldValue: any Equatable, newValue: any Equatable) {
-        print("updating", annotation, annotation.name, oldValue, newValue)
+    func updatePossibilities() {
         APIHandler.shared.autocomplete(query: annotation.name) { data, error in
             guard let places = data else {
                 print(error)
@@ -60,6 +73,24 @@ struct TextDisplay: View {
             possibilities = places.predictions.map { place in
                 return Place(name: place.description, placeID: place.place_id)
             }
+        }
+    }
+    
+    func addMarker(p: Place) {
+        APIHandler.shared.get_info(place_id: p.placeID) { data, error in
+            guard let d = data else {
+                print(error)
+                return
+            }
+
+            let geom = d.result.geometry.location
+            let location = CLLocationCoordinate2D(latitude: geom.lat,
+                                                  longitude: geom.lng)
+            
+            annotation.name = d.result.name
+            annotation.location = location
+            
+            justChanged = true
         }
     }
 }
