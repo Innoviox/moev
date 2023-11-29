@@ -8,13 +8,6 @@
 import SwiftUI
 import MapKit
 
-struct Place: Identifiable {
-    var id = UUID()
-    
-    var name: String
-    var placeID: String
-}
-
 struct Annotation: Identifiable {
     var id = UUID()
     
@@ -29,10 +22,10 @@ struct ContentView: View {
     
     @State private var userLocation: CLLocationCoordinate2D?
     
+    @State private var topAnnotation = Annotation(name: "")
     @State private var annotations: [Annotation] = [Annotation(name: "")]
     
     @State private var region = MKMapRect()
-     
 
     var body: some View {
         VStack {
@@ -49,17 +42,16 @@ struct ContentView: View {
                 
                 HStack {
                     VStack {
-                        TextDisplay(placeHolder: "Current location")
+                        TextDisplay(annotation: topAnnotation, placeHolder: "Current location")
                         
-                        ForEach(annotations.indices, id: \.self) { i in
-                            TextDisplay(searchText: annotations[i].name, addMarker: addMarker(i: i))
+                        ForEach(annotations) { a in
+                            TextDisplay(annotation: a) //, addMarker: addMarker(i: a.i))
                         }
                         
                         Spacer()
                     }
                     
                     VStack {
-                        Image(systemName: "location.magnifyingglass")
                         Button(action: {
                             annotations.append(Annotation(name: ""))
                         }, label: {
@@ -69,9 +61,9 @@ struct ContentView: View {
                         Spacer()
                     }
                 }
+                .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
             }
         }
-        .padding()
     }
     
     func addMarker(i: Int) -> (Place) -> Void {
@@ -89,18 +81,6 @@ struct ContentView: View {
                 annotations[i].location = location
                 annotations[i].name = d.result.name
             }
-        }
-    }
-}
-
-// https://stackoverflow.com/questions/56517610/conditionally-use-view-in-swiftui
-extension View {
-   @ViewBuilder
-   func `if`<Content: View>(_ conditional: Bool, content: (Self) -> Content) -> some View {
-        if conditional {
-            content(self)
-        } else {
-            self
         }
     }
 }
