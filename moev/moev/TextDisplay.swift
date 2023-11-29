@@ -19,8 +19,6 @@ struct TextDisplay: View {
             TextField(placeHolder, text: $searchText)
                 .textFieldStyle(.roundedBorder)
                 .onChange(of: searchText, updatePossibilities)
-            
-//            Spacer()
                 .overlay(alignment: .topLeading) {
                     VStack {
                         ForEach(possibilities) { place in
@@ -36,15 +34,11 @@ struct TextDisplay: View {
                                     }
                                 Spacer()
                             }
-                            .zIndex(2)
-                            //                Spacer()
                         }
                     }
-                    .offset(x: 0, y: 20)
-//                    .zIndex(2)
+                    .offset(x: 0, y: 34)
                 }
-//            Spacer()
-        }
+        }.zIndex(Double(possibilities.count))
     }
     
     func updatePossibilities(oldValue: any Equatable, newValue: any Equatable) {
