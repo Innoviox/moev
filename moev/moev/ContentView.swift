@@ -83,8 +83,8 @@ struct ContentView: View {
     }
     
     func getDirections() {
-        let origin = locationManager.lastLocation!.coordinate.toWaypoint()
-        let destination = annotations[0].location!.toWaypoint() // todo not just 0th annotation
+//        let origin = locationManager.lastLocation!.coordinate.toWaypoint()
+//        let destination = annotations[0].location!.toWaypoint() // todo not just 0th annotation
 //        APIHandler.shared.directions(origin: origin, destination: destination) { results, error in
 //            guard let route = results else {
 //                print(error)
@@ -95,8 +95,8 @@ struct ContentView: View {
 //            polylines.append(UIPolyline(polyline: polyline))
 //        }
         // "_cidPa~oia@"
-        let polyline = Polyline(json: ["encodedPolyline": "_cidPa~oia@"]).decode()
-        let polyline2 = Polyline(json: ["encodedPolyline": "_cidP`~oia@"]).decode()
+//        let polyline = Polyline(json: ["encodedPolyline": "_sdpH_sdpH"]).decode()
+        let polyline2 = Polyline(json: ["encodedPolyline": "_p~iF~ps|U_ulLnnqC_mqNvxq`@"]).decode()
         polylines.append(UIPolyline(polyline: polyline2))
     }
 }

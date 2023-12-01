@@ -147,18 +147,14 @@ struct Polyline {
         var point = ""
         var data: [Double] = []
         var last: [Double] = []
-        
-        print("DECODING POLYLINE")
-        
+                
         for (i, char) in encodedPolyline.enumerated() {
             point.append(char)
             if point.count >= 4 {
                 if point.last!.asciiValue! > 95 && i != encodedPolyline.count - 1 {
                     continue
                 }
-                
-                print("\tDECODING", point)
-                print("\t\t", terminator: "")
+
                 let val = "0" + point.map { c in
                     var v = c.asciiValue! - 63
                     if v >= 32 {
@@ -168,28 +164,25 @@ struct Polyline {
                     if s.count < 5 {
                         s = String(repeating: "0", count: 5 - s.count) + s
                     }
-                    print(s, terminator: " ")
                     return s
                 }.reversed().joined().dropLast()
-                print()
-                print("\t\tconverted to", val)
-                data.append(Double(Int(val, radix: 2)!) / 100000.0)
+                let neg = val.last! == "1"
+                var i = Int(val, radix: 2)!
+                if neg {
+                    i = -i - 1
+                }
+                data.append(Double(i) / 100000.0)
                 
                 if data.count == 2 {
-                    let lat, lng: Double
                     if last.count == 0 {
-                        lat = data[0]
-                        lng = data[1]
+                        last = [data[0], data[1]]
                     } else {
-                        lat = last[0] + data[0]
-                        lng = last[1] + data[1]
+                        last = [last[0] + data[0], last[1] + data[1]]
                     }
                     
-                    let point = CLLocationCoordinate2D(latitude: lat, longitude: lng)
+                    let point = CLLocationCoordinate2D(latitude: last[0], longitude: last[1])
                     points.append(point)
-                    print("GOT POINT", point)
-                    
-                    last = [data[0], data[1]]
+                    print("GOT POINT", data, last, point)
                     data = []
                 }
                 
