@@ -95,10 +95,6 @@ struct ContentView: View {
             let polyline = route.polyline.decode()
             polylines.append(UIPolyline(polyline: polyline))
         }
-        // "_cidPa~oia@"
-//        let polyline = Polyline(json: ["encodedPolyline": "`wtwFzirbM"]).decode()
-//        let polyline2 = Polyline(json: ["encodedPolyline": "awtwFzirbM"]).decode()
-//        polylines.append(UIPolyline(polyline: polyline2))
     }
 }
 
