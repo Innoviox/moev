@@ -152,7 +152,7 @@ struct Polyline {
                 
         for (i, char) in encodedPolyline.enumerated() {
             point.append(char)
-            if point.last!.asciiValue! > 95 && i != encodedPolyline.count - 1 {
+            if point.last!.asciiValue! >= 95 && i != encodedPolyline.count - 1 {
                 continue
             }
             
@@ -186,7 +186,8 @@ struct Polyline {
                 
                 let point = CLLocationCoordinate2D(latitude: last[0], longitude: last[1])
                 points.append(point)
-                print("GOT POINT", data, last, point)
+                print("\tGOT POINT", data, last, point)
+                print("tanghay (\(last[0]), \(last[1]))")
                 data = []
             }
             
