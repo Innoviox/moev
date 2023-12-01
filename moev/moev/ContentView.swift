@@ -72,7 +72,9 @@ struct ContentView: View {
     }
     
     func getDirections() {
-        APIHandler.shared.directions(origin: locationManager.lastLocation!.coordinate, destination: annotations[0].placeID) { results, e in
+        let origin = locationManager.lastLocation!.coordinate.toWaypoint()
+        let destination = annotations[0].location!.toWaypoint() // todo not just 0th annotation
+        APIHandler.shared.directions(origin: origin, destination: destination) { results, e in
             
         }
     }
