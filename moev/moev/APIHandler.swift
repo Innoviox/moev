@@ -146,48 +146,37 @@ struct Polyline {
         
         var point = ""
         var data: [Double] = []
-        var last: [Double] = []
-        
-        print(encodedPolyline)
-                
+        var last: [Double] = [0, 0]
+                        
         for (i, char) in encodedPolyline.enumerated() {
             point.append(char)
-            if point.last!.asciiValue! >= 95 && i != encodedPolyline.count - 1 {
+            if char.asciiValue! >= 95 && i != encodedPolyline.count - 1 {
                 continue
             }
             
-            print("DECODING POINT", point)
-
             let val = point.map { c in
-                var v = c.asciiValue! - 63
-                if v >= 32 {
+                var v = c.asciiValue! - 63 // remove ASCII-fication
+                if v >= 32 { // remove continuation bit
                     v -= 32
                 }
+                
                 var s = String(v, radix: 2)
-                if s.count < 5 {
-                    s = String(repeating: "0", count: 5 - s.count) + s
-                }
+                s = String(repeating: "0", count: 5 - s.count) + s // pad to chunks of 5
                 return s
-            }.reversed().joined() //.dropLast()
-            let neg = val.last! == "1"
-            var i = Int("0" + val.dropLast(), radix: 2)!
-            if neg {
+            }.reversed().joined() // reverse chunk order
+            
+            var i = Int("0" + val.dropLast(), radix: 2)! // right shift
+            if val.last! == "1" { // 2s complement
                 i = -i - 1
             }
-            print("GOT", val, neg)
-            data.append(Double(i) / 100000.0)
+            
+            data.append(Double(i) / 100000.0) // convert back to coordinate range
             
             if data.count == 2 {
-                if last.count == 0 {
-                    last = [data[0], data[1]]
-                } else {
-                    last = [last[0] + data[0], last[1] + data[1]]
-                }
+                last = [last[0] + data[0], last[1] + data[1]]
                 
-                let point = CLLocationCoordinate2D(latitude: last[0], longitude: last[1])
-                points.append(point)
-                print("\tGOT POINT", data, last, point)
-                print("tanghay (\(last[0]), \(last[1]))")
+                let coord = CLLocationCoordinate2D(latitude: last[0], longitude: last[1])
+                points.append(coord)
                 data = []
             }
             
