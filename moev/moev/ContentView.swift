@@ -102,6 +102,8 @@ struct ContentView: View {
             return // todo
         }
         
+        updatePolylines(withID: id1, newPolyline: emptyPolyline())
+        
         APIHandler.shared.directions(origin: o, destination: d) { results, error in
             guard let route = results else {
                 print(error)
@@ -109,7 +111,7 @@ struct ContentView: View {
             }
             
             let polyline = route.polyline.decode()
-            polylines.append(UIPolyline(id: id1, polyline: polyline))
+            updatePolylines(withID: id1, newPolyline: polyline)
         }
     }
     
@@ -126,6 +128,10 @@ struct ContentView: View {
             }
         }
         polylines.append(UIPolyline(id: id, polyline: newPolyline))
+    }
+    
+    func emptyPolyline() -> MKPolyline {
+        return MKPolyline(coordinates: [], count: 0)
     }
 }
 

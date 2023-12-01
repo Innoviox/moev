@@ -254,7 +254,7 @@ class APIHandler {
             url += "\(key)=\(value)"
         }
         
-        print("GET REQUESTING", url)
+//        print("GET REQUESTING", url)
         
         _request(url: url, headers: [:], body: nil, method: "GET", handler: handler)
     }
