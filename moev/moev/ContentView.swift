@@ -9,15 +9,16 @@ import SwiftUI
 import MapKit
 
 struct Annotation: Identifiable {
-    var id = UUID()
+    var id: Int
     
     var location: CLLocationCoordinate2D?
     var name: String
     var placeID: String = ""
+    var placeHolder: String = "Next location..."
 }
 
 struct UIPolyline: Identifiable {
-    var id = UUID()
+    var id: Int
     
     var polyline: MKPolyline
 }
@@ -27,8 +28,11 @@ struct ContentView: View {
     
     @StateObject var locationManager = LocationManager()
         
-    @State private var topAnnotation = Annotation(name: "")
-    @State private var annotations: [Annotation] = [Annotation(name: "")]
+    @State private var annotations: [Annotation] = [
+        Annotation(id: 0, name: "", placeHolder: "Current location"),
+        Annotation(id: 1, name: "")
+    ]
+    
     @State private var polylines: [UIPolyline] = []
     
     @State private var region = MKMapRect()
@@ -58,9 +62,6 @@ struct ContentView: View {
                 
                 HStack {
                     VStack {
-                        TextDisplay(annotation: $topAnnotation,
-                                    placeHolder: "Current location", getDirections: getDirections)
-                        
                         ForEach($annotations) { $a in
                             TextDisplay(annotation: $a, getDirections: getDirections)
                         }
@@ -70,7 +71,7 @@ struct ContentView: View {
                     
                     VStack {
                         Button(action: {
-                            annotations.append(Annotation(name: ""))
+                            annotations.append(Annotation(id: annotations.count, name: ""))
                         }, label: {
                             Image(systemName: "plus.app")
                         })
@@ -83,18 +84,48 @@ struct ContentView: View {
         }
     }
     
-    func getDirections() {
-        let origin = locationManager.lastLocation!.coordinate.toWaypoint()
-        let destination = annotations[0].location!.toWaypoint() // todo not just 0th annotation
-        APIHandler.shared.directions(origin: origin, destination: destination) { results, error in
+    func getDirections(senderID: Int) {
+        if senderID > 0 {
+            getDirections(id1: senderID - 1, id2: senderID)
+        }
+        
+        if senderID < annotations.count - 1 {
+            getDirections(id1: senderID, id2: senderID + 1)
+        }
+    }
+    
+    func getDirections(id1: Int, id2: Int) {
+        let origin = getWaypoint(id1)
+        let destination = getWaypoint(id2)
+        
+        guard let o = origin, let d = destination else {
+            return // todo
+        }
+        
+        APIHandler.shared.directions(origin: o, destination: d) { results, error in
             guard let route = results else {
                 print(error)
                 return
             }
             
             let polyline = route.polyline.decode()
-            polylines.append(UIPolyline(polyline: polyline))
+            polylines.append(UIPolyline(id: id1, polyline: polyline))
         }
+    }
+    
+    func getWaypoint(_ id: Int) -> Waypoint? {
+        let coord = id == 0 ? locationManager.lastLocation?.coordinate : annotations[id].location
+        return coord?.toWaypoint()
+    }
+    
+    func updatePolylines(withID id: Int, newPolyline: MKPolyline) {
+        for i in polylines.indices {
+            if polylines[i].id == id {
+                polylines[i].polyline = newPolyline
+                return
+            }
+        }
+        polylines.append(UIPolyline(id: id, polyline: newPolyline))
     }
 }
 

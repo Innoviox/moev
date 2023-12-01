@@ -20,14 +20,13 @@ struct TextDisplay: View {
     @Binding public var annotation: Annotation
     @State private var possibilities: [Place] = []
     
-    public var placeHolder: String = "Next location..."
-    public var getDirections: () -> Void
+    public var getDirections: (Int) -> Void
     
     @State private var justChanged: Bool = false
     
     var body: some View {
         VStack {
-            TextField(placeHolder, text: $annotation.name)
+            TextField(annotation.placeHolder, text: $annotation.name)
                 .textFieldStyle(.roundedBorder)
                 .onChange(of: annotation.name) { o, n in
                     if justChanged {
@@ -90,7 +89,7 @@ struct TextDisplay: View {
             
             justChanged = true
             
-            getDirections()
+            getDirections(annotation.id)
         }
     }
 }
