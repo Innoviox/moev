@@ -16,6 +16,12 @@ struct Annotation: Identifiable {
     var placeID: String = ""
 }
 
+struct UIPolyline: Identifiable {
+    var id = UUID()
+    
+    var polyline: MKPolyline
+}
+
 struct ContentView: View {
     @State private var selection: UUID?
     
@@ -23,6 +29,7 @@ struct ContentView: View {
         
     @State private var topAnnotation = Annotation(name: "")
     @State private var annotations: [Annotation] = [Annotation(name: "")]
+    @State private var polylines: [UIPolyline] = []
     
     @State private var region = MKMapRect()
 
@@ -34,6 +41,10 @@ struct ContentView: View {
                         Marker(coordinate: a.location!) {
                             Image(systemName: "mappin")
                         }
+                    }
+                    
+                    ForEach(polylines) { p in
+                        MapPolyline(p.polyline)
                     }
                     
                     UserAnnotation()
@@ -74,9 +85,17 @@ struct ContentView: View {
     func getDirections() {
         let origin = locationManager.lastLocation!.coordinate.toWaypoint()
         let destination = annotations[0].location!.toWaypoint() // todo not just 0th annotation
-        APIHandler.shared.directions(origin: origin, destination: destination) { results, e in
-            
-        }
+//        APIHandler.shared.directions(origin: origin, destination: destination) { results, error in
+//            guard let route = results else {
+//                print(error)
+//                return
+//            }
+//            
+//            let polyline = route.polyline.decode()
+//            polylines.append(UIPolyline(polyline: polyline))
+//        }
+        let polyline = Polyline(json: ["encodedPolyline": "_p~iF~ps|U_ulLnnqC_mqNvxq`@"]).decode()
+        polylines.append(UIPolyline(polyline: polyline))
     }
 }
 

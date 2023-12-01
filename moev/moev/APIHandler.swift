@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreLocation
+import MapKit
 
 struct Circle: Encodable {
     let center: [String: CLLocationDegrees]
@@ -85,8 +86,18 @@ struct DetailsResults {
 }
 
 struct LatitudeLongitude: Encodable {
-    let latitude: Double
-    let longitude: Double
+    public let latitude: Double
+    public let longitude: Double
+    
+    init(json: [String: Any]) {
+        latitude = Double(truncating: json["latitude"] as! NSNumber)
+        longitude = Double(truncating: json["longitude"] as! NSNumber)
+    }
+    
+    init(latitude: Double, longitude: Double) {
+        self.latitude = latitude
+        self.longitude = longitude
+    }
 }
 
 struct LatLng: Encodable {
@@ -104,8 +115,109 @@ struct RoutesBody: Encodable {
     let languageCode: String = "en-US"
 }
 
-struct DirectionsResults {
+struct RouteLeg {
     
+}
+
+struct RouteTravelAdvisory {
+    
+}
+
+struct Viewport {
+    public let high: LatitudeLongitude
+    public let low: LatitudeLongitude
+    
+    init(json: [String: Any]) {
+        high = LatitudeLongitude(json: json["high"] as! [String: Any])
+        low = LatitudeLongitude(json: json["low"] as! [String: Any])
+    }
+}
+
+struct Polyline {
+    public let encodedPolyline: String
+    
+    init(json: [String: Any]) {
+        encodedPolyline = json["encodedPolyline"] as! String
+    }
+    
+    func decode() -> MKPolyline {
+        // https://developers.google.com/maps/documentation/utilities/polylinealgorithm
+        var points: [CLLocationCoordinate2D] = []
+        
+        var point = ""
+        var data: [Double] = []
+        var last: [Double] = []
+        
+        print("DECODING POLYLINE")
+        
+        for char in encodedPolyline {
+            point.append(char)
+            if point.count >= 4 {
+                if point.last!.asciiValue! % 2 == 1 {
+                    continue
+                }
+                
+                print("\tDECODING", point)
+                print("\t\t", terminator: "")
+                let val = Int("0" + point.map { c in
+                    var v = c.asciiValue! - 63
+                    if v >= 32 {
+                        v -= 32
+                    }
+                    var s = String(v, radix: 2)
+                    if s.count < 5 {
+                        s = String(repeating: "0", count: 5 - s.count) + s
+                    }
+                    print(s, terminator: " ")
+                    return s
+                }.reversed().joined().dropLast(), radix: 2)!
+                print()
+                print("\t\tconverted to", val)
+                data.append(Double(val) / 100000.0)
+                
+                if data.count == 2 {
+                    let lat, lng: Double
+                    if last.count == 0 {
+                        lat = data[0]
+                        lng = data[1]
+                    } else {
+                        lat = last[0] + data[0]
+                        lng = last[1] + data[1]
+                    }
+                    
+                    let point = CLLocationCoordinate2D(latitude: lat, longitude: lng)
+                    points.append(point)
+                    print("GOT POINT", point)
+                    
+                    last = [data[0], data[1]]
+                    data = []
+                }
+                
+                point = ""
+            }
+        }
+        
+        return MKPolyline(coordinates: points, count: points.count)
+    }
+}
+
+struct DirectionsResults {
+    public let duration: String
+    public let distanceMeters: Int
+    public let polyline: Polyline
+    // todo
+//    public let legs: [RouteLeg]
+//    public let travelAdvisory: RouteTravelAdvisory
+    public let viewport: Viewport
+    
+    init(json: [String: Any]) {
+        duration = json["duration"] as! String
+        distanceMeters = json["distanceMeters"] as! Int
+        polyline = Polyline(json: json["polyline"] as! [String: Any])
+//        legs = (json["legs"] as! [[String: Any]]).map { j in RouteLeg(j) }
+//        travelAdvisory = RouteTravelAdvisory(json["routeTravelAdvisory"] as! [String: Any])
+        viewport = Viewport(json: json["viewport"] as! [String: Any])
+    }
 }
 
 typealias RequestHandler = (Data?, URLResponse?, Error?) -> Void
@@ -188,10 +300,20 @@ class APIHandler {
         
         let body = RoutesBody(origin: origin, destination: destination, travelMode: "TRANSIT")
         
+        let fields = [
+            "routes.duration",
+            "routes.distanceMeters",
+            "routes.polyline.encodedPolyline",
+            // todo this mess
+//            "routes.legs",
+//            "routes.travelAdvisory",
+            "routes.viewport"
+        ]
+        
         let headers: [String: String] = [
             "Content-Type": "application/json",
             "X-Goog-Api-Key": GMAK,
-            "X-Goog-FieldMask": "routes.duration,routes.distanceMeters,routes.polyline.encodedPolyline"
+            "X-Goog-FieldMask": fields.joined(separator: ",")
         ]
         
         _request(url: url, headers: headers, body: body, method: "POST") { data, response, error in
@@ -200,7 +322,8 @@ class APIHandler {
             }
             
             let route = try! JSONSerialization.jsonObject(with: d, options: []) as! [String : Any]
-            print(route)
+            let results = DirectionsResults(json: (route["routes"] as! [[String: Any]])[0])
+            handler(results, error)
 //            let results = AutocompleteResults(json: places)
 //            
 //            handler(results, error)
