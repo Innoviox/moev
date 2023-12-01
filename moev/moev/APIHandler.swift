@@ -150,16 +150,16 @@ struct Polyline {
         
         print("DECODING POLYLINE")
         
-        for char in encodedPolyline {
+        for (i, char) in encodedPolyline.enumerated() {
             point.append(char)
             if point.count >= 4 {
-                if point.last!.asciiValue! % 2 == 1 {
+                if point.last!.asciiValue! > 95 && i != encodedPolyline.count - 1 {
                     continue
                 }
                 
                 print("\tDECODING", point)
                 print("\t\t", terminator: "")
-                let val = Int("0" + point.map { c in
+                let val = "0" + point.map { c in
                     var v = c.asciiValue! - 63
                     if v >= 32 {
                         v -= 32
@@ -170,10 +170,10 @@ struct Polyline {
                     }
                     print(s, terminator: " ")
                     return s
-                }.reversed().joined().dropLast(), radix: 2)!
+                }.reversed().joined().dropLast()
                 print()
                 print("\t\tconverted to", val)
-                data.append(Double(val) / 100000.0)
+                data.append(Double(Int(val, radix: 2)!) / 100000.0)
                 
                 if data.count == 2 {
                     let lat, lng: Double
