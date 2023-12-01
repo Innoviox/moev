@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		20202B312B14F0DD007CC8AA /* APIHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20202B302B14F0DD007CC8AA /* APIHandler.swift */; };
 		20400EB42B145A6D00CA7D7A /* moevApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20400EB32B145A6D00CA7D7A /* moevApp.swift */; };
 		20400EB62B145A6D00CA7D7A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20400EB52B145A6D00CA7D7A /* ContentView.swift */; };
 		20400EB82B145A6D00CA7D7A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20400EB72B145A6D00CA7D7A /* Assets.xcassets */; };
@@ -14,6 +15,8 @@
 		20400EC52B145A6E00CA7D7A /* moevTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20400EC42B145A6E00CA7D7A /* moevTests.swift */; };
 		20400ECF2B145A6E00CA7D7A /* moevUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20400ECE2B145A6E00CA7D7A /* moevUITests.swift */; };
 		20400ED12B145A6E00CA7D7A /* moevUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20400ED02B145A6E00CA7D7A /* moevUITestsLaunchTests.swift */; };
+		20F70B252B1679F100B363FA /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F70B242B1679F100B363FA /* LocationManager.swift */; };
+		20F70B272B16AB8B00B363FA /* TextDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F70B262B16AB8B00B363FA /* TextDisplay.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		20202B302B14F0DD007CC8AA /* APIHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIHandler.swift; sourceTree = "<group>"; };
 		20400EB02B145A6D00CA7D7A /* moev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = moev.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		20400EB32B145A6D00CA7D7A /* moevApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = moevApp.swift; sourceTree = "<group>"; };
 		20400EB52B145A6D00CA7D7A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -44,7 +48,12 @@
 		20400ECA2B145A6E00CA7D7A /* moevUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = moevUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		20400ECE2B145A6E00CA7D7A /* moevUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = moevUITests.swift; sourceTree = "<group>"; };
 		20400ED02B145A6E00CA7D7A /* moevUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = moevUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		20A381322B15AECE00172E8A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		20AFC92F2B14ED7700F5B3CC /* API_KEY.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = API_KEY.xcconfig; sourceTree = "<group>"; };
+		20E272432B1791BE00534C2F /* moev.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = moev.xctestplan; sourceTree = "<group>"; };
+		20E272442B1792AA00534C2F /* test.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = test.gpx; path = ../test.gpx; sourceTree = "<group>"; };
+		20F70B242B1679F100B363FA /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		20F70B262B16AB8B00B363FA /* TextDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDisplay.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +84,8 @@
 		20400EA72B145A6D00CA7D7A = {
 			isa = PBXGroup;
 			children = (
+				20E272442B1792AA00534C2F /* test.gpx */,
+				20E272432B1791BE00534C2F /* moev.xctestplan */,
 				20AFC92F2B14ED7700F5B3CC /* API_KEY.xcconfig */,
 				20400EB22B145A6D00CA7D7A /* moev */,
 				20400EC32B145A6E00CA7D7A /* moevTests */,
@@ -96,10 +107,14 @@
 		20400EB22B145A6D00CA7D7A /* moev */ = {
 			isa = PBXGroup;
 			children = (
+				20A381322B15AECE00172E8A /* Info.plist */,
 				20400EB32B145A6D00CA7D7A /* moevApp.swift */,
 				20400EB52B145A6D00CA7D7A /* ContentView.swift */,
 				20400EB72B145A6D00CA7D7A /* Assets.xcassets */,
 				20400EB92B145A6D00CA7D7A /* Preview Content */,
+				20202B302B14F0DD007CC8AA /* APIHandler.swift */,
+				20F70B242B1679F100B363FA /* LocationManager.swift */,
+				20F70B262B16AB8B00B363FA /* TextDisplay.swift */,
 			);
 			path = moev;
 			sourceTree = "<group>";
@@ -259,7 +274,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20F70B252B1679F100B363FA /* LocationManager.swift in Sources */,
+				20202B312B14F0DD007CC8AA /* APIHandler.swift in Sources */,
 				20400EB62B145A6D00CA7D7A /* ContentView.swift in Sources */,
+				20F70B272B16AB8B00B363FA /* TextDisplay.swift in Sources */,
 				20400EB42B145A6D00CA7D7A /* moevApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -430,6 +448,7 @@
 				DEVELOPMENT_TEAM = SM7F898GQH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = moev/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -460,6 +479,7 @@
 				DEVELOPMENT_TEAM = SM7F898GQH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = moev/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
