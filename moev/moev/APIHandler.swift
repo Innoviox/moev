@@ -147,47 +147,50 @@ struct Polyline {
         var point = ""
         var data: [Double] = []
         var last: [Double] = []
+        
+        print(encodedPolyline)
                 
         for (i, char) in encodedPolyline.enumerated() {
             point.append(char)
-            if point.count >= 4 {
-                if point.last!.asciiValue! > 95 && i != encodedPolyline.count - 1 {
-                    continue
-                }
-
-                let val = "0" + point.map { c in
-                    var v = c.asciiValue! - 63
-                    if v >= 32 {
-                        v -= 32
-                    }
-                    var s = String(v, radix: 2)
-                    if s.count < 5 {
-                        s = String(repeating: "0", count: 5 - s.count) + s
-                    }
-                    return s
-                }.reversed().joined().dropLast()
-                let neg = val.last! == "1"
-                var i = Int(val, radix: 2)!
-                if neg {
-                    i = -i - 1
-                }
-                data.append(Double(i) / 100000.0)
-                
-                if data.count == 2 {
-                    if last.count == 0 {
-                        last = [data[0], data[1]]
-                    } else {
-                        last = [last[0] + data[0], last[1] + data[1]]
-                    }
-                    
-                    let point = CLLocationCoordinate2D(latitude: last[0], longitude: last[1])
-                    points.append(point)
-                    print("GOT POINT", data, last, point)
-                    data = []
-                }
-                
-                point = ""
+            if point.last!.asciiValue! > 95 && i != encodedPolyline.count - 1 {
+                continue
             }
+            
+            print("DECODING POINT", point)
+
+            let val = point.map { c in
+                var v = c.asciiValue! - 63
+                if v >= 32 {
+                    v -= 32
+                }
+                var s = String(v, radix: 2)
+                if s.count < 5 {
+                    s = String(repeating: "0", count: 5 - s.count) + s
+                }
+                return s
+            }.reversed().joined() //.dropLast()
+            let neg = val.last! == "1"
+            var i = Int("0" + val.dropLast(), radix: 2)!
+            if neg {
+                i = -i - 1
+            }
+            print("GOT", val, neg)
+            data.append(Double(i) / 100000.0)
+            
+            if data.count == 2 {
+                if last.count == 0 {
+                    last = [data[0], data[1]]
+                } else {
+                    last = [last[0] + data[0], last[1] + data[1]]
+                }
+                
+                let point = CLLocationCoordinate2D(latitude: last[0], longitude: last[1])
+                points.append(point)
+                print("GOT POINT", data, last, point)
+                data = []
+            }
+            
+            point = ""
         }
         
         return MKPolyline(coordinates: points, count: points.count)
