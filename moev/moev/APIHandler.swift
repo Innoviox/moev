@@ -84,8 +84,24 @@ struct DetailsResults {
     }
 }
 
-struct Waypoint {
-    
+struct LatitudeLongitude: Encodable {
+    let latitude: Double
+    let longitude: Double
+}
+
+struct LatLng: Encodable {
+    let latLng: LatitudeLongitude
+}
+
+struct Waypoint: Encodable {
+    let location: LatLng
+}
+
+struct RoutesBody: Encodable {
+    let origin: Waypoint
+    let destination: Waypoint
+    let travelMode: String
+    let languageCode: String = "en-US"
 }
 
 struct DirectionsResults {
@@ -145,7 +161,8 @@ class APIHandler {
         _request(url: url, headers: [:], body: nil, method: "GET", handler: handler)
     }
     
-    func nearbyPlaces(center: CLLocationCoordinate2D, radius: Int = 100, url: String = "https://places.googleapis.com/v1/places:searchNearby", handler: @escaping RequestHandler) {
+    func nearbyPlaces(center: CLLocationCoordinate2D, radius: Int = 100, handler: @escaping RequestHandler) {
+        let url = "https://places.googleapis.com/v1/places:searchNearby"
         let body = NearbyPlacesBody(
             maxResultCount: 10,
             rankPreference: "DISTANCE",
@@ -167,7 +184,19 @@ class APIHandler {
     }
     
     func _directions(origin: Waypoint, destination: Waypoint, handler: @escaping(DirectionsResults?, Error?) -> Void) {
+        let url = "https://routes.googleapis.com/directions/v2:computeRoutes"
         
+        let body = RoutesBody(origin: origin, destination: destination, travelMode: "TRANSIT")
+        
+        let headers: [String: String] = [
+            "Content-Type": "application/json",
+            "X-Goog-Api-Key": GMAK,
+            "X-Goog-FieldMask": <#String#>
+        ]
+        
+        _request(url: url, headers: headers, body: body, method: "POST") { d, u, e in
+            
+        }
     }
     
 //    func _directions(origin: String, destination: String, handler: @escaping (DirectionsResults?, Error?) -> Void) {
