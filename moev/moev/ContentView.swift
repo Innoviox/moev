@@ -42,8 +42,8 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                ZStack {
-                    GeometryReader { geometry in
+                GeometryReader { geometry in
+                    ZStack {
                         Map {
                             ForEach(annotations.filter { i in i.location != nil }) { a in
                                 Marker(coordinate: a.location!) {
@@ -84,7 +84,7 @@ struct ContentView: View {
                                 Spacer()
                             }
                         }
-                        .offset(CGSize(width: 0.0, height: geometry.size.height / 2 - 50))
+                        .offset(CGSize(width: 0.0, height: searching ? 0 : geometry.size.height / 2 - 50))
                         .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
                     }
                 }
