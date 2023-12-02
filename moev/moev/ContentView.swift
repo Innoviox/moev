@@ -34,8 +34,9 @@ struct Place: Identifiable {
 struct ContentView: View {
     @State private var selection: UUID?
     
-    @State public var searching: Bool
-    @State public var searchingNotAnimated: Bool
+    @State public var searching: Bool = false
+    @State public var searchingFastAnimated: Bool = false
+    @State public var searchingSlowAnimated: Bool = false
     
     @StateObject var locationManager = LocationManager()
     
@@ -90,49 +91,54 @@ struct ContentView: View {
                 .frame(width: geometry.size.width,
                        height: searching ? geometry.size.height + 30 : 0)
                 .offset(CGSize(width: 0.0, height: -30))
-                .opacity(searchingNotAnimated ? 1 : 0)
+                .opacity(searchingFastAnimated ? 1 : 0)
                 
-                HStack {
-                    VStack {
-                        ForEach($annotations) { $a in
-                            TextDisplay(annotation: $a, searching: $searching, searchingNotAnimated: $searchingNotAnimated, possibilities: $possibilities, getDirections: getDirections)
+//                HStack {
+                List(possibilities) { place in
+                    HStack {
+                        Image(systemName: "mappin.and.ellipse")
+                        VStack(alignment: .leading) {
+                            Text(place.main_text)
+                                .font(.system(size: 22))
+                            Text(place.secondary_text)
+                                .font(.system(size: 12))
                         }
-                        
-                        ForEach(possibilities) { place in
-                            HStack {
-                                Image(systemName: "location.magnifyingglass")
-                                VStack {
-                                    Text(place.main_text)
-                                        .font(.system(size: 22))
-                                    Text(place.secondary_text)
-                                        .font(.system(size: 12))
-                                }
-                            }
-//                                .frame(maxWidth: .infinity)
-//                                .border(.black)
-//                                .background(.white)
-//                                .lineLimit(1)
+                    }
+                    .listRowBackground(Color.white)
+                    
 //                                .onTapGesture {
 //                                    addMarker(p: place)
 //                                    possibilities.removeAll()
 //                                }
+                }
+                .background(.white)
+                .scrollContentBackground(.hidden)
+                .edgesIgnoringSafeArea(.all)
+                .offset(CGSize(width: 0.0, height: searchingSlowAnimated ? 0 : geometry.size.height))
+                .frame(height: geometry.size.height - 30)
+                .opacity(searchingSlowAnimated ? 1 : 0)
+//                .zIndex(-1)
+                    VStack {
+                        ForEach($annotations) { $a in
+                            TextDisplay(annotation: $a, searching: $searching, searchingFastAnimated: $searchingFastAnimated, searchingSlowAnimated: $searchingSlowAnimated, possibilities: $possibilities, getDirections: getDirections)
                         }
+                        .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
+                        .zIndex(2)
                         
                         Spacer()
                     }
                     
-                    VStack {
-                        Button(action: {
-                            annotations.append(Annotation(id: annotations.count, name: ""))
-                        }, label: {
-                            Image(systemName: "plus.app")
-                        })
-                        
-                        Spacer()
-                    }
-                }
+//                    VStack {
+//                        Button(action: {
+//                            annotations.append(Annotation(id: annotations.count, name: ""))
+//                        }, label: {
+//                            Image(systemName: "plus.app")
+//                        })
+//                        
+//                        Spacer()
+//                    }
+//                }
                 .offset(CGSize(width: 0.0, height: searching ? 0 : geometry.size.height / 2 - 50))
-                .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
             }
         }
     }
@@ -194,5 +200,33 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(searching: false, searchingNotAnimated: false)
+    ContentView()
+}
+
+// https://stackoverflow.com/questions/56874133/use-hex-color-in-swiftui
+extension Color {
+    init(hex: String) {
+        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&int)
+        let a, r, g, b: UInt64
+        switch hex.count {
+        case 3: // RGB (12-bit)
+            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+        case 6: // RGB (24-bit)
+            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
+        case 8: // ARGB (32-bit)
+            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+        default:
+            (a, r, g, b) = (1, 1, 1, 0)
+        }
+
+        self.init(
+            .sRGB,
+            red: Double(r) / 255,
+            green: Double(g) / 255,
+            blue:  Double(b) / 255,
+            opacity: Double(a) / 255
+        )
+    }
 }

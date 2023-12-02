@@ -11,7 +11,8 @@ import MapKit
 struct TextDisplay: View {
     @Binding public var annotation: Annotation
     @Binding public var searching: Bool
-    @Binding public var searchingNotAnimated: Bool
+    @Binding public var searchingFastAnimated: Bool
+    @Binding public var searchingSlowAnimated: Bool
     @Binding public var possibilities: [Place]
     
     public var getDirections: (Int) -> Void
@@ -26,8 +27,12 @@ struct TextDisplay: View {
                     }
                 
                 withAnimation(Animation.easeInOut(duration: 0.2)) {
-                        searchingNotAnimated = true
+                        searchingFastAnimated = true
                     }
+                
+                withAnimation(Animation.easeInOut(duration: 0.5).delay(0.3)) {
+                    searchingSlowAnimated = true
+                }
                 })
                 .textFieldStyle(.roundedBorder)
                 .onChange(of: annotation.name) { o, n in
