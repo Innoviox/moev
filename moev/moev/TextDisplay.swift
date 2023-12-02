@@ -30,11 +30,11 @@ struct TextDisplay: View {
         VStack {
             TextField(annotation.placeHolder, text: $annotation.name, onEditingChanged: { isEditing in
                 withAnimation(Animation.easeInOut(duration: 0.5)) {
-                        searching = isEditing
+                        searching = true
                     }
                 
                 withAnimation(Animation.easeInOut(duration: 0.2)) {
-                        searchingNotAnimated = isEditing
+                        searchingNotAnimated = true
                     }
                 })
                 .textFieldStyle(.roundedBorder)
