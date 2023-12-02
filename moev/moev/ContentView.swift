@@ -27,6 +27,7 @@ struct ContentView: View {
     @State private var selection: UUID?
     
     @State public var searching: Bool
+    @State public var searchingNotAnimated: Bool
     
     @StateObject var locationManager = LocationManager()
         
@@ -65,7 +66,8 @@ struct ContentView: View {
                     .frame(height: geometry.size.height / 2)
                     
                     VStack {
-                        Text("test")
+                        Text("")
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                         Spacer()
                     }
                 }
@@ -75,13 +77,15 @@ struct ContentView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
                 .background(Color.purple)
-                .frame(width: searching ? geometry.size.width : 0,
-                       height: searching ? geometry.size.height : 0)
+                .frame(width: geometry.size.width,
+                       height: searching ? geometry.size.height + 30 : 0)
+                .offset(CGSize(width: 0.0, height: -30))
+                .opacity(searchingNotAnimated ? 1 : 0)
                 
                 HStack {
                     VStack {
                         ForEach($annotations) { $a in
-                            TextDisplay(annotation: $a, searching: $searching, getDirections: getDirections)
+                            TextDisplay(annotation: $a, searching: $searching, searchingNotAnimated: $searchingNotAnimated, getDirections: getDirections)
                         }
                         
                         Spacer()
@@ -149,11 +153,12 @@ struct ContentView: View {
         polylines.append(UIPolyline(id: id, polyline: newPolyline))
     }
     
+    
     func emptyPolyline() -> MKPolyline {
         return MKPolyline(coordinates: [], count: 0)
     }
 }
 
 #Preview {
-    ContentView(searching: false)
+    ContentView(searching: false, searchingNotAnimated: false)
 }

@@ -11,7 +11,7 @@ import SwiftUI
 struct moevApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView(searching: false)
+            ContentView(searching: false, searchingNotAnimated: false)
         }
     }
 }
