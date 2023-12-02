@@ -55,26 +55,8 @@ struct ContentView: View {
         GeometryReader { geometry in
             ZStack {
                 VStack {
-                    Map {
-                        ForEach(annotations.filter { i in i.location != nil }) { a in
-                            Marker(coordinate: a.location!) {
-                                Image(systemName: "mappin")
-                            }
-                        }
-                        
-                        ForEach(polylines) { p in
-                            MapPolyline(p.polyline)
-                                .stroke(.blue, lineWidth: 2.0)
-                        }
-                        
-                        UserAnnotation()
-                    }
-                    .mapControls {
-                        MapUserLocationButton()
-                        MapCompass()
-                        MapScaleView()
-                    }
-                    .frame(height: geometry.size.height / 2)
+                    map(geometry)
+                        .frame(height: geometry.size.height / 2)
                     
                     VStack {
                         Text("")
@@ -93,21 +75,8 @@ struct ContentView: View {
                 .offset(CGSize(width: 0.0, height: -30))
                 .opacity(searchingFastAnimated ? 1 : 0)
                 
-//                HStack {
                 VStack {
-                    List(possibilities) { place in
-                        HStack {
-                            Image(systemName: "mappin.and.ellipse")
-                            VStack(alignment: .leading) {
-                                Text(place.main_text)
-                                    .font(.system(size: 22))
-                                Text(place.secondary_text)
-                                    .font(.system(size: 12))
-                            }
-                        }
-                        .listRowBackground(Color.white)
-                    }
-                    .scrollContentBackground(.hidden)
+                    possibilitiesList()
                     .offset(CGSize(width: 0.0, height: 50))
                 }
                 .background(.white)
@@ -115,27 +84,14 @@ struct ContentView: View {
                 .offset(CGSize(width: 0.0, height: searchingSlowAnimated ? 0 : geometry.size.height))
                 .frame(height: geometry.size.height - 30)
                 .opacity(searchingSlowAnimated ? 1 : 0)
-//                .zIndex(-1)
-                    VStack {
-                        ForEach($annotations) { $a in
-                            TextDisplay(annotation: $a, searching: $searching, searchingFastAnimated: $searchingFastAnimated, searchingSlowAnimated: $searchingSlowAnimated, possibilities: $possibilities, getDirections: getDirections)
-                        }
-                        .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
-                        .zIndex(2)
-                        
-                        Spacer()
-                    }
+                
+                VStack {
+                    searchBars()
+                    .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
+                    .zIndex(2)
                     
-//                    VStack {
-//                        Button(action: {
-//                            annotations.append(Annotation(id: annotations.count, name: ""))
-//                        }, label: {
-//                            Image(systemName: "plus.app")
-//                        })
-//                        
-//                        Spacer()
-//                    }
-//                }
+                    Spacer()
+                }
                 .offset(CGSize(width: 0.0, height: searching ? 0 : geometry.size.height / 2 - 50))
             }
         }
@@ -194,6 +150,55 @@ struct ContentView: View {
     
     func addMarker(p: Place) {
         
+    }
+    
+    func map(_ geometry: GeometryProxy) -> some View {
+        return Map {
+            ForEach(annotations.filter { i in i.location != nil }) { a in
+                Marker(coordinate: a.location!) {
+                    Image(systemName: "mappin")
+                }
+            }
+            
+            ForEach(polylines) { p in
+                MapPolyline(p.polyline)
+                    .stroke(.blue, lineWidth: 2.0)
+            }
+            
+            UserAnnotation()
+        }
+        .mapControls {
+            MapUserLocationButton()
+            MapCompass()
+            MapScaleView()
+        }
+    }
+    
+    func possibilitiesList() -> some View {
+        return List(possibilities) { place in
+            HStack {
+                Image(systemName: "mappin.and.ellipse")
+                VStack(alignment: .leading) {
+                    Text(place.main_text)
+                        .font(.system(size: 22))
+                    Text(place.secondary_text)
+                        .font(.system(size: 12))
+                }
+            }
+            .listRowBackground(Color.white)
+        }
+        .scrollContentBackground(.hidden)
+    }
+    
+    func searchBars() -> some View {
+        return ForEach($annotations) { $a in
+            TextDisplay(annotation: $a, 
+                        searching: $searching,
+                        searchingFastAnimated: $searchingFastAnimated,
+                        searchingSlowAnimated: $searchingSlowAnimated,
+                        possibilities: $possibilities,
+                        getDirections: getDirections)
+        }
     }
 }
 
