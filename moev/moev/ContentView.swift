@@ -58,14 +58,13 @@ struct ContentView: View {
                     map(geometry)
                         .frame(height: geometry.size.height / 2)
                     
-                    VStack {
+                    VStack { // to fill the remaining space (will eventually hold favorites / last searches)
                         Text("")
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        Spacer()
                     }
                 }
                 
-                VStack {
+                VStack { // purple background that sweeps up
                     Text("")
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
@@ -75,7 +74,7 @@ struct ContentView: View {
                 .offset(CGSize(width: 0.0, height: -30))
                 .opacity(searchingFastAnimated ? 1 : 0)
                 
-                VStack {
+                VStack { // list background that sweeps up after
                     possibilitiesList()
                     .offset(CGSize(width: 0.0, height: 50))
                 }
@@ -88,7 +87,6 @@ struct ContentView: View {
                 VStack {
                     searchBars()
                     .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
-                    .zIndex(2)
                     
                     Spacer()
                 }

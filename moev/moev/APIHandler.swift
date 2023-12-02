@@ -31,8 +31,8 @@ struct AutocompleteStructuredFormatting {
     public let secondary_text: String
     
     init(json: [String: Any]) {
-        main_text = json["main_text"] as! String
-        secondary_text = json["secondary_text"] as! String
+        main_text = json["main_text"] as? String ?? ""
+        secondary_text = json["secondary_text"] as? String ?? ""
     }
 }
 
@@ -43,8 +43,8 @@ struct AutocompleteResult {
     // todo types? matches?
     
     init(json: [String: Any]) {
-        description = json["description"] as! String
-        place_id = json["place_id"] as! String
+        description = json["description"] as? String ?? ""
+        place_id = json["place_id"] as? String ?? ""
         structured_formatting = AutocompleteStructuredFormatting(json: json["structured_formatting"] as! [String: Any])
     }
 }
