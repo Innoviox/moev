@@ -40,46 +40,50 @@ struct ContentView: View {
     var body: some View {
         VStack {
             ZStack {
-                Map {
-                    ForEach(annotations.filter { i in i.location != nil }) { a in
-                        Marker(coordinate: a.location!) {
-                            Image(systemName: "mappin")
+                GeometryReader { geometry in
+                    Map {
+                        ForEach(annotations.filter { i in i.location != nil }) { a in
+                            Marker(coordinate: a.location!) {
+                                Image(systemName: "mappin")
+                            }
                         }
+                        
+                        ForEach(polylines) { p in
+                            MapPolyline(p.polyline)
+                                .stroke(.blue, lineWidth: 2.0)
+                        }
+                        
+                        UserAnnotation()
                     }
-                    
-                    ForEach(polylines) { p in
-                        MapPolyline(p.polyline)
-                            .stroke(.blue, lineWidth: 2.0)
+                    .mapControls {
+                        MapUserLocationButton()
+                        MapCompass()
+                        MapScaleView()
                     }
-                    
-                    UserAnnotation()
-                }
-                .mapControls {
-                    MapUserLocationButton()
-                    MapCompass()
-                    MapScaleView()
-                }
+                    .frame(height: geometry.size.height / 2)
                 
-                HStack {
-                    VStack {
-                        ForEach($annotations) { $a in
-                            TextDisplay(annotation: $a, getDirections: getDirections)
+                    HStack {
+                        VStack {
+                            ForEach($annotations) { $a in
+                                TextDisplay(annotation: $a, getDirections: getDirections)
+                            }
+                            
+                            Spacer()
                         }
                         
-                        Spacer()
+                        VStack {
+                            Button(action: {
+                                annotations.append(Annotation(id: annotations.count, name: ""))
+                            }, label: {
+                                Image(systemName: "plus.app")
+                            })
+                            
+                            Spacer()
+                        }
                     }
-                    
-                    VStack {
-                        Button(action: {
-                            annotations.append(Annotation(id: annotations.count, name: ""))
-                        }, label: {
-                            Image(systemName: "plus.app")
-                        })
-                        
-                        Spacer()
-                    }
+                    .offset(CGSize(width: 0.0, height: geometry.size.height / 2 - 50))
+                    .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
                 }
-                .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
             }
         }
     }
