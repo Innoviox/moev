@@ -8,26 +8,32 @@
 import SwiftUI
 import MapKit
 
-struct Place: Identifiable {
-    var id = UUID()
-    
-    var name: String
-    var placeID: String
-}
-
-
 struct TextDisplay: View {
     @Binding public var annotation: Annotation
-    @State private var possibilities: [Place] = []
+    @Binding public var searching: Bool
+    @Binding public var searchingFastAnimated: Bool
+    @Binding public var searchingSlowAnimated: Bool
+    @Binding public var possibilities: [Place]
     
-    public var placeHolder: String = "Next location..."
-    public var getDirections: () -> Void
+    public var getDirections: (Int) -> Void
     
     @State private var justChanged: Bool = false
     
     var body: some View {
         VStack {
-            TextField(placeHolder, text: $annotation.name)
+            TextField(annotation.placeHolder, text: $annotation.name, onEditingChanged: { isEditing in
+                withAnimation(Animation.easeInOut(duration: 0.5)) {
+                        searching = true
+                    }
+                
+                withAnimation(Animation.easeInOut(duration: 0.2)) {
+                        searchingFastAnimated = true
+                    }
+                
+                withAnimation(Animation.easeInOut(duration: 0.5).delay(0.3)) {
+                    searchingSlowAnimated = true
+                }
+                })
                 .textFieldStyle(.roundedBorder)
                 .onChange(of: annotation.name) { o, n in
                     if justChanged {
@@ -35,26 +41,6 @@ struct TextDisplay: View {
                     } else {
                         updatePossibilities()
                     }
-                }
-                .overlay(alignment: .topLeading) {
-                    VStack {
-                        ForEach(possibilities) { place in
-                            HStack {
-                                Text(place.name)
-                                    .frame(maxWidth: .infinity)
-                                    .border(.black)
-                                    .background(.white)
-                                    .lineLimit(1)
-                                    .onTapGesture {
-                                        addMarker(p: place)
-                                        possibilities.removeAll()
-                                    }
-                                
-                                Spacer()
-                            }
-                        }
-                    }
-                    .offset(x: 0, y: 34)
                 }
         }
         .zIndex(Double(possibilities.count))
@@ -68,7 +54,7 @@ struct TextDisplay: View {
             }
             
             possibilities = places.predictions.map { place in
-                return Place(name: place.description, placeID: place.place_id)
+                return Place(main_text: place.structured_formatting.main_text, secondary_text: place.structured_formatting.secondary_text, placeID: place.place_id)
             }
         }
     }
@@ -90,7 +76,7 @@ struct TextDisplay: View {
             
             justChanged = true
             
-            getDirections()
+            getDirections(annotation.id)
         }
     }
 }
