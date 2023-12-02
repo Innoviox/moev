@@ -40,54 +40,65 @@ struct ContentView: View {
     @State private var region = MKMapRect()
 
     var body: some View {
-        NavigationStack {
-            VStack {
-                GeometryReader { geometry in
-                    ZStack {
-                        Map {
-                            ForEach(annotations.filter { i in i.location != nil }) { a in
-                                Marker(coordinate: a.location!) {
-                                    Image(systemName: "mappin")
-                                }
+        GeometryReader { geometry in
+            ZStack {
+                VStack {
+                    Map {
+                        ForEach(annotations.filter { i in i.location != nil }) { a in
+                            Marker(coordinate: a.location!) {
+                                Image(systemName: "mappin")
                             }
-                            
-                            ForEach(polylines) { p in
-                                MapPolyline(p.polyline)
-                                    .stroke(.blue, lineWidth: 2.0)
-                            }
-                            
-                            UserAnnotation()
                         }
-                        .mapControls {
-                            MapUserLocationButton()
-                            MapCompass()
-                            MapScaleView()
-                        }
-                        .frame(height: geometry.size.height / 2)
                         
-                        HStack {
-                            VStack {
-                                ForEach($annotations) { $a in
-                                    TextDisplay(annotation: $a, searching: $searching, getDirections: getDirections)
-                                }
-                                
-                                Spacer()
-                            }
-                            
-                            VStack {
-                                Button(action: {
-                                    annotations.append(Annotation(id: annotations.count, name: ""))
-                                }, label: {
-                                    Image(systemName: "plus.app")
-                                })
-                                
-                                Spacer()
-                            }
+                        ForEach(polylines) { p in
+                            MapPolyline(p.polyline)
+                                .stroke(.blue, lineWidth: 2.0)
                         }
-                        .offset(CGSize(width: 0.0, height: searching ? 0 : geometry.size.height / 2 - 50))
-                        .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
+                        
+                        UserAnnotation()
+                    }
+                    .mapControls {
+                        MapUserLocationButton()
+                        MapCompass()
+                        MapScaleView()
+                    }
+                    .frame(height: geometry.size.height / 2)
+                    
+                    VStack {
+                        Text("test")
+                        Spacer()
                     }
                 }
+                
+                VStack {
+                    Text("")
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+                .background(Color.purple)
+                .frame(width: searching ? geometry.size.width : 0,
+                       height: searching ? geometry.size.height : 0)
+                
+                HStack {
+                    VStack {
+                        ForEach($annotations) { $a in
+                            TextDisplay(annotation: $a, searching: $searching, getDirections: getDirections)
+                        }
+                        
+                        Spacer()
+                    }
+                    
+                    VStack {
+                        Button(action: {
+                            annotations.append(Annotation(id: annotations.count, name: ""))
+                        }, label: {
+                            Image(systemName: "plus.app")
+                        })
+                        
+                        Spacer()
+                    }
+                }
+                .offset(CGSize(width: 0.0, height: searching ? 0 : geometry.size.height / 2 - 50))
+                .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
             }
         }
     }
