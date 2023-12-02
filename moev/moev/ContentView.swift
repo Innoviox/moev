@@ -50,6 +50,8 @@ struct ContentView: View {
     @State private var polylines: [UIPolyline] = []
     
     @State private var region = MKMapRect()
+    
+    private let listBackgroundColor = Color(hex: "fcba03")
 
     var body: some View {
         GeometryReader { geometry in
@@ -78,7 +80,7 @@ struct ContentView: View {
                     possibilitiesList()
                     .offset(CGSize(width: 0.0, height: 50))
                 }
-                .background(.white)
+                .background(listBackgroundColor)
                 .edgesIgnoringSafeArea(.all)
                 .offset(CGSize(width: 0.0, height: searchingSlowAnimated ? 0 : geometry.size.height))
                 .frame(height: geometry.size.height - 30)
@@ -183,7 +185,7 @@ struct ContentView: View {
                         .font(.system(size: 12))
                 }
             }
-            .listRowBackground(Color.white)
+            .listRowBackground(listBackgroundColor)
         }
         .scrollContentBackground(.hidden)
     }
