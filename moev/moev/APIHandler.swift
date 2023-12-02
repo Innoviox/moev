@@ -26,14 +26,26 @@ struct NearbyPlacesBody: Encodable {
 
 struct Empty: Encodable {}
 
+struct AutocompleteStructuredFormatting {
+    public let main_text: String
+    public let secondary_text: String
+    
+    init(json: [String: Any]) {
+        main_text = json["main_text"] as! String
+        secondary_text = json["secondary_text"] as! String
+    }
+}
+
 struct AutocompleteResult {
     public let description: String
     public let place_id: String
+    public let structured_formatting: AutocompleteStructuredFormatting
     // todo types? matches?
     
     init(json: [String: Any]) {
         description = json["description"] as! String
         place_id = json["place_id"] as! String
+        structured_formatting = AutocompleteStructuredFormatting(json: json["structured_formatting"] as! [String: Any])
     }
 }
 

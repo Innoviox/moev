@@ -8,19 +8,11 @@
 import SwiftUI
 import MapKit
 
-struct Place: Identifiable {
-    var id = UUID()
-    
-    var name: String
-    var placeID: String
-}
-
-
 struct TextDisplay: View {
     @Binding public var annotation: Annotation
     @Binding public var searching: Bool
     @Binding public var searchingNotAnimated: Bool
-    @State private var possibilities: [Place] = []
+    @Binding public var possibilities: [Place]
     
     public var getDirections: (Int) -> Void
     
@@ -45,26 +37,6 @@ struct TextDisplay: View {
                         updatePossibilities()
                     }
                 }
-                .overlay(alignment: .topLeading) {
-                    VStack {
-                        ForEach(possibilities) { place in
-                            HStack {
-                                Text(place.name)
-                                    .frame(maxWidth: .infinity)
-                                    .border(.black)
-                                    .background(.white)
-                                    .lineLimit(1)
-                                    .onTapGesture {
-                                        addMarker(p: place)
-                                        possibilities.removeAll()
-                                    }
-                                
-                                Spacer()
-                            }
-                        }
-                    }
-                    .offset(x: 0, y: 34)
-                }
         }
         .zIndex(Double(possibilities.count))
     }
@@ -77,7 +49,7 @@ struct TextDisplay: View {
             }
             
             possibilities = places.predictions.map { place in
-                return Place(name: place.description, placeID: place.place_id)
+                return Place(main_text: place.structured_formatting.main_text, secondary_text: place.structured_formatting.secondary_text, placeID: place.place_id)
             }
         }
     }

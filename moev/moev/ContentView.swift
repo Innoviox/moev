@@ -23,6 +23,14 @@ struct UIPolyline: Identifiable {
     var polyline: MKPolyline
 }
 
+struct Place: Identifiable {
+    var id = UUID()
+    
+    var main_text: String
+    var secondary_text: String
+    var placeID: String
+}
+
 struct ContentView: View {
     @State private var selection: UUID?
     
@@ -30,6 +38,8 @@ struct ContentView: View {
     @State public var searchingNotAnimated: Bool
     
     @StateObject var locationManager = LocationManager()
+    
+    @State private var possibilities: [Place] = []
         
     @State private var annotations: [Annotation] = [
         Annotation(id: 0, name: "", placeHolder: "Current location"),
@@ -85,7 +95,27 @@ struct ContentView: View {
                 HStack {
                     VStack {
                         ForEach($annotations) { $a in
-                            TextDisplay(annotation: $a, searching: $searching, searchingNotAnimated: $searchingNotAnimated, getDirections: getDirections)
+                            TextDisplay(annotation: $a, searching: $searching, searchingNotAnimated: $searchingNotAnimated, possibilities: $possibilities, getDirections: getDirections)
+                        }
+                        
+                        ForEach(possibilities) { place in
+                            HStack {
+                                Image(systemName: "location.magnifyingglass")
+                                VStack {
+                                    Text(place.main_text)
+                                        .font(.system(size: 22))
+                                    Text(place.secondary_text)
+                                        .font(.system(size: 12))
+                                }
+                            }
+//                                .frame(maxWidth: .infinity)
+//                                .border(.black)
+//                                .background(.white)
+//                                .lineLimit(1)
+//                                .onTapGesture {
+//                                    addMarker(p: place)
+//                                    possibilities.removeAll()
+//                                }
                         }
                         
                         Spacer()
@@ -156,6 +186,10 @@ struct ContentView: View {
     
     func emptyPolyline() -> MKPolyline {
         return MKPolyline(coordinates: [], count: 0)
+    }
+    
+    func addMarker(p: Place) {
+        
     }
 }
 
