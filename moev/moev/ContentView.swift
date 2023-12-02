@@ -94,25 +94,23 @@ struct ContentView: View {
                 .opacity(searchingFastAnimated ? 1 : 0)
                 
 //                HStack {
-                List(possibilities) { place in
-                    HStack {
-                        Image(systemName: "mappin.and.ellipse")
-                        VStack(alignment: .leading) {
-                            Text(place.main_text)
-                                .font(.system(size: 22))
-                            Text(place.secondary_text)
-                                .font(.system(size: 12))
+                VStack {
+                    List(possibilities) { place in
+                        HStack {
+                            Image(systemName: "mappin.and.ellipse")
+                            VStack(alignment: .leading) {
+                                Text(place.main_text)
+                                    .font(.system(size: 22))
+                                Text(place.secondary_text)
+                                    .font(.system(size: 12))
+                            }
                         }
+                        .listRowBackground(Color.white)
                     }
-                    .listRowBackground(Color.white)
-                    
-//                                .onTapGesture {
-//                                    addMarker(p: place)
-//                                    possibilities.removeAll()
-//                                }
+                    .scrollContentBackground(.hidden)
+                    .offset(CGSize(width: 0.0, height: 50))
                 }
                 .background(.white)
-                .scrollContentBackground(.hidden)
                 .edgesIgnoringSafeArea(.all)
                 .offset(CGSize(width: 0.0, height: searchingSlowAnimated ? 0 : geometry.size.height))
                 .frame(height: geometry.size.height - 30)
