@@ -18,6 +18,7 @@ struct Place: Identifiable {
 
 struct TextDisplay: View {
     @Binding public var annotation: Annotation
+    @Binding public var searching: Bool
     @State private var possibilities: [Place] = []
     
     public var getDirections: (Int) -> Void
@@ -26,7 +27,11 @@ struct TextDisplay: View {
     
     var body: some View {
         VStack {
-            TextField(annotation.placeHolder, text: $annotation.name)
+            TextField(annotation.placeHolder, text: $annotation.name, onEditingChanged: { isEditing in
+                    withAnimation {
+                        searching = isEditing
+                    }
+                })
                 .textFieldStyle(.roundedBorder)
                 .onChange(of: annotation.name) { o, n in
                     if justChanged {

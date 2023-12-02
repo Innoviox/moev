@@ -15,6 +15,7 @@
 		20400EC52B145A6E00CA7D7A /* moevTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20400EC42B145A6E00CA7D7A /* moevTests.swift */; };
 		20400ECF2B145A6E00CA7D7A /* moevUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20400ECE2B145A6E00CA7D7A /* moevUITests.swift */; };
 		20400ED12B145A6E00CA7D7A /* moevUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20400ED02B145A6E00CA7D7A /* moevUITestsLaunchTests.swift */; };
+		20F2F9772B1AE48100DBEAAB /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F2F9762B1AE48100DBEAAB /* MapView.swift */; };
 		20F70B252B1679F100B363FA /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F70B242B1679F100B363FA /* LocationManager.swift */; };
 		20F70B272B16AB8B00B363FA /* TextDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F70B262B16AB8B00B363FA /* TextDisplay.swift */; };
 /* End PBXBuildFile section */
@@ -52,6 +53,7 @@
 		20AFC92F2B14ED7700F5B3CC /* API_KEY.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = API_KEY.xcconfig; sourceTree = "<group>"; };
 		20E272432B1791BE00534C2F /* moev.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = moev.xctestplan; sourceTree = "<group>"; };
 		20E272442B1792AA00534C2F /* test.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = test.gpx; path = ../test.gpx; sourceTree = "<group>"; };
+		20F2F9762B1AE48100DBEAAB /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		20F70B242B1679F100B363FA /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		20F70B262B16AB8B00B363FA /* TextDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDisplay.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -115,6 +117,7 @@
 				20202B302B14F0DD007CC8AA /* APIHandler.swift */,
 				20F70B242B1679F100B363FA /* LocationManager.swift */,
 				20F70B262B16AB8B00B363FA /* TextDisplay.swift */,
+				20F2F9762B1AE48100DBEAAB /* MapView.swift */,
 			);
 			path = moev;
 			sourceTree = "<group>";
@@ -275,6 +278,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				20F70B252B1679F100B363FA /* LocationManager.swift in Sources */,
+				20F2F9772B1AE48100DBEAAB /* MapView.swift in Sources */,
 				20202B312B14F0DD007CC8AA /* APIHandler.swift in Sources */,
 				20400EB62B145A6D00CA7D7A /* ContentView.swift in Sources */,
 				20F70B272B16AB8B00B363FA /* TextDisplay.swift in Sources */,
