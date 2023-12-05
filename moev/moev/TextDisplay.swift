@@ -42,6 +42,7 @@ struct TextDisplay: View {
                         updatePossibilities()
                     }
                 }
+                .background(UIColor.Theme.searchColor)
         }
         .zIndex(Double(possibilities.count))
     }

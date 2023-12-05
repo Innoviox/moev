@@ -50,8 +50,6 @@ struct ContentView: View {
     @State private var polylines: [UIPolyline] = []
     
     @State private var region = MKMapRect()
-    
-    private let listBackgroundColor = Color(hex: "ebf3fc")
 
     var body: some View {
         GeometryReader { geometry in
@@ -70,7 +68,7 @@ struct ContentView: View {
                     Text("")
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                .background(Color.purple)
+                .background(UIColor.Theme.searchColor)
                 .frame(width: geometry.size.width,
                        height: searching ? geometry.size.height + 30 : 0)
                 .offset(CGSize(width: 0.0, height: -30))
@@ -80,7 +78,7 @@ struct ContentView: View {
                     possibilitiesList()
                     .offset(CGSize(width: 0.0, height: 75))
                 }
-                .background(listBackgroundColor)
+                .background(UIColor.Theme.listBackgroundColor)
                 .edgesIgnoringSafeArea(.all)
                 .offset(CGSize(width: 0.0, height: searchingSlowAnimated ? 0 : geometry.size.height))
                 .frame(height: geometry.size.height - 30)
@@ -190,21 +188,27 @@ struct ContentView: View {
                         .lineLimit(1)
                 }
             }
-            .listRowBackground(listBackgroundColor)
+            .listRowBackground(UIColor.Theme.listBackgroundColor)
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
     }
     
     func searchBars() -> some View {
-        return ForEach($annotations) { $a in
-            TextDisplay(annotation: $a, 
-                        searching: $searching,
-                        searchingFastAnimated: $searchingFastAnimated,
-                        searchingSlowAnimated: $searchingSlowAnimated,
-                        possibilities: $possibilities,
-                        getDirections: getDirections)
-        }
+//        return ForEach($annotations) { $a in
+//            TextDisplay(annotation: $a, 
+//                        searching: $searching,
+//                        searchingFastAnimated: $searchingFastAnimated,
+//                        searchingSlowAnimated: $searchingSlowAnimated,
+//                        possibilities: $possibilities,
+//                        getDirections: getDirections)
+//        }
+        return TextDisplay(annotation: $annotations[1],
+                           searching: $searching,
+                           searchingFastAnimated: $searchingFastAnimated,
+                           searchingSlowAnimated: $searchingSlowAnimated,
+                           possibilities: $possibilities,
+                           getDirections: getDirections)
     }
 }
 
