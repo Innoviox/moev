@@ -76,7 +76,7 @@ struct ContentView: View {
                 
                 VStack { // list background that sweeps up after
                     possibilitiesList()
-                    .offset(CGSize(width: 0.0, height: 75))
+                    .offset(CGSize(width: 0.0, height: 0))
                 }
                 .background(UIColor.Theme.listBackgroundColor)
                 .edgesIgnoringSafeArea(.all)
