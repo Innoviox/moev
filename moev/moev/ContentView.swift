@@ -51,7 +51,7 @@ struct ContentView: View {
     
     @State private var region = MKMapRect()
     
-    private let listBackgroundColor = Color(hex: "fcba03")
+    private let listBackgroundColor = Color(hex: "ebf3fc")
 
     var body: some View {
         GeometryReader { geometry in
@@ -78,7 +78,7 @@ struct ContentView: View {
                 
                 VStack { // list background that sweeps up after
                     possibilitiesList()
-                    .offset(CGSize(width: 0.0, height: 50))
+                    .offset(CGSize(width: 0.0, height: 75))
                 }
                 .background(listBackgroundColor)
                 .edgesIgnoringSafeArea(.all)
@@ -180,13 +180,16 @@ struct ContentView: View {
                 Image(systemName: "mappin.and.ellipse")
                 VStack(alignment: .leading) {
                     Text(place.main_text)
-                        .font(.system(size: 22))
+                        .font(.system(size: 17))
+                        .lineLimit(1)
                     Text(place.secondary_text)
-                        .font(.system(size: 12))
+                        .font(.system(size: 10))
+                        .lineLimit(1)
                 }
             }
             .listRowBackground(listBackgroundColor)
         }
+        .listStyle(.plain)
         .scrollContentBackground(.hidden)
     }
     
