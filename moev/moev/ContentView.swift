@@ -32,6 +32,12 @@ struct Place: Identifiable {
     var placeID: String
 }
 
+struct UIRoute: Identifiable {
+    var id: Int
+    
+    var route: DirectionsResults
+}
+
 struct ContentView: View {
     @State private var selection: UUID?
     
@@ -56,6 +62,8 @@ struct ContentView: View {
     
     @State public var loadingResults: Bool = false
     @State public var showingResults: Bool = false
+    
+    @State private var routes: [UIRoute] = []
 
     var body: some View {
         GeometryReader { geometry in
@@ -85,11 +93,12 @@ struct ContentView: View {
                     .offset(CGSize(width: 0.0, height: 5))
                     .opacity(searchingSlowAnimated && !(loadingResults || showingResults) ? 1 : 0)
                     
-                    VStack {
-                        ActivityIndicator(isAnimating: .constant(true), style: .large)
-                    }
-                    .offset(CGSize(width: 0.0, height: -geometry.size.height / 2))
+                    ActivityIndicator(isAnimating: .constant(true), style: .large)
+//                    .offset(CGSize(width: 0.0, height: -geometry.size.height / 2))
                     .opacity(loadingResults ? 1 : 0)
+                    
+                    routesList()
+                    .opacity(showingResults ? 1 : 0)
                 }
                 .background(UIColor.Theme.listBackgroundColor)
                 .edgesIgnoringSafeArea(.all)
@@ -127,7 +136,7 @@ struct ContentView: View {
             return // todo
         }
         
-        updatePolylines(withID: id1, newPolyline: emptyPolyline())
+//        updatePolylines(withID: id1, newPolyline: emptyPolyline())
         
         APIHandler.shared.directions(origin: o, destination: d) { results, error in
             guard let route = results else {
@@ -135,10 +144,14 @@ struct ContentView: View {
                 return
             }
             
-            let polyline = route.polyline.decode()
-            updatePolylines(withID: id1, newPolyline: polyline)
+            print("GOT ROUTE", route)
+            
+//            let polyline = route.polyline.decode()
+//            updatePolylines(withID: id1, newPolyline: polyline)
+            updateRoutes(withID: id1, newRoute: route)
             
             withAnimation(Animation.easeInOut(duration: 0.5)) {
+                loadingResults = false
                 showingResults = true
             }
         }
@@ -150,6 +163,16 @@ struct ContentView: View {
             coord = locationManager.lastLocation?.coordinate
         }
         return coord?.toWaypoint()
+    }
+    
+    func updateRoutes(withID id: Int, newRoute: DirectionsResults) {
+        for i in routes.indices {
+            if routes[i].id == id {
+                routes[i].route = newRoute
+                return
+            }
+        }
+        routes.append(UIRoute(id: id, route: newRoute))
     }
     
     func updatePolylines(withID id: Int, newPolyline: MKPolyline) {
@@ -211,6 +234,15 @@ struct ContentView: View {
         .scrollContentBackground(.hidden)
     }
     
+    func routesList() -> some View {
+        return List(routes) { route in
+            HStack {
+                Text(route.route.duration)
+                Text(String(route.route.distanceMeters))
+            }
+        }
+    }
+    
     func addMarker(p: Place) {
         APIHandler.shared.get_info(place_id: p.placeID) { data, error in
             guard let d = data else {
@@ -233,6 +265,7 @@ struct ContentView: View {
     }
     
     func searchBars() -> some View {
+        // todo expand or something
 //        return ForEach($annotations) { $a in
 //            TextDisplay(annotation: $a, 
 //                        searching: $searching,
