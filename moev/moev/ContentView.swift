@@ -86,12 +86,9 @@ struct ContentView: View {
                 
                 VStack {
                     searchBars()
-//                    .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
-//                        .offset(CGSize(width: 0.0, height: 25))
-                    
                     Spacer()
                 }
-                .offset(CGSize(width: 0.0, height: searching ? 0 : geometry.size.height / 2 - 20))
+                .offset(CGSize(width: 10.0, height: searching ? 0 : geometry.size.height / 2 - 20))
             }
         }
     }

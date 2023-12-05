@@ -45,11 +45,15 @@ struct TextDisplay: View {
                         updatePossibilities()
                     }
                 }
-                //                .textFieldStyle(.roundedBorder)
                 .frame(width: 2 * geometry.size.width / 3)
                 .padding(10)
                 .border(UIColor.Theme.searchColor, width: 10)
                 .background(UIColor.Theme.searchColor)
+                // todo shadow
+//                .shadow(
+//                    color: .primary,
+//                    radius: CGFloat(5),
+//                    x: CGFloat(0), y: CGFloat(0))
             }
             .zIndex(Double(possibilities.count))
         }
