@@ -14,11 +14,10 @@ struct TextDisplay: View {
     @Binding public var searchingFastAnimated: Bool
     @Binding public var searchingSlowAnimated: Bool
     @Binding public var possibilities: [Place]
+    @Binding public var searchingIdx: Int
     
     public var getDirections: (Int) -> Void
-    
-    @State private var justChanged: Bool = false
-    
+        
     var body: some View {
         GeometryReader { geometry in
             HStack {
@@ -37,10 +36,12 @@ struct TextDisplay: View {
                     withAnimation(Animation.easeInOut(duration: 0.5).delay(0.3)) {
                         searchingSlowAnimated = true
                     }
+                    
+                    searchingIdx = annotation.id
                 })
                 .onChange(of: annotation.name) { o, n in
-                    if justChanged {
-                        justChanged = false
+                    if annotation.justChanged {
+                        annotation.justChanged = false
                     } else {
                         updatePossibilities()
                     }
@@ -69,27 +70,6 @@ struct TextDisplay: View {
             possibilities = places.predictions.map { place in
                 return Place(main_text: place.structured_formatting.main_text, secondary_text: place.structured_formatting.secondary_text, placeID: place.place_id)
             }
-        }
-    }
-    
-    func addMarker(p: Place) {
-        APIHandler.shared.get_info(place_id: p.placeID) { data, error in
-            guard let d = data else {
-                print(error)
-                return
-            }
-
-            let geom = d.result.geometry.location
-            let location = CLLocationCoordinate2D(latitude: geom.lat,
-                                                  longitude: geom.lng)
-            
-            annotation.name = d.result.name
-            annotation.location = location
-            annotation.placeID = p.placeID
-            
-            justChanged = true
-            
-            getDirections(annotation.id)
         }
     }
 }

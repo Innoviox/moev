@@ -15,6 +15,7 @@ struct Annotation: Identifiable {
     var name: String
     var placeID: String = ""
     var placeHolder: String = "Next location..."
+    var justChanged: Bool = false
 }
 
 struct UIPolyline: Identifiable {
@@ -50,6 +51,8 @@ struct ContentView: View {
     @State private var polylines: [UIPolyline] = []
     
     @State private var region = MKMapRect()
+    
+    @State private var searchingIdx = 0
 
     var body: some View {
         GeometryReader { geometry in
@@ -147,10 +150,6 @@ struct ContentView: View {
         return MKPolyline(coordinates: [], count: 0)
     }
     
-    func addMarker(p: Place) {
-        
-    }
-    
     func map(_ geometry: GeometryProxy) -> some View {
         return Map {
             ForEach(annotations.filter { i in i.location != nil }) { a in
@@ -174,7 +173,7 @@ struct ContentView: View {
     }
     
     func possibilitiesList() -> some View {
-        return List(possibilities) { place in
+        return List(possibilities, selection: $selection) { place in
             HStack {
                 Image(systemName: "mappin.and.ellipse")
                 VStack(alignment: .leading) {
@@ -187,9 +186,33 @@ struct ContentView: View {
                 }
             }
             .listRowBackground(UIColor.Theme.listBackgroundColor)
+            .onTapGesture {
+                addMarker(p: place)
+            }
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
+    }
+    
+    func addMarker(p: Place) {
+        APIHandler.shared.get_info(place_id: p.placeID) { data, error in
+            guard let d = data else {
+                print(error)
+                return
+            }
+
+            let geom = d.result.geometry.location
+            let location = CLLocationCoordinate2D(latitude: geom.lat,
+                                                  longitude: geom.lng)
+            
+            annotations[searchingIdx].name = d.result.name
+            annotations[searchingIdx].location = location
+            annotations[searchingIdx].placeID = p.placeID
+            
+            annotations[searchingIdx].justChanged = true
+            
+//            getDirections(senderID: searchingIdx)
+        }
     }
     
     func searchBars() -> some View {
@@ -207,6 +230,7 @@ struct ContentView: View {
                         searchingFastAnimated: $searchingFastAnimated,
                         searchingSlowAnimated: $searchingSlowAnimated,
                         possibilities: $possibilities,
+                        searchingIdx: $searchingIdx,
                         getDirections: getDirections)
         }
     }
