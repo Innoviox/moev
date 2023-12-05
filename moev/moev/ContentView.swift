@@ -53,6 +53,9 @@ struct ContentView: View {
     @State private var region = MKMapRect()
     
     @State private var searchingIdx = 0
+    
+    @State public var loadingResults: Bool = false
+    @State public var showingResults: Bool = false
 
     var body: some View {
         GeometryReader { geometry in
@@ -80,12 +83,18 @@ struct ContentView: View {
                 VStack { // list background that sweeps up after
                     possibilitiesList()
                     .offset(CGSize(width: 0.0, height: 5))
+                    .opacity(searchingSlowAnimated && !(loadingResults || showingResults) ? 1 : 0)
+                    
+                    VStack {
+                        ActivityIndicator(isAnimating: .constant(true), style: .large)
+                    }
+                    .offset(CGSize(width: 0.0, height: -geometry.size.height / 2))
+                    .opacity(loadingResults ? 1 : 0)
                 }
                 .background(UIColor.Theme.listBackgroundColor)
                 .edgesIgnoringSafeArea(.all)
                 .offset(CGSize(width: 0.0, height: searchingSlowAnimated ? 0 : geometry.size.height))
                 .frame(height: geometry.size.height - 30)
-                .opacity(searchingSlowAnimated ? 1 : 0)
                 
                 VStack {
                     searchBars()
@@ -97,6 +106,10 @@ struct ContentView: View {
     }
     
     func getDirections(senderID: Int) {
+        withAnimation(Animation.easeInOut(duration: 0.5)) {
+            loadingResults = true
+        }
+        
         if senderID > 0 {
             getDirections(id1: senderID - 1, id2: senderID)
         }
@@ -124,6 +137,10 @@ struct ContentView: View {
             
             let polyline = route.polyline.decode()
             updatePolylines(withID: id1, newPolyline: polyline)
+            
+            withAnimation(Animation.easeInOut(duration: 0.5)) {
+                showingResults = true
+            }
         }
     }
     
@@ -211,7 +228,7 @@ struct ContentView: View {
             
             annotations[searchingIdx].justChanged = true
             
-//            getDirections(senderID: searchingIdx)
+            getDirections(senderID: searchingIdx)
         }
     }
     
