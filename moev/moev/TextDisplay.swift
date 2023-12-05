@@ -20,20 +20,23 @@ struct TextDisplay: View {
     @State private var justChanged: Bool = false
     
     var body: some View {
-        HStack {
-            Image(systemName: "magnifyingglass")
-            TextField(annotation.placeHolder, text: $annotation.name, onEditingChanged: { isEditing in
-                withAnimation(Animation.easeInOut(duration: 0.5)) {
+        GeometryReader { geometry in
+            HStack {
+                Image(systemName: "magnifyingglass")
+                    .opacity(searchingSlowAnimated ? 1 : 0)
+                    .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 0))
+                TextField(annotation.placeHolder, text: $annotation.name, onEditingChanged: { isEditing in
+                    withAnimation(Animation.easeInOut(duration: 0.5)) {
                         searching = true
                     }
-                
-                withAnimation(Animation.easeInOut(duration: 0.2)) {
+                    
+                    withAnimation(Animation.easeInOut(duration: 0.2)) {
                         searchingFastAnimated = true
                     }
-                
-                withAnimation(Animation.easeInOut(duration: 0.5).delay(0.3)) {
-                    searchingSlowAnimated = true
-                }
+                    
+                    withAnimation(Animation.easeInOut(duration: 0.5).delay(0.3)) {
+                        searchingSlowAnimated = true
+                    }
                 })
                 .onChange(of: annotation.name) { o, n in
                     if justChanged {
@@ -42,10 +45,14 @@ struct TextDisplay: View {
                         updatePossibilities()
                     }
                 }
-//                .textFieldStyle(.roundedBorder)
+                //                .textFieldStyle(.roundedBorder)
+                .frame(width: 2 * geometry.size.width / 3)
+                .padding(10)
+                .border(UIColor.Theme.searchColor, width: 10)
                 .background(UIColor.Theme.searchColor)
+            }
+            .zIndex(Double(possibilities.count))
         }
-        .zIndex(Double(possibilities.count))
     }
     
     func updatePossibilities() {
