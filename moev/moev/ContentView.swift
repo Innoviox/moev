@@ -70,8 +70,8 @@ struct ContentView: View {
                 }
                 .background(UIColor.Theme.searchColor)
                 .frame(width: geometry.size.width,
-                       height: searching ? geometry.size.height + 30 : 0)
-                .offset(CGSize(width: 0.0, height: -30))
+                       height: searching ? geometry.size.height + 75 : 0)
+                .offset(CGSize(width: 0.0, height: -75))
                 .opacity(searchingFastAnimated ? 1 : 0)
                 
                 VStack { // list background that sweeps up after

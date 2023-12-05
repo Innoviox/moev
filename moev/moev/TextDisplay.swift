@@ -20,7 +20,8 @@ struct TextDisplay: View {
     @State private var justChanged: Bool = false
     
     var body: some View {
-        VStack {
+        HStack {
+            Image(systemName: "magnifyingglass")
             TextField(annotation.placeHolder, text: $annotation.name, onEditingChanged: { isEditing in
                 withAnimation(Animation.easeInOut(duration: 0.5)) {
                         searching = true
@@ -34,7 +35,6 @@ struct TextDisplay: View {
                     searchingSlowAnimated = true
                 }
                 })
-                .textFieldStyle(.roundedBorder)
                 .onChange(of: annotation.name) { o, n in
                     if justChanged {
                         justChanged = false
@@ -42,6 +42,7 @@ struct TextDisplay: View {
                         updatePossibilities()
                     }
                 }
+//                .textFieldStyle(.roundedBorder)
                 .background(UIColor.Theme.searchColor)
         }
         .zIndex(Double(possibilities.count))
