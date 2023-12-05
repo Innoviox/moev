@@ -68,17 +68,17 @@ struct ContentView: View {
                     Text("")
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                .background(Color.purple)
+                .background(UIColor.Theme.searchColor)
                 .frame(width: geometry.size.width,
-                       height: searching ? geometry.size.height + 30 : 0)
-                .offset(CGSize(width: 0.0, height: -30))
+                       height: searching ? geometry.size.height + 75 : 0)
+                .offset(CGSize(width: 0.0, height: -75))
                 .opacity(searchingFastAnimated ? 1 : 0)
                 
                 VStack { // list background that sweeps up after
                     possibilitiesList()
-                    .offset(CGSize(width: 0.0, height: 50))
+                    .offset(CGSize(width: 0.0, height: 0))
                 }
-                .background(.white)
+                .background(UIColor.Theme.listBackgroundColor)
                 .edgesIgnoringSafeArea(.all)
                 .offset(CGSize(width: 0.0, height: searchingSlowAnimated ? 0 : geometry.size.height))
                 .frame(height: geometry.size.height - 30)
@@ -86,11 +86,9 @@ struct ContentView: View {
                 
                 VStack {
                     searchBars()
-                    .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 10))
-                    
                     Spacer()
                 }
-                .offset(CGSize(width: 0.0, height: searching ? 0 : geometry.size.height / 2 - 50))
+                .offset(CGSize(width: 10.0, height: searching ? 0 : geometry.size.height / 2 - 20))
             }
         }
     }
@@ -127,7 +125,10 @@ struct ContentView: View {
     }
     
     func getWaypoint(_ id: Int) -> Waypoint? {
-        let coord = id == 0 ? locationManager.lastLocation?.coordinate : annotations[id].location
+        var coord = annotations[id].location
+        if coord == nil && id == 0 {
+            coord = locationManager.lastLocation?.coordinate
+        }
         return coord?.toWaypoint()
     }
     
@@ -178,19 +179,30 @@ struct ContentView: View {
                 Image(systemName: "mappin.and.ellipse")
                 VStack(alignment: .leading) {
                     Text(place.main_text)
-                        .font(.system(size: 22))
+                        .font(.system(size: 17))
+                        .lineLimit(1)
                     Text(place.secondary_text)
-                        .font(.system(size: 12))
+                        .font(.system(size: 10))
+                        .lineLimit(1)
                 }
             }
-            .listRowBackground(Color.white)
+            .listRowBackground(UIColor.Theme.listBackgroundColor)
         }
+        .listStyle(.plain)
         .scrollContentBackground(.hidden)
     }
     
     func searchBars() -> some View {
-        return ForEach($annotations) { $a in
-            TextDisplay(annotation: $a, 
+//        return ForEach($annotations) { $a in
+//            TextDisplay(annotation: $a, 
+//                        searching: $searching,
+//                        searchingFastAnimated: $searchingFastAnimated,
+//                        searchingSlowAnimated: $searchingSlowAnimated,
+//                        possibilities: $possibilities,
+//                        getDirections: getDirections)
+//        }
+        return HStack {
+            TextDisplay(annotation: $annotations[1],
                         searching: $searching,
                         searchingFastAnimated: $searchingFastAnimated,
                         searchingSlowAnimated: $searchingSlowAnimated,
