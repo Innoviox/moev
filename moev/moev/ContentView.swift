@@ -129,7 +129,10 @@ struct ContentView: View {
     }
     
     func getWaypoint(_ id: Int) -> Waypoint? {
-        let coord = id == 0 ? locationManager.lastLocation?.coordinate : annotations[id].location
+        var coord = annotations[id].location
+        if coord == nil && id == 0 {
+            coord = locationManager.lastLocation?.coordinate
+        }
         return coord?.toWaypoint()
     }
     
