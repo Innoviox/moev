@@ -110,7 +110,8 @@ class APIHandler {
                 return handler(nil, error)
             }
             
-            let results = ComputeRoutesResponse(fromJSONData: d)
+            let results = ComputeRoutesResponse.from(jsonData: d)
+            
             handler(results, error)
         }
     }
