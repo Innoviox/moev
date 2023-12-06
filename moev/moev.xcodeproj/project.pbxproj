@@ -19,6 +19,7 @@
 		206453332B1ED6AE00E288C9 /* ActivityMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206453322B1ED6AE00E288C9 /* ActivityMonitor.swift */; };
 		206453362B2019F000E288C9 /* RequestModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206453352B2019F000E288C9 /* RequestModels.swift */; };
 		206453382B201A0B00E288C9 /* ResponseModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206453372B201A0B00E288C9 /* ResponseModels.swift */; };
+		2064533A2B2041F800E288C9 /* ComputeRoutesModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206453392B2041F800E288C9 /* ComputeRoutesModels.swift */; };
 		20F70B252B1679F100B363FA /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F70B242B1679F100B363FA /* LocationManager.swift */; };
 		20F70B272B16AB8B00B363FA /* TextDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F70B262B16AB8B00B363FA /* TextDisplay.swift */; };
 /* End PBXBuildFile section */
@@ -56,6 +57,7 @@
 		206453322B1ED6AE00E288C9 /* ActivityMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityMonitor.swift; sourceTree = "<group>"; };
 		206453352B2019F000E288C9 /* RequestModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestModels.swift; sourceTree = "<group>"; };
 		206453372B201A0B00E288C9 /* ResponseModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseModels.swift; sourceTree = "<group>"; };
+		206453392B2041F800E288C9 /* ComputeRoutesModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComputeRoutesModels.swift; sourceTree = "<group>"; };
 		20A381322B15AECE00172E8A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		20AFC92F2B14ED7700F5B3CC /* API_KEY.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = API_KEY.xcconfig; sourceTree = "<group>"; };
 		20E272432B1791BE00534C2F /* moev.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = moev.xctestplan; sourceTree = "<group>"; };
@@ -160,6 +162,7 @@
 				20202B302B14F0DD007CC8AA /* APIHandler.swift */,
 				206453352B2019F000E288C9 /* RequestModels.swift */,
 				206453372B201A0B00E288C9 /* ResponseModels.swift */,
+				206453392B2041F800E288C9 /* ComputeRoutesModels.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -295,6 +298,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				20F70B252B1679F100B363FA /* LocationManager.swift in Sources */,
+				2064533A2B2041F800E288C9 /* ComputeRoutesModels.swift in Sources */,
 				206453312B1ECA7F00E288C9 /* Colors.swift in Sources */,
 				20202B312B14F0DD007CC8AA /* APIHandler.swift in Sources */,
 				206453362B2019F000E288C9 /* RequestModels.swift in Sources */,
