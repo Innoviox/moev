@@ -2,11 +2,157 @@
 
 
 
+
+
+
+
+
+
+struct ComputeRoutesRequest {
+	var origin: Waypoint? = nil // Required. Origin waypoint.
+	var destination: Waypoint? = nil // Required. Destination waypoint.
+	var intermediates: [Waypoint]? = nil // Optional. A set of waypoints along the route (excluding terminal points), for either stopping at or passing by. Up to 25 intermediate waypoints are supported.
+	var travelMode: RouteTravelMode? = nil // Optional. Specifies the mode of transportation.
+	var routingPreference: RoutingPreference? = nil // Optional. Specifies how to compute the route. The server attempts to use the selected routing preference to compute the route. If  the routing preference results in an error or an extra long latency, then an error is returned. You can specify this option only when the travelMode is DRIVE or TWO_WHEELER, otherwise the request fails.
+	var polylineQuality: PolylineQuality? = nil // Optional. Specifies your preference for the quality of the polyline.
+	var polylineEncoding: PolylineEncoding? = nil // Optional. Specifies the preferred encoding for the polyline.
+	var departureTime: String? = nil // Optional. The departure time. If you don't set this value, then this value defaults to the time that you made the request. NOTE: You can only specify a departureTime in the past when RouteTravelMode is set to TRANSIT. Transit trips are available for up to 7 days in the past or 100 days in the future.
+	var arrivalTime: String? = nil // Optional. The arrival time. NOTE: Can only be set when RouteTravelMode is set to TRANSIT. You can specify either departureTime or arrivalTime, but not both. Transit trips are available for up to 7 days in the past or 100 days in the future.
+	var computeAlternativeRoutes: Bool? = nil // Optional. Specifies whether to calculate alternate routes in addition to the route. No alternative routes are returned for requests that have intermediate waypoints.
+	var routeModifiers: RouteModifiers? = nil // Optional. A set of conditions to satisfy that affect the way routes are calculated.
+	var languageCode: String? = nil // Optional. The BCP-47 language code, such as "en-US" or "sr-Latn". For more information, see Unicode Locale Identifier. See Language Support for the list of supported languages. When you don't provide this value, the display language is inferred from the location of the route request.
+	var regionCode: String? = nil // Optional. The region code, specified as a ccTLD ("top-level domain") two-character value. For more information see Country code top-level domains.
+	var units: Units? = nil // Optional. Specifies the units of measure for the display fields. These fields include the instruction field in NavigationInstruction. The units of measure used for the route, leg, step distance, and duration are not affected by this value. If you don't provide this value, then the display units are inferred from the location of the first origin.
+	var optimizeWaypointOrder: Bool? = nil // Optional. If set to true, the service attempts to minimize the overall cost of the route by re-ordering the specified intermediate waypoints. The request fails if any of the intermediate waypoints is a via waypoint. Use ComputeRoutesResponse.Routes.optimized_intermediate_waypoint_index to find the new ordering. If ComputeRoutesResponseroutes.optimized_intermediate_waypoint_index is not requested in the X-Goog-FieldMask header, the request fails. If optimizeWaypointOrder is set to false, ComputeRoutesResponse.optimized_intermediate_waypoint_index will be empty.
+	var requestedReferenceRoutes: [ReferenceRoute]? = nil // Optional. Specifies what reference routes to calculate as part of the request in addition to the default route. A reference route is a route with a different route calculation objective than the default route. For example a FUEL_EFFICIENT reference route calculation takes into account various parameters that would generate an optimal fuel efficient route.
+	var extraComputations: [ExtraComputation]? = nil // Optional. A list of extra computations which may be used to complete the request. Note: These extra computations may return extra fields on the response. These extra fields must also be specified in the field mask to be returned in the response.
+	var trafficModel: TrafficModel? = nil // Optional. Specifies the assumptions to use when calculating time in traffic. This setting affects the value returned in the duration field in the Route and RouteLeg which contains the predicted time in traffic based on historical averages. TrafficModel is only available for requests that have set RoutingPreference to TRAFFIC_AWARE_OPTIMAL and RouteTravelMode to DRIVE. Defaults to BEST_GUESS if traffic is requested and TrafficModel is not specified.
+	var transitPreferences: TransitPreferences? = nil // Optional. Specifies preferences that influence the route returned for TRANSIT routes. NOTE: You can only specify a transitPreferences when RouteTravelMode is set to TRANSIT.
+
+	init(json jsonOrNil: [String: Any]?) {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jorigin = json["origin"] as? [String: Any] {
+			origin = Waypoint(json: jorigin)
+		}
+
+		if let jdestination = json["destination"] as? [String: Any] {
+			destination = Waypoint(json: jdestination)
+		}
+
+		intermediates = (json["intermediates"] as? [[String: Any]] ?? nil)?.map { j in Waypoint(json: j) }
+		
+
+		if let jtravelMode = json["travelMode"] as? String {
+			travelMode = RouteTravelMode(rawValue: jtravelMode)!
+		}
+
+		if let jroutingPreference = json["routingPreference"] as? String {
+			routingPreference = RoutingPreference(rawValue: jroutingPreference)!
+		}
+
+		if let jpolylineQuality = json["polylineQuality"] as? String {
+			polylineQuality = PolylineQuality(rawValue: jpolylineQuality)!
+		}
+
+		if let jpolylineEncoding = json["polylineEncoding"] as? String {
+			polylineEncoding = PolylineEncoding(rawValue: jpolylineEncoding)!
+		}
+
+		if let jdepartureTime = json["departureTime"] as? String {
+			departureTime = jdepartureTime
+		}
+
+		if let jarrivalTime = json["arrivalTime"] as? String {
+			arrivalTime = jarrivalTime
+		}
+
+		if let jcomputeAlternativeRoutes = json["computeAlternativeRoutes"] as? Bool {
+			computeAlternativeRoutes = jcomputeAlternativeRoutes
+		}
+
+		if let jrouteModifiers = json["routeModifiers"] as? [String: Any] {
+			routeModifiers = RouteModifiers(json: jrouteModifiers)
+		}
+
+		if let jlanguageCode = json["languageCode"] as? String {
+			languageCode = jlanguageCode
+		}
+
+		if let jregionCode = json["regionCode"] as? String {
+			regionCode = jregionCode
+		}
+
+		if let junits = json["units"] as? String {
+			units = Units(rawValue: junits)!
+		}
+
+		if let joptimizeWaypointOrder = json["optimizeWaypointOrder"] as? Bool {
+			optimizeWaypointOrder = joptimizeWaypointOrder
+		}
+
+		requestedReferenceRoutes = (json["requestedReferenceRoutes"] as? [String] ?? nil)?.map { j in ReferenceRoute(rawValue: j)! }
+		
+
+		extraComputations = (json["extraComputations"] as? [String] ?? nil)?.map { j in ExtraComputation(rawValue: j)! }
+		
+
+		if let jtrafficModel = json["trafficModel"] as? String {
+			trafficModel = TrafficModel(rawValue: jtrafficModel)!
+		}
+
+		if let jtransitPreferences = json["transitPreferences"] as? [String: Any] {
+			transitPreferences = TransitPreferences(json: jtransitPreferences)
+		}
+	}
+}
+
+
+
+
+
+
+
+struct ComputeRoutesResponse {
+	var routes: [Route]? = nil // Contains an array of computed routes (up to three) when you specify compute_alternatives_routes, and contains just one route when you don't. When this array contains multiple entries, the first one is the most recommended route. If the array is empty, then it means no route could be found.
+	var fallbackInfo: FallbackInfo? = nil // In some cases when the server is not able to compute the route results with all of the input preferences, it may fallback to using a different way of computation. When fallback mode is used, this field contains detailed info about the fallback response. Otherwise this field is unset.
+	var geocodingResults: GeocodingResults? = nil // Contains geocoding response info for waypoints specified as addresses.
+
+	init(json jsonOrNil: [String: Any]?) {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		routes = (json["routes"] as? [[String: Any]] ?? nil)?.map { j in Route(json: j) }
+		
+
+		if let jfallbackInfo = json["fallbackInfo"] as? [String: Any] {
+			fallbackInfo = FallbackInfo(json: jfallbackInfo)
+		}
+
+		if let jgeocodingResults = json["geocodingResults"] as? [String: Any] {
+			geocodingResults = GeocodingResults(json: jgeocodingResults)
+		}
+	}
+}
+
+
+
+
+
+
+
 enum PolylineQuality: String {
 	case POLYLINE_QUALITY_UNSPECIFIED // No polyline quality preference specified. Defaults to OVERVIEW.
 	case HIGH_QUALITY // Specifies a high-quality polyline - which is composed using more points than OVERVIEW, at the cost of increased response size. Use this value when you need more precision.
 	case OVERVIEW // Specifies an overview polyline - which is composed using a small number of points. Use this value when displaying an overview of the route. Using this option has a lower request latency compared to using the HIGH_QUALITY option.
 }
+
+
+
+
 
 enum PolylineEncoding: String {
 	case POLYLINE_ENCODING_UNSPECIFIED // No polyline type preference specified. Defaults to ENCODED_POLYLINE.
@@ -14,16 +160,28 @@ enum PolylineEncoding: String {
 	case GEO_JSON_LINESTRING // Specifies a polyline using the GeoJSON LineString format
 }
 
+
+
+
+
 enum Units: String {
 	case UNITS_UNSPECIFIED // Units of measure not specified. Defaults to the unit of measure inferred from the request.
 	case METRIC // Metric units of measure.
 	case IMPERIAL // Imperial (English) units of measure.
 }
 
+
+
+
+
 enum ReferenceRoute: String {
 	case REFERENCE_ROUTE_UNSPECIFIED // Not used. Requests containing this value fail.
 	case FUEL_EFFICIENT // Fuel efficient route. Routes labeled with this value are determined to be optimized for parameters such as fuel consumption.
 }
+
+
+
+
 
 enum ExtraComputation: String {
 	case EXTRA_COMPUTATION_UNSPECIFIED // Not used. Requests containing this value will fail.
@@ -32,6 +190,10 @@ enum ExtraComputation: String {
 	case TRAFFIC_ON_POLYLINE // Traffic aware polylines for the route(s).
 	case HTML_FORMATTED_NAVIGATION_INSTRUCTIONS // NavigationInstructions presented as a formatted HTML text string. This content is meant to be read as-is. This content is for display only. Do not programmatically parse it.
 }
+
+
+
+
 
 struct Route {
 	var routeLabels: [RouteLabel]? = nil // Labels for the Route that are useful to identify specific properties of the route to compare against others.
@@ -49,11 +211,11 @@ struct Route {
 	var routeToken: String? = nil // A web-safe, base64-encoded route token that can be passed to the Navigation SDK, that allows the Navigation SDK to reconstruct the route during navigation, and, in the event of rerouting, honor the original intention when you created the route by calling v2.computeRoutes. Customers should treat this token as an opaque blob. It is not meant for reading or mutating. NOTE: Route.route_token is only available for requests that have set ComputeRoutesRequest.routing_preference to TRAFFIC_AWARE or TRAFFIC_AWARE_OPTIMAL. Route.route_token is not supported for requests that have Via waypoints.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		routeLabels = (json["routeLabels"] as? [String] ?? nil)?.map { j in RouteLabel(rawValue: j as! String)! }
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		routeLabels = (json["routeLabels"] as? [String] ?? nil)?.map { j in RouteLabel(rawValue: j)! }
 		
 
 		legs = (json["legs"] as? [[String: Any]] ?? nil)?.map { j in RouteLeg(json: j) }
@@ -79,7 +241,7 @@ struct Route {
 			description = jdescription
 		}
 
-		warnings = (json["warnings"] as? [String] ?? nil)?.map { j in j as! String }
+		warnings = (json["warnings"] as? [String] ?? nil)?.map { j in j }
 		
 
 		if let jviewport = json["viewport"] as? [String: Any] {
@@ -90,7 +252,7 @@ struct Route {
 			travelAdvisory = RouteTravelAdvisory(json: jtravelAdvisory)
 		}
 
-		optimizedIntermediateWaypointIndex = (json["optimizedIntermediateWaypointIndex"] as? [Int] ?? nil)?.map { j in j as! Int }
+		optimizedIntermediateWaypointIndex = (json["optimizedIntermediateWaypointIndex"] as? [Int] ?? nil)?.map { j in j }
 		
 
 		if let jlocalizedValues = json["localizedValues"] as? [String: Any] {
@@ -100,9 +262,14 @@ struct Route {
 		if let jrouteToken = json["routeToken"] as? String {
 			routeToken = jrouteToken
 		}
-
 	}
 }
+
+
+
+
+
+
 
 enum RouteLabel: String {
 	case ROUTE_LABEL_UNSPECIFIED // Default - not used.
@@ -110,6 +277,10 @@ enum RouteLabel: String {
 	case DEFAULT_ROUTE_ALTERNATE // An alternative to the default "best" route. Routes like this will be returned when computeAlternativeRoutes is specified.
 	case FUEL_EFFICIENT // Fuel efficient route. Routes labeled with this value are determined to be optimized for Eco parameters such as fuel consumption.
 }
+
+
+
+
 
 struct RouteLeg {
 	var distanceMeters: Int? = nil // The travel distance of the route leg, in meters.
@@ -124,11 +295,11 @@ struct RouteLeg {
 	var stepsOverview: StepsOverview? = nil // Overview information about the steps in this RouteLeg. This field is only populated for TRANSIT routes.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jdistanceMeters = json["distanceMeters"] as? Int {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jdistanceMeters = json["distanceMeters"] as? Int {
 			distanceMeters = jdistanceMeters
 		}
 
@@ -166,29 +337,39 @@ struct RouteLeg {
 		if let jstepsOverview = json["stepsOverview"] as? [String: Any] {
 			stepsOverview = StepsOverview(json: jstepsOverview)
 		}
-
 	}
 }
 
+
+
+
+
+
+
 struct Polyline {
 	var encodedPolyline: String? = nil // The string encoding of the polyline using the polyline encoding algorithm
-	var geoJsonLinestring: Struct format? = nil // Specifies a polyline using the GeoJSON LineString format.
+	var geoJsonLinestring: [String: Any]? = nil // Specifies a polyline using the GeoJSON LineString format.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jencodedPolyline = json["encodedPolyline"] as? String {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jencodedPolyline = json["encodedPolyline"] as? String {
 			encodedPolyline = jencodedPolyline
 		}
 
 		if let jgeoJsonLinestring = json["geoJsonLinestring"] as? [String: Any] {
-			geoJsonLinestring = Struct format(json: jgeoJsonLinestring)
+			geoJsonLinestring = jgeoJsonLinestring
 		}
-
 	}
 }
+
+
+
+
+
+
 
 struct RouteLegStep {
 	var distanceMeters: Int? = nil // The travel distance of this step, in meters. In some circumstances, this field might not have a value.
@@ -203,11 +384,11 @@ struct RouteLegStep {
 	var travelMode: RouteTravelMode? = nil // The travel mode used for this step.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jdistanceMeters = json["distanceMeters"] as? Int {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jdistanceMeters = json["distanceMeters"] as? Int {
 			distanceMeters = jdistanceMeters
 		}
 
@@ -246,29 +427,39 @@ struct RouteLegStep {
 		if let jtravelMode = json["travelMode"] as? String {
 			travelMode = RouteTravelMode(rawValue: jtravelMode)!
 		}
-
 	}
 }
+
+
+
+
+
+
 
 struct NavigationInstruction {
 	var maneuver: Maneuver? = nil // Encapsulates the navigation instructions for the current step (for example, turn left, merge, or straight). This field determines which icon to display.
 	var instructions: String? = nil // Instructions for navigating this step.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jmaneuver = json["maneuver"] as? String {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jmaneuver = json["maneuver"] as? String {
 			maneuver = Maneuver(rawValue: jmaneuver)!
 		}
 
 		if let jinstructions = json["instructions"] as? String {
 			instructions = jinstructions
 		}
-
 	}
 }
+
+
+
+
+
+
 
 enum Maneuver: String {
 	case MANEUVER_UNSPECIFIED // Not used.
@@ -294,39 +485,53 @@ enum Maneuver: String {
 	case NAME_CHANGE // Used to indicate a street name change.
 }
 
+
+
+
+
 struct RouteLegStepTravelAdvisory {
 	var speedReadingIntervals: [SpeedReadingInterval]? = nil // NOTE: This field is not currently populated.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		speedReadingIntervals = (json["speedReadingIntervals"] as? [[String: Any]] ?? nil)?.map { j in SpeedReadingInterval(json: j) }
-		
+		guard let json = jsonOrNil else {
+			return
+		}
 
+		speedReadingIntervals = (json["speedReadingIntervals"] as? [[String: Any]] ?? nil)?.map { j in SpeedReadingInterval(json: j) }
+		
 	}
 }
+
+
+
+
+
+
 
 struct RouteLegStepLocalizedValues {
 	var distance: LocalizedText? = nil // Travel distance represented in text form.
 	var staticDuration: LocalizedText? = nil // Duration without taking traffic conditions into consideration, represented in text form.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jdistance = json["distance"] as? [String: Any] {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jdistance = json["distance"] as? [String: Any] {
 			distance = LocalizedText(json: jdistance)
 		}
 
 		if let jstaticDuration = json["staticDuration"] as? [String: Any] {
 			staticDuration = LocalizedText(json: jstaticDuration)
 		}
-
 	}
 }
+
+
+
+
+
+
 
 struct RouteLegStepTransitDetails {
 	var stopDetails: TransitStopDetails? = nil // Information about the arrival and departure stops for the step.
@@ -338,11 +543,11 @@ struct RouteLegStepTransitDetails {
 	var tripShortText: String? = nil // The text that appears in schedules and sign boards to identify a transit trip to passengers. The text should uniquely identify a trip within a service day. For example, "538" is the tripShortText of the Amtrak train that leaves San Jose, CA at 15:10 on weekdays to Sacramento, CA.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jstopDetails = json["stopDetails"] as? [String: Any] {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jstopDetails = json["stopDetails"] as? [String: Any] {
 			stopDetails = TransitStopDetails(json: jstopDetails)
 		}
 
@@ -369,9 +574,14 @@ struct RouteLegStepTransitDetails {
 		if let jtripShortText = json["tripShortText"] as? String {
 			tripShortText = jtripShortText
 		}
-
 	}
 }
+
+
+
+
+
+
 
 struct TransitStopDetails {
 	var arrivalStop: TransitStop? = nil // Information about the arrival stop for the step.
@@ -380,11 +590,11 @@ struct TransitStopDetails {
 	var departureTime: String? = nil // The estimated time of departure for the step.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jarrivalStop = json["arrivalStop"] as? [String: Any] {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jarrivalStop = json["arrivalStop"] as? [String: Any] {
 			arrivalStop = TransitStop(json: jarrivalStop)
 		}
 
@@ -399,69 +609,89 @@ struct TransitStopDetails {
 		if let jdepartureTime = json["departureTime"] as? String {
 			departureTime = jdepartureTime
 		}
-
 	}
 }
+
+
+
+
+
+
 
 struct TransitStop {
 	var name: String? = nil // The name of the transit stop.
 	var location: Location? = nil // The location of the stop expressed in latitude/longitude coordinates.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jname = json["name"] as? String {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jname = json["name"] as? String {
 			name = jname
 		}
 
 		if let jlocation = json["location"] as? [String: Any] {
 			location = Location(json: jlocation)
 		}
-
 	}
 }
+
+
+
+
+
+
 
 struct TransitDetailsLocalizedValues {
 	var arrivalTime: LocalizedTime? = nil // Time in its formatted text representation with a corresponding time zone.
 	var departureTime: LocalizedTime? = nil // Time in its formatted text representation with a corresponding time zone.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jarrivalTime = json["arrivalTime"] as? [String: Any] {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jarrivalTime = json["arrivalTime"] as? [String: Any] {
 			arrivalTime = LocalizedTime(json: jarrivalTime)
 		}
 
 		if let jdepartureTime = json["departureTime"] as? [String: Any] {
 			departureTime = LocalizedTime(json: jdepartureTime)
 		}
-
 	}
 }
+
+
+
+
+
+
 
 struct LocalizedTime {
 	var time: LocalizedText? = nil // The time specified as a string in a given time zone.
 	var timeZone: String? = nil // Contains the time zone. The value is the name of the time zone as defined in the IANA Time Zone Database, e.g. "America/New_York".
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jtime = json["time"] as? [String: Any] {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jtime = json["time"] as? [String: Any] {
 			time = LocalizedText(json: jtime)
 		}
 
 		if let jtimeZone = json["timeZone"] as? String {
 			timeZone = jtimeZone
 		}
-
 	}
 }
+
+
+
+
+
+
 
 struct TransitLine {
 	var agencies: [TransitAgency]? = nil // The transit agency (or agencies) that operates this transit line.
@@ -474,11 +704,11 @@ struct TransitLine {
 	var vehicle: TransitVehicle? = nil // The type of vehicle that operates on this transit line.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		agencies = (json["agencies"] as? [[String: Any]] ?? nil)?.map { j in TransitAgency(json: j) }
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		agencies = (json["agencies"] as? [[String: Any]] ?? nil)?.map { j in TransitAgency(json: j) }
 		
 
 		if let jname = json["name"] as? String {
@@ -508,9 +738,14 @@ struct TransitLine {
 		if let jvehicle = json["vehicle"] as? [String: Any] {
 			vehicle = TransitVehicle(json: jvehicle)
 		}
-
 	}
 }
+
+
+
+
+
+
 
 struct TransitAgency {
 	var name: String? = nil // The name of this transit agency.
@@ -518,11 +753,11 @@ struct TransitAgency {
 	var uri: String? = nil // The transit agency's URI.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jname = json["name"] as? String {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jname = json["name"] as? String {
 			name = jname
 		}
 
@@ -533,9 +768,14 @@ struct TransitAgency {
 		if let juri = json["uri"] as? String {
 			uri = juri
 		}
-
 	}
 }
+
+
+
+
+
+
 
 struct TransitVehicle {
 	var name: LocalizedText? = nil // The name of this vehicle, capitalized.
@@ -544,11 +784,11 @@ struct TransitVehicle {
 	var localIconUri: String? = nil // The URI for the icon associated with this vehicle type, based on the local transport signage.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jname = json["name"] as? [String: Any] {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jname = json["name"] as? [String: Any] {
 			name = LocalizedText(json: jname)
 		}
 
@@ -563,9 +803,14 @@ struct TransitVehicle {
 		if let jlocalIconUri = json["localIconUri"] as? String {
 			localIconUri = jlocalIconUri
 		}
-
 	}
 }
+
+
+
+
+
+
 
 enum TransitVehicleType: String {
 	case TRANSIT_VEHICLE_TYPE_UNSPECIFIED // Unused.
@@ -589,24 +834,33 @@ enum TransitVehicleType: String {
 	case TROLLEYBUS // Trolleybus.
 }
 
+
+
+
+
 struct RouteLegTravelAdvisory {
 	var tollInfo: TollInfo? = nil // Contains information about tolls on the specific RouteLeg. This field is only populated if we expect there are tolls on the RouteLeg. If this field is set but the estimatedPrice subfield is not populated, we expect that road contains tolls but we do not know an estimated price. If this field does not exist, then there is no toll on the RouteLeg.
 	var speedReadingIntervals: [SpeedReadingInterval]? = nil // Speed reading intervals detailing traffic density. Applicable in case of TRAFFIC_AWARE and TRAFFIC_AWARE_OPTIMAL routing preferences. The intervals cover the entire polyline of the RouteLeg without overlap. The start point of a specified interval is the same as the end point of the preceding interval.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jtollInfo = json["tollInfo"] as? [String: Any] {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jtollInfo = json["tollInfo"] as? [String: Any] {
 			tollInfo = TollInfo(json: jtollInfo)
 		}
 
 		speedReadingIntervals = (json["speedReadingIntervals"] as? [[String: Any]] ?? nil)?.map { j in SpeedReadingInterval(json: j) }
 		
-
 	}
 }
+
+
+
+
+
+
 
 struct RouteLegLocalizedValues {
 	var distance: LocalizedText? = nil // Travel distance represented in text form.
@@ -614,11 +868,11 @@ struct RouteLegLocalizedValues {
 	var staticDuration: LocalizedText? = nil // Duration without taking traffic conditions into consideration, represented in text form.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jdistance = json["distance"] as? [String: Any] {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jdistance = json["distance"] as? [String: Any] {
 			distance = LocalizedText(json: jdistance)
 		}
 
@@ -629,23 +883,33 @@ struct RouteLegLocalizedValues {
 		if let jstaticDuration = json["staticDuration"] as? [String: Any] {
 			staticDuration = LocalizedText(json: jstaticDuration)
 		}
-
 	}
 }
+
+
+
+
+
+
 
 struct StepsOverview {
 	var multiModalSegments: [MultiModalSegment]? = nil // Summarized information about different multi-modal segments of the RouteLeg.steps. This field is not populated if the RouteLeg does not contain any multi-modal segments in the steps.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		multiModalSegments = (json["multiModalSegments"] as? [[String: Any]] ?? nil)?.map { j in MultiModalSegment(json: j) }
-		
+		guard let json = jsonOrNil else {
+			return
+		}
 
+		multiModalSegments = (json["multiModalSegments"] as? [[String: Any]] ?? nil)?.map { j in MultiModalSegment(json: j) }
+		
 	}
 }
+
+
+
+
+
+
 
 struct MultiModalSegment {
 	var navigationInstruction: NavigationInstruction? = nil // NavigationInstruction for the multi-modal segment.
@@ -654,11 +918,11 @@ struct MultiModalSegment {
 	var stepEndIndex: Int? = nil // The corresponding RouteLegStep index that is the end of a multi-modal segment.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jnavigationInstruction = json["navigationInstruction"] as? [String: Any] {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jnavigationInstruction = json["navigationInstruction"] as? [String: Any] {
 			navigationInstruction = NavigationInstruction(json: jnavigationInstruction)
 		}
 
@@ -673,29 +937,39 @@ struct MultiModalSegment {
 		if let jstepEndIndex = json["stepEndIndex"] as? Int {
 			stepEndIndex = jstepEndIndex
 		}
-
 	}
 }
+
+
+
+
+
+
 
 struct Viewport {
 	var low: LatLng? = nil // Required. The low point of the viewport.
 	var high: LatLng? = nil // Required. The high point of the viewport.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jlow = json["low"] as? [String: Any] {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jlow = json["low"] as? [String: Any] {
 			low = LatLng(json: jlow)
 		}
 
 		if let jhigh = json["high"] as? [String: Any] {
 			high = LatLng(json: jhigh)
 		}
-
 	}
 }
+
+
+
+
+
+
 
 struct RouteLocalizedValues {
 	var distance: LocalizedText? = nil // Travel distance represented in text form.
@@ -704,11 +978,11 @@ struct RouteLocalizedValues {
 	var transitFare: LocalizedText? = nil // Transit fare represented in text form.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jdistance = json["distance"] as? [String: Any] {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jdistance = json["distance"] as? [String: Any] {
 			distance = LocalizedText(json: jdistance)
 		}
 
@@ -723,9 +997,14 @@ struct RouteLocalizedValues {
 		if let jtransitFare = json["transitFare"] as? [String: Any] {
 			transitFare = LocalizedText(json: jtransitFare)
 		}
-
 	}
 }
+
+
+
+
+
+
 
 struct GeocodingResults {
 	var origin: GeocodedWaypoint? = nil // Origin geocoded waypoint.
@@ -733,11 +1012,11 @@ struct GeocodingResults {
 	var intermediates: [GeocodedWaypoint]? = nil // A list of intermediate geocoded waypoints each containing an index field that corresponds to the zero-based position of the waypoint in the order they were specified in the request.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jorigin = json["origin"] as? [String: Any] {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jorigin = json["origin"] as? [String: Any] {
 			origin = GeocodedWaypoint(json: jorigin)
 		}
 
@@ -747,9 +1026,14 @@ struct GeocodingResults {
 
 		intermediates = (json["intermediates"] as? [[String: Any]] ?? nil)?.map { j in GeocodedWaypoint(json: j) }
 		
-
 	}
 }
+
+
+
+
+
+
 
 struct GeocodedWaypoint {
 	var geocoderStatus: Status? = nil // Indicates the status code resulting from the geocoding operation.
@@ -759,15 +1043,15 @@ struct GeocodedWaypoint {
 	var intermediateWaypointRequestIndex: Int? = nil // The index of the corresponding intermediate waypoint in the request. Only populated if the corresponding waypoint is an intermediate waypoint.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jgeocoderStatus = json["geocoderStatus"] as? [String: Any] {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jgeocoderStatus = json["geocoderStatus"] as? [String: Any] {
 			geocoderStatus = Status(json: jgeocoderStatus)
 		}
 
-		type = (json["type"] as? [String] ?? nil)?.map { j in j as! String }
+		type = (json["type"] as? [String] ?? nil)?.map { j in j }
 		
 
 		if let jpartialMatch = json["partialMatch"] as? Bool {
@@ -781,29 +1065,39 @@ struct GeocodedWaypoint {
 		if let jintermediateWaypointRequestIndex = json["intermediateWaypointRequestIndex"] as? Int {
 			intermediateWaypointRequestIndex = jintermediateWaypointRequestIndex
 		}
-
 	}
 }
+
+
+
+
+
+
+
+
 
 struct FallbackInfo {
 	var routingMode: FallbackRoutingMode? = nil // Routing mode used for the response. If fallback was triggered, the mode may be different from routing preference set in the original client request.
 	var reason: FallbackReason? = nil // The reason why fallback response was used instead of the original response. This field is only populated when the fallback mode is triggered and the fallback response is returned.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jroutingMode = json["routingMode"] as? String {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jroutingMode = json["routingMode"] as? String {
 			routingMode = FallbackRoutingMode(rawValue: jroutingMode)!
 		}
 
 		if let jreason = json["reason"] as? String {
 			reason = FallbackReason(rawValue: jreason)!
 		}
-
 	}
 }
+
+
+
+
 
 
 
@@ -813,6 +1107,10 @@ enum FallbackRoutingMode: String {
 	case FALLBACK_TRAFFIC_AWARE // Indicates the TRAFFIC_AWARE RoutingPreference was used to compute the response.
 }
 
+
+
+
+
 enum FallbackReason: String {
 	case FALLBACK_REASON_UNSPECIFIED // No fallback reason specified.
 	case SERVER_ERROR // A server error happened while calculating routes with your preferred routing mode, but we were able to return a result calculated by an alternative mode.
@@ -820,25 +1118,36 @@ enum FallbackReason: String {
 }
 
 
+
+
+
+
+
+
 struct LatLng {
 	var latitude: Int? = nil // The latitude in degrees. It must be in the range [-90.0, +90.0].
 	var longitude: Int? = nil // The longitude in degrees. It must be in the range [-180.0, +180.0].
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jlatitude = json["latitude"] as? Int {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jlatitude = json["latitude"] as? Int {
 			latitude = jlatitude
 		}
 
 		if let jlongitude = json["longitude"] as? Int {
 			longitude = jlongitude
 		}
-
 	}
 }
+
+
+
+
+
+
 
 
 
@@ -848,20 +1157,25 @@ struct LocalizedText {
 	var languageCode: String? = nil // The text's BCP-47 language code, such as "en-US" or "sr-Latn".
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jtext = json["text"] as? String {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jtext = json["text"] as? String {
 			text = jtext
 		}
 
 		if let jlanguageCode = json["languageCode"] as? String {
 			languageCode = jlanguageCode
 		}
-
 	}
 }
+
+
+
+
+
+
 
 
 
@@ -871,20 +1185,25 @@ struct Location {
 	var heading: Int? = nil // The compass heading associated with the direction of the flow of traffic. This value specifies the side of the road for pickup and drop-off. Heading values can be from 0 to 360, where 0 specifies a heading of due North, 90 specifies a heading of due East, and so on. You can use this field only for DRIVE and TWO_WHEELER RouteTravelMode.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jlatLng = json["latLng"] as? [String: Any] {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jlatLng = json["latLng"] as? [String: Any] {
 			latLng = LatLng(json: jlatLng)
 		}
 
 		if let jheading = json["heading"] as? Int {
 			heading = jheading
 		}
-
 	}
 }
+
+
+
+
+
+
 
 
 
@@ -895,11 +1214,11 @@ struct Money {
 	var nanos: Int? = nil // Number of nano (10^-9) units of the amount. The value must be between -999,999,999 and +999,999,999 inclusive. If units is positive, nanos must be positive or zero. If units is zero, nanos can be positive, zero, or negative. If units is negative, nanos must be negative or zero. For example $-1.75 is represented as units=-1 and nanos=-750,000,000.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jcurrencyCode = json["currencyCode"] as? String {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jcurrencyCode = json["currencyCode"] as? String {
 			currencyCode = jcurrencyCode
 		}
 
@@ -910,9 +1229,14 @@ struct Money {
 		if let jnanos = json["nanos"] as? Int {
 			nanos = jnanos
 		}
-
 	}
 }
+
+
+
+
+
+
 
 
 
@@ -926,11 +1250,11 @@ struct RouteModifiers {
 	var tollPasses: [TollPass]? = nil // Encapsulates information about toll passes. If toll passes are provided, the API tries to return the pass price. If toll passes are not provided, the API treats the toll pass as unknown and tries to return the cash price. Applies only to the DRIVE and TWO_WHEELER RouteTravelMode.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let javoidTolls = json["avoidTolls"] as? Bool {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let javoidTolls = json["avoidTolls"] as? Bool {
 			avoidTolls = javoidTolls
 		}
 
@@ -950,11 +1274,14 @@ struct RouteModifiers {
 			vehicleInfo = VehicleInfo(json: jvehicleInfo)
 		}
 
-		tollPasses = (json["tollPasses"] as? [String] ?? nil)?.map { j in TollPass(rawValue: j as! String)! }
+		tollPasses = (json["tollPasses"] as? [String] ?? nil)?.map { j in TollPass(rawValue: j)! }
 		
-
 	}
 }
+
+
+
+
 
 
 
@@ -962,16 +1289,21 @@ struct VehicleInfo {
 	var emissionType: VehicleEmissionType? = nil // Describes the vehicle's emission type. Applies only to the DRIVE RouteTravelMode.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jemissionType = json["emissionType"] as? String {
-			emissionType = VehicleEmissionType(rawValue: jemissionType)!
+		guard let json = jsonOrNil else {
+			return
 		}
 
+		if let jemissionType = json["emissionType"] as? String {
+			emissionType = VehicleEmissionType(rawValue: jemissionType)!
+		}
 	}
 }
+
+
+
+
+
+
 
 enum VehicleEmissionType: String {
 	case VEHICLE_EMISSION_TYPE_UNSPECIFIED // No emission type specified. Default to GASOLINE.
@@ -980,6 +1312,10 @@ enum VehicleEmissionType: String {
 	case HYBRID // Hybrid fuel (such as gasoline + electric) vehicle.
 	case DIESEL // Diesel fueled vehicle.
 }
+
+
+
+
 
 enum TollPass: String {
 	case TOLL_PASS_UNSPECIFIED // Not used. If this value is used, then the request fails.
@@ -1084,6 +1420,12 @@ enum TollPass: String {
 }
 
 
+
+
+
+
+
+
 struct RouteTravelAdvisory {
 	var tollInfo: TollInfo? = nil // Contains information about tolls on the route. This field is only populated if tolls are expected on the route. If this field is set, but the estimatedPrice subfield is not populated, then the route contains tolls, but the estimated price is unknown. If this field is not set, then there are no tolls expected on the route.
 	var speedReadingIntervals: [SpeedReadingInterval]? = nil // Speed reading intervals detailing traffic density. Applicable in case of TRAFFIC_AWARE and TRAFFIC_AWARE_OPTIMAL routing preferences. The intervals cover the entire polyline of the route without overlap. The start point of a specified interval is the same as the end point of the preceding interval.
@@ -1092,11 +1434,11 @@ struct RouteTravelAdvisory {
 	var transitFare: Money? = nil // If present, contains the total fare or ticket costs on this route This property is only returned for TRANSIT requests and only for routes where fare information is available for all transit steps.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jtollInfo = json["tollInfo"] as? [String: Any] {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jtollInfo = json["tollInfo"] as? [String: Any] {
 			tollInfo = TollInfo(json: jtollInfo)
 		}
 
@@ -1114,9 +1456,14 @@ struct RouteTravelAdvisory {
 		if let jtransitFare = json["transitFare"] as? [String: Any] {
 			transitFare = Money(json: jtransitFare)
 		}
-
 	}
 }
+
+
+
+
+
+
 
 
 
@@ -1133,6 +1480,10 @@ enum RouteTravelMode: String {
 
 
 
+
+
+
+
 enum RoutingPreference: String {
 	case ROUTING_PREFERENCE_UNSPECIFIED // No routing preference specified. Default to TRAFFIC_UNAWARE.
 	case TRAFFIC_UNAWARE // Computes routes without taking live traffic conditions into consideration. Suitable when traffic conditions don't matter or are not applicable. Using this value produces the lowest latency. Note: For RouteTravelMode DRIVE and TWO_WHEELER, the route and duration chosen are based on road network and average time-independent traffic conditions, not current road conditions. Consequently, routes may include roads that are temporarily closed. Results for a given request may vary over time due to changes in the road network, updated average traffic conditions, and the distributed nature of the service. Results may also vary between nearly-equivalent routes at any time or frequency.
@@ -1143,17 +1494,21 @@ enum RoutingPreference: String {
 
 
 
+
+
+
+
 struct SpeedReadingInterval {
 	var startPolylinePointIndex: Int? = nil // The starting index of this interval in the polyline.
 	var endPolylinePointIndex: Int? = nil // The ending index of this interval in the polyline.
 	var speed: Speed? = nil // Traffic speed in this interval.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jstartPolylinePointIndex = json["startPolylinePointIndex"] as? Int {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jstartPolylinePointIndex = json["startPolylinePointIndex"] as? Int {
 			startPolylinePointIndex = jstartPolylinePointIndex
 		}
 
@@ -1164,9 +1519,12 @@ struct SpeedReadingInterval {
 		if let jspeed = json["speed"] as? String {
 			speed = Speed(rawValue: jspeed)!
 		}
-
 	}
 }
+
+
+
+
 
 
 
@@ -1178,17 +1536,23 @@ enum Speed: String {
 }
 
 
+
+
+
+
+
+
 struct Status {
 	var code: Int? = nil // The status code, which should be an enum value of google.rpc.Code.
 	var message: String? = nil // A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the google.rpc.Status.details field, or localized by the client.
 	var details: [[String: Any]]? = nil // A list of messages that carry the error details. There is a common set of message types for APIs to use.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jcode = json["code"] as? Int {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jcode = json["code"] as? Int {
 			code = jcode
 		}
 
@@ -1196,11 +1560,15 @@ struct Status {
 			message = jmessage
 		}
 
-		details = (json["details"] as? [[String: Any]] ?? nil)?.map { j in [String: Any](json: j) }
-		
-
+		details = (json["details"] as? [[String: Any]] ?? nil)
 	}
 }
+
+
+
+
+
+
 
 
 
@@ -1209,15 +1577,20 @@ struct TollInfo {
 	var estimatedPrice: [Money]? = nil // The monetary amount of tolls for the corresponding Route or RouteLeg. This list contains a money amount for each currency that is expected to be charged by the toll stations. Typically this list will contain only one item for routes with tolls in one currency. For international trips, this list may contain multiple items to reflect tolls in different currencies.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		estimatedPrice = (json["estimatedPrice"] as? [[String: Any]] ?? nil)?.map { j in Money(json: j) }
-		
+		guard let json = jsonOrNil else {
+			return
+		}
 
+		estimatedPrice = (json["estimatedPrice"] as? [[String: Any]] ?? nil)?.map { j in Money(json: j) }
+		
 	}
 }
+
+
+
+
+
+
 
 
 
@@ -1232,24 +1605,31 @@ enum TrafficModel: String {
 
 
 
+
+
+
+
 struct TransitPreferences {
 	var allowedTravelModes: [TransitTravelMode]? = nil // A set of travel modes to use when getting a TRANSIT route. Defaults to all supported modes of travel.
 	var routingPreference: TransitRoutingPreference? = nil // A routing preference that, when specified, influences the TRANSIT route returned.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		allowedTravelModes = (json["allowedTravelModes"] as? [String] ?? nil)?.map { j in TransitTravelMode(rawValue: j as! String)! }
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		allowedTravelModes = (json["allowedTravelModes"] as? [String] ?? nil)?.map { j in TransitTravelMode(rawValue: j)! }
 		
 
 		if let jroutingPreference = json["routingPreference"] as? String {
 			routingPreference = TransitRoutingPreference(rawValue: jroutingPreference)!
 		}
-
 	}
 }
+
+
+
+
 
 
 
@@ -1262,11 +1642,21 @@ enum TransitTravelMode: String {
 	case RAIL // Travel by rail. This is equivalent to a combination of SUBWAY, TRAIN, and LIGHT_RAIL.
 }
 
+
+
+
+
 enum TransitRoutingPreference: String {
 	case TRANSIT_ROUTING_PREFERENCE_UNSPECIFIED // No preference specified.
 	case LESS_WALKING // Indicates that the calculated route should prefer limited amounts of walking.
 	case FEWER_TRANSFERS // Indicates that the calculated route should prefer a limited number of transfers.
 }
+
+
+
+
+
+
 
 
 struct Waypoint {
@@ -1278,11 +1668,11 @@ struct Waypoint {
 	var address: String? = nil // Human readable address or a plus code. See https://plus.codes for details.
 
 	init(json jsonOrNil: [String: Any]?) {
-	guard let json = jsonOrNil else {
-		return
-	}
-    
-    		if let jvia = json["via"] as? Bool {
+		guard let json = jsonOrNil else {
+			return
+		}
+
+		if let jvia = json["via"] as? Bool {
 			via = jvia
 		}
 
@@ -1305,9 +1695,12 @@ struct Waypoint {
 		if let jaddress = json["address"] as? String {
 			address = jaddress
 		}
-
 	}
 }
+
+
+
+
 
 
 
