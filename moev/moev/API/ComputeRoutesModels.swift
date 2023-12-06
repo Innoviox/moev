@@ -7,17 +7,7 @@
 
 import Foundation
 
-
-
-
-
-
-
-
-
-
-
-struct ComputeRoutesRequest {
+struct ComputeRoutesRequest: Encodable {
     var origin: Waypoint? = nil // Required. Origin waypoint.
     var destination: Waypoint? = nil // Required. Destination waypoint.
     var intermediates: [Waypoint]? = nil // Optional. A set of waypoints along the route (excluding terminal points), for either stopping at or passing by. Up to 25 intermediate waypoints are supported.
@@ -37,7 +27,9 @@ struct ComputeRoutesRequest {
     var extraComputations: [ExtraComputation]? = nil // Optional. A list of extra computations which may be used to complete the request. Note: These extra computations may return extra fields on the response. These extra fields must also be specified in the field mask to be returned in the response.
     var trafficModel: TrafficModel? = nil // Optional. Specifies the assumptions to use when calculating time in traffic. This setting affects the value returned in the duration field in the Route and RouteLeg which contains the predicted time in traffic based on historical averages. TrafficModel is only available for requests that have set RoutingPreference to TRAFFIC_AWARE_OPTIMAL and RouteTravelMode to DRIVE. Defaults to BEST_GUESS if traffic is requested and TrafficModel is not specified.
     var transitPreferences: TransitPreferences? = nil // Optional. Specifies preferences that influence the route returned for TRANSIT routes. NOTE: You can only specify a transitPreferences when RouteTravelMode is set to TRANSIT.
+}
 
+extension ComputeRoutesRequest {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -118,17 +110,13 @@ struct ComputeRoutesRequest {
     }
 }
 
-
-
-
-
-
-
-struct ComputeRoutesResponse {
+struct ComputeRoutesResponse: Encodable {
     var routes: [Route]? = nil // Contains an array of computed routes (up to three) when you specify compute_alternatives_routes, and contains just one route when you don't. When this array contains multiple entries, the first one is the most recommended route. If the array is empty, then it means no route could be found.
     var fallbackInfo: FallbackInfo? = nil // In some cases when the server is not able to compute the route results with all of the input preferences, it may fallback to using a different way of computation. When fallback mode is used, this field contains detailed info about the fallback response. Otherwise this field is unset.
     var geocodingResults: GeocodingResults? = nil // Contains geocoding response info for waypoints specified as addresses.
+}
 
+extension ComputeRoutesResponse {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -146,53 +134,43 @@ struct ComputeRoutesResponse {
         }
     }
 }
+extension ComputeRoutesResponse {
+    init?(fromJSONData data: Data) {
+        let j = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+        guard let json = j else {
+            return nil
+        }
+        
+        self.init(json: json)
+    }
+}
 
 
 
-
-
-
-
-enum PolylineQuality: String {
+enum PolylineQuality: String, Encodable {
     case POLYLINE_QUALITY_UNSPECIFIED // No polyline quality preference specified. Defaults to OVERVIEW.
     case HIGH_QUALITY // Specifies a high-quality polyline - which is composed using more points than OVERVIEW, at the cost of increased response size. Use this value when you need more precision.
     case OVERVIEW // Specifies an overview polyline - which is composed using a small number of points. Use this value when displaying an overview of the route. Using this option has a lower request latency compared to using the HIGH_QUALITY option.
 }
 
-
-
-
-
-enum PolylineEncoding: String {
+enum PolylineEncoding: String, Encodable {
     case POLYLINE_ENCODING_UNSPECIFIED // No polyline type preference specified. Defaults to ENCODED_POLYLINE.
     case ENCODED_POLYLINE // Specifies a polyline encoded using the polyline encoding algorithm.
     case GEO_JSON_LINESTRING // Specifies a polyline using the GeoJSON LineString format
 }
 
-
-
-
-
-enum Units: String {
+enum Units: String, Encodable {
     case UNITS_UNSPECIFIED // Units of measure not specified. Defaults to the unit of measure inferred from the request.
     case METRIC // Metric units of measure.
     case IMPERIAL // Imperial (English) units of measure.
 }
 
-
-
-
-
-enum ReferenceRoute: String {
+enum ReferenceRoute: String, Encodable {
     case REFERENCE_ROUTE_UNSPECIFIED // Not used. Requests containing this value fail.
     case FUEL_EFFICIENT // Fuel efficient route. Routes labeled with this value are determined to be optimized for parameters such as fuel consumption.
 }
 
-
-
-
-
-enum ExtraComputation: String {
+enum ExtraComputation: String, Encodable {
     case EXTRA_COMPUTATION_UNSPECIFIED // Not used. Requests containing this value will fail.
     case TOLLS // Toll information for the route(s).
     case FUEL_CONSUMPTION // Estimated fuel consumption for the route(s).
@@ -200,11 +178,7 @@ enum ExtraComputation: String {
     case HTML_FORMATTED_NAVIGATION_INSTRUCTIONS // NavigationInstructions presented as a formatted HTML text string. This content is meant to be read as-is. This content is for display only. Do not programmatically parse it.
 }
 
-
-
-
-
-struct Route {
+struct Route: Encodable {
     var routeLabels: [RouteLabel]? = nil // Labels for the Route that are useful to identify specific properties of the route to compare against others.
     var legs: [RouteLeg]? = nil // A collection of legs (path segments between waypoints) that make up the route. Each leg corresponds to the trip between two non-via Waypoints. For example, a route with no intermediate waypoints has only one leg. A route that includes one non-via intermediate waypoint has two legs. A route that includes one via intermediate waypoint has one leg. The order of the legs matches the order of waypoints from origin to intermediates to destination.
     var distanceMeters: Int? = nil // The travel distance of the route, in meters.
@@ -218,7 +192,9 @@ struct Route {
     var optimizedIntermediateWaypointIndex: [Int]? = nil // If you set optimizeWaypointOrder to true, this field contains the optimized ordering of intermediate waypoints. Otherwise, this field is empty. For example, if you give an input of Origin: LA; Intermediate waypoints: Dallas, Bangor, Phoenix; Destination: New York; and the optimized intermediate waypoint order is Phoenix, Dallas, Bangor, then this field contains the values [2, 0, 1]. The index starts with 0 for the first intermediate waypoint provided in the input.
     var localizedValues: RouteLocalizedValues? = nil // Text representations of properties of the Route.
     var routeToken: String? = nil // A web-safe, base64-encoded route token that can be passed to the Navigation SDK, that allows the Navigation SDK to reconstruct the route during navigation, and, in the event of rerouting, honor the original intention when you created the route by calling v2.computeRoutes. Customers should treat this token as an opaque blob. It is not meant for reading or mutating. NOTE: Route.route_token is only available for requests that have set ComputeRoutesRequest.routing_preference to TRAFFIC_AWARE or TRAFFIC_AWARE_OPTIMAL. Route.route_token is not supported for requests that have Via waypoints.
+}
 
+extension Route {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -274,24 +250,14 @@ struct Route {
     }
 }
 
-
-
-
-
-
-
-enum RouteLabel: String {
+enum RouteLabel: String, Encodable {
     case ROUTE_LABEL_UNSPECIFIED // Default - not used.
     case DEFAULT_ROUTE // The default "best" route returned for the route computation.
     case DEFAULT_ROUTE_ALTERNATE // An alternative to the default "best" route. Routes like this will be returned when computeAlternativeRoutes is specified.
     case FUEL_EFFICIENT // Fuel efficient route. Routes labeled with this value are determined to be optimized for Eco parameters such as fuel consumption.
 }
 
-
-
-
-
-struct RouteLeg {
+struct RouteLeg: Encodable {
     var distanceMeters: Int? = nil // The travel distance of the route leg, in meters.
     var duration: String? = nil // The length of time needed to navigate the leg. If the route_preference is set to TRAFFIC_UNAWARE, then this value is the same as staticDuration. If the route_preference is either TRAFFIC_AWARE or TRAFFIC_AWARE_OPTIMAL, then this value is calculated taking traffic conditions into account.
     var staticDuration: String? = nil // The duration of travel through the leg, calculated without taking traffic conditions into consideration.
@@ -302,7 +268,9 @@ struct RouteLeg {
     var travelAdvisory: RouteLegTravelAdvisory? = nil // Contains the additional information that the user should be informed about, such as possible traffic zone restrictions, on a route leg.
     var localizedValues: RouteLegLocalizedValues? = nil // Text representations of properties of the RouteLeg.
     var stepsOverview: StepsOverview? = nil // Overview information about the steps in this RouteLeg. This field is only populated for TRANSIT routes.
+}
 
+extension RouteLeg {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -349,16 +317,12 @@ struct RouteLeg {
     }
 }
 
-
-
-
-
-
-
-struct Polyline {
+struct Polyline: Encodable {
     var encodedPolyline: String? = nil // The string encoding of the polyline using the polyline encoding algorithm
     var geoJsonLinestring: [String: Any]? = nil // Specifies a polyline using the GeoJSON LineString format.
+}
 
+extension Polyline {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -374,13 +338,7 @@ struct Polyline {
     }
 }
 
-
-
-
-
-
-
-struct RouteLegStep {
+struct RouteLegStep: Encodable {
     var distanceMeters: Int? = nil // The travel distance of this step, in meters. In some circumstances, this field might not have a value.
     var staticDuration: String? = nil // The duration of travel through this step without taking traffic conditions into consideration. In some circumstances, this field might not have a value.
     var polyline: Polyline? = nil // The polyline associated with this step.
@@ -391,7 +349,9 @@ struct RouteLegStep {
     var localizedValues: RouteLegStepLocalizedValues? = nil // Text representations of properties of the RouteLegStep.
     var transitDetails: RouteLegStepTransitDetails? = nil // Details pertaining to this step if the travel mode is TRANSIT.
     var travelMode: RouteTravelMode? = nil // The travel mode used for this step.
+}
 
+extension RouteLegStep {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -439,16 +399,12 @@ struct RouteLegStep {
     }
 }
 
-
-
-
-
-
-
-struct NavigationInstruction {
+struct NavigationInstruction: Encodable {
     var maneuver: Maneuver? = nil // Encapsulates the navigation instructions for the current step (for example, turn left, merge, or straight). This field determines which icon to display.
     var instructions: String? = nil // Instructions for navigating this step.
+}
 
+extension NavigationInstruction {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -464,13 +420,7 @@ struct NavigationInstruction {
     }
 }
 
-
-
-
-
-
-
-enum Maneuver: String {
+enum Maneuver: String, Encodable {
     case MANEUVER_UNSPECIFIED // Not used.
     case TURN_SLIGHT_LEFT // Turn slightly to the left.
     case TURN_SHARP_LEFT // Turn sharply to the left.
@@ -494,13 +444,11 @@ enum Maneuver: String {
     case NAME_CHANGE // Used to indicate a street name change.
 }
 
-
-
-
-
-struct RouteLegStepTravelAdvisory {
+struct RouteLegStepTravelAdvisory: Encodable {
     var speedReadingIntervals: [SpeedReadingInterval]? = nil // NOTE: This field is not currently populated.
+}
 
+extension RouteLegStepTravelAdvisory {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -511,16 +459,12 @@ struct RouteLegStepTravelAdvisory {
     }
 }
 
-
-
-
-
-
-
-struct RouteLegStepLocalizedValues {
+struct RouteLegStepLocalizedValues: Encodable {
     var distance: LocalizedText? = nil // Travel distance represented in text form.
     var staticDuration: LocalizedText? = nil // Duration without taking traffic conditions into consideration, represented in text form.
+}
 
+extension RouteLegStepLocalizedValues {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -536,13 +480,7 @@ struct RouteLegStepLocalizedValues {
     }
 }
 
-
-
-
-
-
-
-struct RouteLegStepTransitDetails {
+struct RouteLegStepTransitDetails: Encodable {
     var stopDetails: TransitStopDetails? = nil // Information about the arrival and departure stops for the step.
     var localizedValues: TransitDetailsLocalizedValues? = nil // Text representations of properties of the RouteLegStepTransitDetails.
     var headsign: String? = nil // Specifies the direction in which to travel on this line as marked on the vehicle or at the departure stop. The direction is often the terminus station.
@@ -550,7 +488,9 @@ struct RouteLegStepTransitDetails {
     var transitLine: TransitLine? = nil // Information about the transit line used in this step.
     var stopCount: Int? = nil // The number of stops from the departure to the arrival stop. This count includes the arrival stop, but excludes the departure stop. For example, if your route leaves from Stop A, passes through stops B and C, and arrives at stop D, stopCount will return 3.
     var tripShortText: String? = nil // The text that appears in schedules and sign boards to identify a transit trip to passengers. The text should uniquely identify a trip within a service day. For example, "538" is the tripShortText of the Amtrak train that leaves San Jose, CA at 15:10 on weekdays to Sacramento, CA.
+}
 
+extension RouteLegStepTransitDetails {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -586,18 +526,14 @@ struct RouteLegStepTransitDetails {
     }
 }
 
-
-
-
-
-
-
-struct TransitStopDetails {
+struct TransitStopDetails: Encodable {
     var arrivalStop: TransitStop? = nil // Information about the arrival stop for the step.
     var arrivalTime: String? = nil // The estimated time of arrival for the step.
     var departureStop: TransitStop? = nil // Information about the departure stop for the step.
     var departureTime: String? = nil // The estimated time of departure for the step.
+}
 
+extension TransitStopDetails {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -621,16 +557,12 @@ struct TransitStopDetails {
     }
 }
 
-
-
-
-
-
-
-struct TransitStop {
+struct TransitStop: Encodable {
     var name: String? = nil // The name of the transit stop.
     var location: Location? = nil // The location of the stop expressed in latitude/longitude coordinates.
+}
 
+extension TransitStop {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -646,16 +578,12 @@ struct TransitStop {
     }
 }
 
-
-
-
-
-
-
-struct TransitDetailsLocalizedValues {
+struct TransitDetailsLocalizedValues: Encodable {
     var arrivalTime: LocalizedTime? = nil // Time in its formatted text representation with a corresponding time zone.
     var departureTime: LocalizedTime? = nil // Time in its formatted text representation with a corresponding time zone.
+}
 
+extension TransitDetailsLocalizedValues {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -671,16 +599,12 @@ struct TransitDetailsLocalizedValues {
     }
 }
 
-
-
-
-
-
-
-struct LocalizedTime {
+struct LocalizedTime: Encodable {
     var time: LocalizedText? = nil // The time specified as a string in a given time zone.
     var timeZone: String? = nil // Contains the time zone. The value is the name of the time zone as defined in the IANA Time Zone Database, e.g. "America/New_York".
+}
 
+extension LocalizedTime {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -696,13 +620,7 @@ struct LocalizedTime {
     }
 }
 
-
-
-
-
-
-
-struct TransitLine {
+struct TransitLine: Encodable {
     var agencies: [TransitAgency]? = nil // The transit agency (or agencies) that operates this transit line.
     var name: String? = nil // The full name of this transit line, For example, "8 Avenue Local".
     var uri: String? = nil // the URI for this transit line as provided by the transit agency.
@@ -711,7 +629,9 @@ struct TransitLine {
     var nameShort: String? = nil // The short name of this transit line. This name will normally be a line number, such as "M7" or "355".
     var textColor: String? = nil // The color commonly used in text on signage for this line. Represented in hexadecimal.
     var vehicle: TransitVehicle? = nil // The type of vehicle that operates on this transit line.
+}
 
+extension TransitLine {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -750,17 +670,13 @@ struct TransitLine {
     }
 }
 
-
-
-
-
-
-
-struct TransitAgency {
+struct TransitAgency: Encodable {
     var name: String? = nil // The name of this transit agency.
     var phoneNumber: String? = nil // The transit agency's locale-specific formatted phone number.
     var uri: String? = nil // The transit agency's URI.
+}
 
+extension TransitAgency {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -780,18 +696,14 @@ struct TransitAgency {
     }
 }
 
-
-
-
-
-
-
-struct TransitVehicle {
+struct TransitVehicle: Encodable {
     var name: LocalizedText? = nil // The name of this vehicle, capitalized.
     var type: TransitVehicleType? = nil // The type of vehicle used.
     var iconUri: String? = nil // The URI for an icon associated with this vehicle type.
     var localIconUri: String? = nil // The URI for the icon associated with this vehicle type, based on the local transport signage.
+}
 
+extension TransitVehicle {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -815,13 +727,7 @@ struct TransitVehicle {
     }
 }
 
-
-
-
-
-
-
-enum TransitVehicleType: String {
+enum TransitVehicleType: String, Encodable {
     case TRANSIT_VEHICLE_TYPE_UNSPECIFIED // Unused.
     case BUS // Bus.
     case CABLE_CAR // A vehicle that operates on a cable, usually on the ground. Aerial cable cars may be of the type GONDOLA_LIFT.
@@ -843,14 +749,12 @@ enum TransitVehicleType: String {
     case TROLLEYBUS // Trolleybus.
 }
 
-
-
-
-
-struct RouteLegTravelAdvisory {
+struct RouteLegTravelAdvisory: Encodable {
     var tollInfo: TollInfo? = nil // Contains information about tolls on the specific RouteLeg. This field is only populated if we expect there are tolls on the RouteLeg. If this field is set but the estimatedPrice subfield is not populated, we expect that road contains tolls but we do not know an estimated price. If this field does not exist, then there is no toll on the RouteLeg.
     var speedReadingIntervals: [SpeedReadingInterval]? = nil // Speed reading intervals detailing traffic density. Applicable in case of TRAFFIC_AWARE and TRAFFIC_AWARE_OPTIMAL routing preferences. The intervals cover the entire polyline of the RouteLeg without overlap. The start point of a specified interval is the same as the end point of the preceding interval.
+}
 
+extension RouteLegTravelAdvisory {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -865,17 +769,13 @@ struct RouteLegTravelAdvisory {
     }
 }
 
-
-
-
-
-
-
-struct RouteLegLocalizedValues {
+struct RouteLegLocalizedValues: Encodable {
     var distance: LocalizedText? = nil // Travel distance represented in text form.
     var duration: LocalizedText? = nil // Duration taking traffic conditions into consideration represented in text form. Note: If you did not request traffic information, this value will be the same value as staticDuration.
     var staticDuration: LocalizedText? = nil // Duration without taking traffic conditions into consideration, represented in text form.
+}
 
+extension RouteLegLocalizedValues {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -895,15 +795,11 @@ struct RouteLegLocalizedValues {
     }
 }
 
-
-
-
-
-
-
-struct StepsOverview {
+struct StepsOverview: Encodable {
     var multiModalSegments: [MultiModalSegment]? = nil // Summarized information about different multi-modal segments of the RouteLeg.steps. This field is not populated if the RouteLeg does not contain any multi-modal segments in the steps.
+}
 
+extension StepsOverview {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -914,18 +810,14 @@ struct StepsOverview {
     }
 }
 
-
-
-
-
-
-
-struct MultiModalSegment {
+struct MultiModalSegment: Encodable {
     var navigationInstruction: NavigationInstruction? = nil // NavigationInstruction for the multi-modal segment.
     var travelMode: RouteTravelMode? = nil // The travel mode of the multi-modal segment.
     var stepStartIndex: Int? = nil // The corresponding RouteLegStep index that is the start of a multi-modal segment.
     var stepEndIndex: Int? = nil // The corresponding RouteLegStep index that is the end of a multi-modal segment.
+}
 
+extension MultiModalSegment {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -949,16 +841,12 @@ struct MultiModalSegment {
     }
 }
 
-
-
-
-
-
-
-struct Viewport {
+struct Viewport: Encodable {
     var low: LatLng? = nil // Required. The low point of the viewport.
     var high: LatLng? = nil // Required. The high point of the viewport.
+}
 
+extension Viewport {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -974,18 +862,14 @@ struct Viewport {
     }
 }
 
-
-
-
-
-
-
-struct RouteLocalizedValues {
+struct RouteLocalizedValues: Encodable {
     var distance: LocalizedText? = nil // Travel distance represented in text form.
     var duration: LocalizedText? = nil // Duration taking traffic conditions into consideration, represented in text form. Note: If you did not request traffic information, this value will be the same value as staticDuration.
     var staticDuration: LocalizedText? = nil // Duration without taking traffic conditions into consideration, represented in text form.
     var transitFare: LocalizedText? = nil // Transit fare represented in text form.
+}
 
+extension RouteLocalizedValues {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -1009,17 +893,13 @@ struct RouteLocalizedValues {
     }
 }
 
-
-
-
-
-
-
-struct GeocodingResults {
+struct GeocodingResults: Encodable {
     var origin: GeocodedWaypoint? = nil // Origin geocoded waypoint.
     var destination: GeocodedWaypoint? = nil // Destination geocoded waypoint.
     var intermediates: [GeocodedWaypoint]? = nil // A list of intermediate geocoded waypoints each containing an index field that corresponds to the zero-based position of the waypoint in the order they were specified in the request.
+}
 
+extension GeocodingResults {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -1038,19 +918,15 @@ struct GeocodingResults {
     }
 }
 
-
-
-
-
-
-
-struct GeocodedWaypoint {
+struct GeocodedWaypoint: Encodable {
     var geocoderStatus: Status? = nil // Indicates the status code resulting from the geocoding operation.
     var type: [String]? = nil // The type(s) of the result, in the form of zero or more type tags. Supported types: Address types and address component types.
     var partialMatch: Bool? = nil // Indicates that the geocoder did not return an exact match for the original request, though it was able to match part of the requested address. You may wish to examine the original request for misspellings and/or an incomplete address.
     var placeId: String? = nil // The place ID for this result.
     var intermediateWaypointRequestIndex: Int? = nil // The index of the corresponding intermediate waypoint in the request. Only populated if the corresponding waypoint is an intermediate waypoint.
+}
 
+extension GeocodedWaypoint {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -1077,18 +953,12 @@ struct GeocodedWaypoint {
     }
 }
 
-
-
-
-
-
-
-
-
-struct FallbackInfo {
+struct FallbackInfo: Encodable {
     var routingMode: FallbackRoutingMode? = nil // Routing mode used for the response. If fallback was triggered, the mode may be different from routing preference set in the original client request.
     var reason: FallbackReason? = nil // The reason why fallback response was used instead of the original response. This field is only populated when the fallback mode is triggered and the fallback response is returned.
+}
 
+extension FallbackInfo {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -1104,39 +974,25 @@ struct FallbackInfo {
     }
 }
 
-
-
-
-
-
-
-enum FallbackRoutingMode: String {
+enum FallbackRoutingMode: String, Encodable {
     case FALLBACK_ROUTING_MODE_UNSPECIFIED // Not used.
     case FALLBACK_TRAFFIC_UNAWARE // Indicates the TRAFFIC_UNAWARE RoutingPreference was used to compute the response.
     case FALLBACK_TRAFFIC_AWARE // Indicates the TRAFFIC_AWARE RoutingPreference was used to compute the response.
 }
 
-
-
-
-
-enum FallbackReason: String {
+enum FallbackReason: String, Encodable {
     case FALLBACK_REASON_UNSPECIFIED // No fallback reason specified.
     case SERVER_ERROR // A server error happened while calculating routes with your preferred routing mode, but we were able to return a result calculated by an alternative mode.
     case LATENCY_EXCEEDED // We were not able to finish the calculation with your preferred routing mode on time, but we were able to return a result calculated by an alternative mode.
 }
 
 
-
-
-
-
-
-
-struct LatLng {
+struct LatLng: Encodable {
     var latitude: Int? = nil // The latitude in degrees. It must be in the range [-90.0, +90.0].
     var longitude: Int? = nil // The longitude in degrees. It must be in the range [-180.0, +180.0].
+}
 
+extension LatLng {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -1153,18 +1009,12 @@ struct LatLng {
 }
 
 
-
-
-
-
-
-
-
-
-struct LocalizedText {
+struct LocalizedText: Encodable {
     var text: String? = nil // Localized string in the language corresponding to languageCode below.
     var languageCode: String? = nil // The text's BCP-47 language code, such as "en-US" or "sr-Latn".
+}
 
+extension LocalizedText {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -1181,18 +1031,12 @@ struct LocalizedText {
 }
 
 
-
-
-
-
-
-
-
-
-struct Location {
+struct Location: Encodable {
     var latLng: LatLng? = nil // The waypoint's geographic coordinates.
     var heading: Int? = nil // The compass heading associated with the direction of the flow of traffic. This value specifies the side of the road for pickup and drop-off. Heading values can be from 0 to 360, where 0 specifies a heading of due North, 90 specifies a heading of due East, and so on. You can use this field only for DRIVE and TWO_WHEELER RouteTravelMode.
+}
 
+extension Location {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -1209,19 +1053,13 @@ struct Location {
 }
 
 
-
-
-
-
-
-
-
-
-struct Money {
+struct Money: Encodable {
     var currencyCode: String? = nil // The three-letter currency code defined in ISO 4217.
     var units: String? = nil // The whole units of the amount. For example if currencyCode is "USD", then 1 unit is one US dollar.
     var nanos: Int? = nil // Number of nano (10^-9) units of the amount. The value must be between -999,999,999 and +999,999,999 inclusive. If units is positive, nanos must be positive or zero. If units is zero, nanos can be positive, zero, or negative. If units is negative, nanos must be negative or zero. For example $-1.75 is represented as units=-1 and nanos=-750,000,000.
+}
 
+extension Money {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -1242,22 +1080,16 @@ struct Money {
 }
 
 
-
-
-
-
-
-
-
-
-struct RouteModifiers {
+struct RouteModifiers: Encodable {
     var avoidTolls: Bool? = nil // When set to true, avoids toll roads where reasonable, giving preference to routes not containing toll roads. Applies only to the DRIVE and TWO_WHEELER RouteTravelMode.
     var avoidHighways: Bool? = nil // When set to true, avoids highways where reasonable, giving preference to routes not containing highways. Applies only to the DRIVE and TWO_WHEELER RouteTravelMode.
     var avoidFerries: Bool? = nil // When set to true, avoids ferries where reasonable, giving preference to routes not containing ferries. Applies only to the DRIVE andTWO_WHEELER RouteTravelMode.
     var avoidIndoor: Bool? = nil // When set to true, avoids navigating indoors where reasonable, giving preference to routes not containing indoor navigation. Applies only to the WALK RouteTravelMode.
     var vehicleInfo: VehicleInfo? = nil // Specifies the vehicle information.
     var tollPasses: [TollPass]? = nil // Encapsulates information about toll passes. If toll passes are provided, the API tries to return the pass price. If toll passes are not provided, the API treats the toll pass as unknown and tries to return the cash price. Applies only to the DRIVE and TWO_WHEELER RouteTravelMode.
+}
 
+extension RouteModifiers {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -1288,15 +1120,11 @@ struct RouteModifiers {
     }
 }
 
-
-
-
-
-
-
-struct VehicleInfo {
+struct VehicleInfo: Encodable {
     var emissionType: VehicleEmissionType? = nil // Describes the vehicle's emission type. Applies only to the DRIVE RouteTravelMode.
+}
 
+extension VehicleInfo {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -1308,13 +1136,7 @@ struct VehicleInfo {
     }
 }
 
-
-
-
-
-
-
-enum VehicleEmissionType: String {
+enum VehicleEmissionType: String, Encodable {
     case VEHICLE_EMISSION_TYPE_UNSPECIFIED // No emission type specified. Default to GASOLINE.
     case GASOLINE // Gasoline/petrol fueled vehicle.
     case ELECTRIC // Electricity powered vehicle.
@@ -1322,11 +1144,7 @@ enum VehicleEmissionType: String {
     case DIESEL // Diesel fueled vehicle.
 }
 
-
-
-
-
-enum TollPass: String {
+enum TollPass: String, Encodable {
     case TOLL_PASS_UNSPECIFIED // Not used. If this value is used, then the request fails.
     case AU_ETOLL_TAG // Sydney toll pass. See additional details at https://www.myetoll.com.au.
     case AU_EWAY_TAG // Sydney toll pass. See additional details at https://www.tollpay.com.au.
@@ -1429,19 +1247,15 @@ enum TollPass: String {
 }
 
 
-
-
-
-
-
-
-struct RouteTravelAdvisory {
+struct RouteTravelAdvisory: Encodable {
     var tollInfo: TollInfo? = nil // Contains information about tolls on the route. This field is only populated if tolls are expected on the route. If this field is set, but the estimatedPrice subfield is not populated, then the route contains tolls, but the estimated price is unknown. If this field is not set, then there are no tolls expected on the route.
     var speedReadingIntervals: [SpeedReadingInterval]? = nil // Speed reading intervals detailing traffic density. Applicable in case of TRAFFIC_AWARE and TRAFFIC_AWARE_OPTIMAL routing preferences. The intervals cover the entire polyline of the route without overlap. The start point of a specified interval is the same as the end point of the preceding interval.
     var fuelConsumptionMicroliters: String? = nil // The predicted fuel consumption in microliters.
     var routeRestrictionsPartiallyIgnored: Bool? = nil // Returned route may have restrictions that are not suitable for requested travel mode or route modifiers.
     var transitFare: Money? = nil // If present, contains the total fare or ticket costs on this route This property is only returned for TRANSIT requests and only for routes where fare information is available for all transit steps.
+}
 
+extension RouteTravelAdvisory {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -1469,15 +1283,7 @@ struct RouteTravelAdvisory {
 }
 
 
-
-
-
-
-
-
-
-
-enum RouteTravelMode: String {
+enum RouteTravelMode: String, Encodable {
     case TRAVEL_MODE_UNSPECIFIED // No travel mode specified. Defaults to DRIVE.
     case DRIVE // Travel by passenger car.
     case BICYCLE // Travel by bicycle.
@@ -1487,13 +1293,7 @@ enum RouteTravelMode: String {
 }
 
 
-
-
-
-
-
-
-enum RoutingPreference: String {
+enum RoutingPreference: String, Encodable {
     case ROUTING_PREFERENCE_UNSPECIFIED // No routing preference specified. Default to TRAFFIC_UNAWARE.
     case TRAFFIC_UNAWARE // Computes routes without taking live traffic conditions into consideration. Suitable when traffic conditions don't matter or are not applicable. Using this value produces the lowest latency. Note: For RouteTravelMode DRIVE and TWO_WHEELER, the route and duration chosen are based on road network and average time-independent traffic conditions, not current road conditions. Consequently, routes may include roads that are temporarily closed. Results for a given request may vary over time due to changes in the road network, updated average traffic conditions, and the distributed nature of the service. Results may also vary between nearly-equivalent routes at any time or frequency.
     case TRAFFIC_AWARE // Calculates routes taking live traffic conditions into consideration. In contrast to TRAFFIC_AWARE_OPTIMAL, some optimizations are applied to significantly reduce latency.
@@ -1501,17 +1301,13 @@ enum RoutingPreference: String {
 }
 
 
-
-
-
-
-
-
-struct SpeedReadingInterval {
+struct SpeedReadingInterval: Encodable {
     var startPolylinePointIndex: Int? = nil // The starting index of this interval in the polyline.
     var endPolylinePointIndex: Int? = nil // The ending index of this interval in the polyline.
     var speed: Speed? = nil // Traffic speed in this interval.
+}
 
+extension SpeedReadingInterval {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -1531,13 +1327,7 @@ struct SpeedReadingInterval {
     }
 }
 
-
-
-
-
-
-
-enum Speed: String {
+enum Speed: String, Encodable {
     case SPEED_UNSPECIFIED // Default value. This value is unused.
     case NORMAL // Normal speed, no slowdown is detected.
     case SLOW // Slowdown detected, but no traffic jam formed.
@@ -1545,17 +1335,13 @@ enum Speed: String {
 }
 
 
-
-
-
-
-
-
-struct Status {
+struct Status: Encodable {
     var code: Int? = nil // The status code, which should be an enum value of google.rpc.Code.
     var message: String? = nil // A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the google.rpc.Status.details field, or localized by the client.
     var details: [[String: Any]]? = nil // A list of messages that carry the error details. There is a common set of message types for APIs to use.
+}
 
+extension Status {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -1574,17 +1360,11 @@ struct Status {
 }
 
 
-
-
-
-
-
-
-
-
-struct TollInfo {
+struct TollInfo: Encodable {
     var estimatedPrice: [Money]? = nil // The monetary amount of tolls for the corresponding Route or RouteLeg. This list contains a money amount for each currency that is expected to be charged by the toll stations. Typically this list will contain only one item for routes with tolls in one currency. For international trips, this list may contain multiple items to reflect tolls in different currencies.
+}
 
+extension TollInfo {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -1596,15 +1376,7 @@ struct TollInfo {
 }
 
 
-
-
-
-
-
-
-
-
-enum TrafficModel: String {
+enum TrafficModel: String, Encodable {
     case TRAFFIC_MODEL_UNSPECIFIED // Unused. If specified, will default to BEST_GUESS.
     case BEST_GUESS // Indicates that the returned duration should be the best estimate of travel time given what is known about both historical traffic conditions and live traffic. Live traffic becomes more important the closer the departureTime is to now.
     case PESSIMISTIC // Indicates that the returned duration should be longer than the actual travel time on most days, though occasional days with particularly bad traffic conditions may exceed this value.
@@ -1612,16 +1384,12 @@ enum TrafficModel: String {
 }
 
 
-
-
-
-
-
-
-struct TransitPreferences {
+struct TransitPreferences: Encodable {
     var allowedTravelModes: [TransitTravelMode]? = nil // A set of travel modes to use when getting a TRANSIT route. Defaults to all supported modes of travel.
     var routingPreference: TransitRoutingPreference? = nil // A routing preference that, when specified, influences the TRANSIT route returned.
+}
 
+extension TransitPreferences {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -1636,13 +1404,7 @@ struct TransitPreferences {
     }
 }
 
-
-
-
-
-
-
-enum TransitTravelMode: String {
+enum TransitTravelMode: String, Encodable {
     case TRANSIT_TRAVEL_MODE_UNSPECIFIED // No transit travel mode specified.
     case BUS // Travel by bus.
     case SUBWAY // Travel by subway.
@@ -1651,31 +1413,23 @@ enum TransitTravelMode: String {
     case RAIL // Travel by rail. This is equivalent to a combination of SUBWAY, TRAIN, and LIGHT_RAIL.
 }
 
-
-
-
-
-enum TransitRoutingPreference: String {
+enum TransitRoutingPreference: String, Encodable {
     case TRANSIT_ROUTING_PREFERENCE_UNSPECIFIED // No preference specified.
     case LESS_WALKING // Indicates that the calculated route should prefer limited amounts of walking.
     case FEWER_TRANSFERS // Indicates that the calculated route should prefer a limited number of transfers.
 }
 
 
-
-
-
-
-
-
-struct Waypoint {
+struct Waypoint: Encodable {
     var via: Bool? = nil // Marks this waypoint as a milestone rather a stopping point. For each non-via waypoint in the request, the response appends an entry to the legs array to provide the details for stopovers on that leg of the trip. Set this value to true when you want the route to pass through this waypoint without stopping over. Via waypoints don't cause an entry to be added to the legs array, but they do route the journey through the waypoint. You can only set this value on waypoints that are intermediates. The request fails if you set this field on terminal waypoints. If ComputeRoutesRequest.optimize_waypoint_order is set to true then this field cannot be set to true; otherwise, the request fails.
     var vehicleStopover: Bool? = nil // Indicates that the waypoint is meant for vehicles to stop at, where the intention is to either pickup or drop-off. When you set this value, the calculated route won't include non-via waypoints on roads that are unsuitable for pickup and drop-off. This option works only for DRIVE and TWO_WHEELER travel modes, and when the locationType is Location.
     var sideOfRoad: Bool? = nil // Indicates that the location of this waypoint is meant to have a preference for the vehicle to stop at a particular side of road. When you set this value, the route will pass through the location so that the vehicle can stop at the side of road that the location is biased towards from the center of the road. This option works only for 'DRIVE' and 'TWO_WHEELER' RouteTravelMode.
     var location: Location? = nil // A point specified using geographic coordinates, including an optional heading.
     var placeId: String? = nil // The POI Place ID associated with the waypoint.
     var address: String? = nil // Human readable address or a plus code. See https://plus.codes for details.
+}
 
+extension Waypoint {
     init(json jsonOrNil: [String: Any]?) {
         guard let json = jsonOrNil else {
             return
@@ -1706,11 +1460,5 @@ struct Waypoint {
         }
     }
 }
-
-
-
-
-
-
 
 

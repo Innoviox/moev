@@ -84,10 +84,10 @@ class APIHandler {
         _request(url: url, headers: headers, body: body, method: "POST", handler: handler)
     }
     
-    func directions(origin: Waypoint, destination: Waypoint, handler: @escaping(DirectionsResults?, Error?) -> Void) {
+    func directions(origin: Waypoint, destination: Waypoint, handler: @escaping(ComputeRoutesResponse?, Error?) -> Void) {
         let url = "https://routes.googleapis.com/directions/v2:computeRoutes"
         
-        let body = RoutesBody(origin: origin, destination: destination, travelMode: "TRANSIT")
+        let body = ComputeRoutesRequest(origin: origin, destination: destination, travelMode: .TRANSIT)
         
         let fields = [
             "routes.duration",
@@ -110,8 +110,7 @@ class APIHandler {
                 return handler(nil, error)
             }
             
-            let route = try! JSONSerialization.jsonObject(with: d, options: []) as! [String : Any]
-            let results = DirectionsResults(json: (route["routes"] as! [[String: Any]])[0])
+            let results = ComputeRoutesResponse(fromJSONData: d)
             handler(results, error)
         }
     }
