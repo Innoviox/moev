@@ -7,6 +7,32 @@ struct PlacesAutocompleteResponse: Codable, Identifiable {
 	var info_messages: [String]? = nil // 
 }
 
+extension PlacesAutocompleteResponse {	enum CodingKeys: String, CodingKey {
+		case predictions
+		case status
+		case error_message
+		case info_messages
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		predictions = try container.decodeIfPresent([PlaceAutocompletePrediction].self, forKey: .predictions)
+		status = try container.decodeIfPresent(PlacesAutocompleteStatus.self, forKey: .status)
+		error_message = try container.decodeIfPresent(String.self, forKey: .error_message)
+		info_messages = try container.decodeIfPresent([String].self, forKey: .info_messages)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(predictions, forKey: .predictions)
+		try container.encodeIfPresent(status, forKey: .status)
+		try container.encodeIfPresent(error_message, forKey: .error_message)
+		try container.encodeIfPresent(info_messages, forKey: .info_messages)
+	}
+}
+
 extension PlacesAutocompleteResponse {
 	init(json jsonOrNil: [String: Any]?) {
 		guard let json = jsonOrNil else {
@@ -47,6 +73,44 @@ struct PlaceAutocompletePrediction: Codable, Identifiable {
 	var place_id: String? = nil // 
 	var reference: String? = nil // See place_id.
 	var types: [String]? = nil // 
+}
+
+extension PlaceAutocompletePrediction {	enum CodingKeys: String, CodingKey {
+		case description
+		case matched_substrings
+		case structured_formatting
+		case terms
+		case distance_meters
+		case place_id
+		case reference
+		case types
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		description = try container.decodeIfPresent(String.self, forKey: .description)
+		matched_substrings = try container.decodeIfPresent([PlaceAutocompleteMatchedSubstring].self, forKey: .matched_substrings)
+		structured_formatting = try container.decodeIfPresent(PlaceAutocompleteStructuredFormat.self, forKey: .structured_formatting)
+		terms = try container.decodeIfPresent([PlaceAutocompleteTerm].self, forKey: .terms)
+		distance_meters = try container.decodeIfPresent(Int.self, forKey: .distance_meters)
+		place_id = try container.decodeIfPresent(String.self, forKey: .place_id)
+		reference = try container.decodeIfPresent(String.self, forKey: .reference)
+		types = try container.decodeIfPresent([String].self, forKey: .types)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(description, forKey: .description)
+		try container.encodeIfPresent(matched_substrings, forKey: .matched_substrings)
+		try container.encodeIfPresent(structured_formatting, forKey: .structured_formatting)
+		try container.encodeIfPresent(terms, forKey: .terms)
+		try container.encodeIfPresent(distance_meters, forKey: .distance_meters)
+		try container.encodeIfPresent(place_id, forKey: .place_id)
+		try container.encodeIfPresent(reference, forKey: .reference)
+		try container.encodeIfPresent(types, forKey: .types)
+	}
 }
 
 extension PlaceAutocompletePrediction {
@@ -92,6 +156,26 @@ struct PlaceAutocompleteMatchedSubstring: Codable, Identifiable {
 	var offset: Double? = nil // Start location of the matched substring in the prediction result             text.
 }
 
+extension PlaceAutocompleteMatchedSubstring {	enum CodingKeys: String, CodingKey {
+		case length
+		case offset
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		length = try container.decodeIfPresent(Double.self, forKey: .length)
+		offset = try container.decodeIfPresent(Double.self, forKey: .offset)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(length, forKey: .length)
+		try container.encodeIfPresent(offset, forKey: .offset)
+	}
+}
+
 extension PlaceAutocompleteMatchedSubstring {
 	init(json jsonOrNil: [String: Any]?) {
 		guard let json = jsonOrNil else {
@@ -114,6 +198,32 @@ struct PlaceAutocompleteStructuredFormat: Codable, Identifiable {
 	var main_text_matched_substrings: [PlaceAutocompleteMatchedSubstring]? = nil // 
 	var secondary_text: String? = nil // Contains the secondary text of a prediction, usually the location of             the place.
 	var secondary_text_matched_substrings: [PlaceAutocompleteMatchedSubstring]? = nil // 
+}
+
+extension PlaceAutocompleteStructuredFormat {	enum CodingKeys: String, CodingKey {
+		case main_text
+		case main_text_matched_substrings
+		case secondary_text
+		case secondary_text_matched_substrings
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		main_text = try container.decodeIfPresent(String.self, forKey: .main_text)
+		main_text_matched_substrings = try container.decodeIfPresent([PlaceAutocompleteMatchedSubstring].self, forKey: .main_text_matched_substrings)
+		secondary_text = try container.decodeIfPresent(String.self, forKey: .secondary_text)
+		secondary_text_matched_substrings = try container.decodeIfPresent([PlaceAutocompleteMatchedSubstring].self, forKey: .secondary_text_matched_substrings)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(main_text, forKey: .main_text)
+		try container.encodeIfPresent(main_text_matched_substrings, forKey: .main_text_matched_substrings)
+		try container.encodeIfPresent(secondary_text, forKey: .secondary_text)
+		try container.encodeIfPresent(secondary_text_matched_substrings, forKey: .secondary_text_matched_substrings)
+	}
 }
 
 extension PlaceAutocompleteStructuredFormat {
@@ -142,6 +252,26 @@ struct PlaceAutocompleteTerm: Codable, Identifiable {
 	var id = UUID()
 	var offset: Double? = nil // Defines the start position of this term in the description, measured             in Unicode characters
 	var value: String? = nil // The text of the term.
+}
+
+extension PlaceAutocompleteTerm {	enum CodingKeys: String, CodingKey {
+		case offset
+		case value
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		offset = try container.decodeIfPresent(Double.self, forKey: .offset)
+		value = try container.decodeIfPresent(String.self, forKey: .value)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(offset, forKey: .offset)
+		try container.encodeIfPresent(value, forKey: .value)
+	}
 }
 
 extension PlaceAutocompleteTerm {

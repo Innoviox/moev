@@ -22,6 +22,77 @@ struct ComputeRoutesRequest: Codable, Identifiable {
 	var transitPreferences: TransitPreferences? = nil // Optional. Specifies preferences that influence the route returned for TRANSIT routes. NOTE: You can only specify a transitPreferences when RouteTravelMode is set to TRANSIT.
 }
 
+extension ComputeRoutesRequest {	enum CodingKeys: String, CodingKey {
+		case origin
+		case destination
+		case intermediates
+		case travelMode
+		case routingPreference
+		case polylineQuality
+		case polylineEncoding
+		case departureTime
+		case arrivalTime
+		case computeAlternativeRoutes
+		case routeModifiers
+		case languageCode
+		case regionCode
+		case units
+		case optimizeWaypointOrder
+		case requestedReferenceRoutes
+		case extraComputations
+		case trafficModel
+		case transitPreferences
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		origin = try container.decodeIfPresent(Waypoint.self, forKey: .origin)
+		destination = try container.decodeIfPresent(Waypoint.self, forKey: .destination)
+		intermediates = try container.decodeIfPresent([Waypoint].self, forKey: .intermediates)
+		travelMode = try container.decodeIfPresent(RouteTravelMode.self, forKey: .travelMode)
+		routingPreference = try container.decodeIfPresent(RoutingPreference.self, forKey: .routingPreference)
+		polylineQuality = try container.decodeIfPresent(PolylineQuality.self, forKey: .polylineQuality)
+		polylineEncoding = try container.decodeIfPresent(PolylineEncoding.self, forKey: .polylineEncoding)
+		departureTime = try container.decodeIfPresent(String.self, forKey: .departureTime)
+		arrivalTime = try container.decodeIfPresent(String.self, forKey: .arrivalTime)
+		computeAlternativeRoutes = try container.decodeIfPresent(Bool.self, forKey: .computeAlternativeRoutes)
+		routeModifiers = try container.decodeIfPresent(RouteModifiers.self, forKey: .routeModifiers)
+		languageCode = try container.decodeIfPresent(String.self, forKey: .languageCode)
+		regionCode = try container.decodeIfPresent(String.self, forKey: .regionCode)
+		units = try container.decodeIfPresent(Units.self, forKey: .units)
+		optimizeWaypointOrder = try container.decodeIfPresent(Bool.self, forKey: .optimizeWaypointOrder)
+		requestedReferenceRoutes = try container.decodeIfPresent([ReferenceRoute].self, forKey: .requestedReferenceRoutes)
+		extraComputations = try container.decodeIfPresent([ExtraComputation].self, forKey: .extraComputations)
+		trafficModel = try container.decodeIfPresent(TrafficModel.self, forKey: .trafficModel)
+		transitPreferences = try container.decodeIfPresent(TransitPreferences.self, forKey: .transitPreferences)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(origin, forKey: .origin)
+		try container.encodeIfPresent(destination, forKey: .destination)
+		try container.encodeIfPresent(intermediates, forKey: .intermediates)
+		try container.encodeIfPresent(travelMode, forKey: .travelMode)
+		try container.encodeIfPresent(routingPreference, forKey: .routingPreference)
+		try container.encodeIfPresent(polylineQuality, forKey: .polylineQuality)
+		try container.encodeIfPresent(polylineEncoding, forKey: .polylineEncoding)
+		try container.encodeIfPresent(departureTime, forKey: .departureTime)
+		try container.encodeIfPresent(arrivalTime, forKey: .arrivalTime)
+		try container.encodeIfPresent(computeAlternativeRoutes, forKey: .computeAlternativeRoutes)
+		try container.encodeIfPresent(routeModifiers, forKey: .routeModifiers)
+		try container.encodeIfPresent(languageCode, forKey: .languageCode)
+		try container.encodeIfPresent(regionCode, forKey: .regionCode)
+		try container.encodeIfPresent(units, forKey: .units)
+		try container.encodeIfPresent(optimizeWaypointOrder, forKey: .optimizeWaypointOrder)
+		try container.encodeIfPresent(requestedReferenceRoutes, forKey: .requestedReferenceRoutes)
+		try container.encodeIfPresent(extraComputations, forKey: .extraComputations)
+		try container.encodeIfPresent(trafficModel, forKey: .trafficModel)
+		try container.encodeIfPresent(transitPreferences, forKey: .transitPreferences)
+	}
+}
+
 extension ComputeRoutesRequest {
 	init(json jsonOrNil: [String: Any]?) {
 		guard let json = jsonOrNil else {
@@ -110,6 +181,29 @@ struct ComputeRoutesResponse: Codable, Identifiable {
 	var geocodingResults: GeocodingResults? = nil // Contains geocoding response info for waypoints specified as addresses.
 }
 
+extension ComputeRoutesResponse {	enum CodingKeys: String, CodingKey {
+		case routes
+		case fallbackInfo
+		case geocodingResults
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		routes = try container.decodeIfPresent([Route].self, forKey: .routes)
+		fallbackInfo = try container.decodeIfPresent(FallbackInfo.self, forKey: .fallbackInfo)
+		geocodingResults = try container.decodeIfPresent(GeocodingResults.self, forKey: .geocodingResults)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(routes, forKey: .routes)
+		try container.encodeIfPresent(fallbackInfo, forKey: .fallbackInfo)
+		try container.encodeIfPresent(geocodingResults, forKey: .geocodingResults)
+	}
+}
+
 extension ComputeRoutesResponse {
 	init(json jsonOrNil: [String: Any]?) {
 		guard let json = jsonOrNil else {
@@ -183,6 +277,59 @@ struct Route: Codable, Identifiable {
 	var optimizedIntermediateWaypointIndex: [Int]? = nil // If you set optimizeWaypointOrder to true, this field contains the optimized ordering of intermediate waypoints. Otherwise, this field is empty. For example, if you give an input of Origin: LA; Intermediate waypoints: Dallas, Bangor, Phoenix; Destination: New York; and the optimized intermediate waypoint order is Phoenix, Dallas, Bangor, then this field contains the values [2, 0, 1]. The index starts with 0 for the first intermediate waypoint provided in the input.
 	var localizedValues: RouteLocalizedValues? = nil // Text representations of properties of the Route.
 	var routeToken: String? = nil // A web-safe, base64-encoded route token that can be passed to the Navigation SDK, that allows the Navigation SDK to reconstruct the route during navigation, and, in the event of rerouting, honor the original intention when you created the route by calling v2.computeRoutes. Customers should treat this token as an opaque blob. It is not meant for reading or mutating. NOTE: Route.route_token is only available for requests that have set ComputeRoutesRequest.routing_preference to TRAFFIC_AWARE or TRAFFIC_AWARE_OPTIMAL. Route.route_token is not supported for requests that have Via waypoints.
+}
+
+extension Route {	enum CodingKeys: String, CodingKey {
+		case routeLabels
+		case legs
+		case distanceMeters
+		case duration
+		case staticDuration
+		case polyline
+		case description
+		case warnings
+		case viewport
+		case travelAdvisory
+		case optimizedIntermediateWaypointIndex
+		case localizedValues
+		case routeToken
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		routeLabels = try container.decodeIfPresent([RouteLabel].self, forKey: .routeLabels)
+		legs = try container.decodeIfPresent([RouteLeg].self, forKey: .legs)
+		distanceMeters = try container.decodeIfPresent(Int.self, forKey: .distanceMeters)
+		duration = try container.decodeIfPresent(String.self, forKey: .duration)
+		staticDuration = try container.decodeIfPresent(String.self, forKey: .staticDuration)
+		polyline = try container.decodeIfPresent(Polyline.self, forKey: .polyline)
+		description = try container.decodeIfPresent(String.self, forKey: .description)
+		warnings = try container.decodeIfPresent([String].self, forKey: .warnings)
+		viewport = try container.decodeIfPresent(Viewport.self, forKey: .viewport)
+		travelAdvisory = try container.decodeIfPresent(RouteTravelAdvisory.self, forKey: .travelAdvisory)
+		optimizedIntermediateWaypointIndex = try container.decodeIfPresent([Int].self, forKey: .optimizedIntermediateWaypointIndex)
+		localizedValues = try container.decodeIfPresent(RouteLocalizedValues.self, forKey: .localizedValues)
+		routeToken = try container.decodeIfPresent(String.self, forKey: .routeToken)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(routeLabels, forKey: .routeLabels)
+		try container.encodeIfPresent(legs, forKey: .legs)
+		try container.encodeIfPresent(distanceMeters, forKey: .distanceMeters)
+		try container.encodeIfPresent(duration, forKey: .duration)
+		try container.encodeIfPresent(staticDuration, forKey: .staticDuration)
+		try container.encodeIfPresent(polyline, forKey: .polyline)
+		try container.encodeIfPresent(description, forKey: .description)
+		try container.encodeIfPresent(warnings, forKey: .warnings)
+		try container.encodeIfPresent(viewport, forKey: .viewport)
+		try container.encodeIfPresent(travelAdvisory, forKey: .travelAdvisory)
+		try container.encodeIfPresent(optimizedIntermediateWaypointIndex, forKey: .optimizedIntermediateWaypointIndex)
+		try container.encodeIfPresent(localizedValues, forKey: .localizedValues)
+		try container.encodeIfPresent(routeToken, forKey: .routeToken)
+	}
 }
 
 extension Route {
@@ -262,6 +409,50 @@ struct RouteLeg: Codable, Identifiable {
 	var stepsOverview: StepsOverview? = nil // Overview information about the steps in this RouteLeg. This field is only populated for TRANSIT routes.
 }
 
+extension RouteLeg {	enum CodingKeys: String, CodingKey {
+		case distanceMeters
+		case duration
+		case staticDuration
+		case polyline
+		case startLocation
+		case endLocation
+		case steps
+		case travelAdvisory
+		case localizedValues
+		case stepsOverview
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		distanceMeters = try container.decodeIfPresent(Int.self, forKey: .distanceMeters)
+		duration = try container.decodeIfPresent(String.self, forKey: .duration)
+		staticDuration = try container.decodeIfPresent(String.self, forKey: .staticDuration)
+		polyline = try container.decodeIfPresent(Polyline.self, forKey: .polyline)
+		startLocation = try container.decodeIfPresent(Location.self, forKey: .startLocation)
+		endLocation = try container.decodeIfPresent(Location.self, forKey: .endLocation)
+		steps = try container.decodeIfPresent([RouteLegStep].self, forKey: .steps)
+		travelAdvisory = try container.decodeIfPresent(RouteLegTravelAdvisory.self, forKey: .travelAdvisory)
+		localizedValues = try container.decodeIfPresent(RouteLegLocalizedValues.self, forKey: .localizedValues)
+		stepsOverview = try container.decodeIfPresent(StepsOverview.self, forKey: .stepsOverview)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(distanceMeters, forKey: .distanceMeters)
+		try container.encodeIfPresent(duration, forKey: .duration)
+		try container.encodeIfPresent(staticDuration, forKey: .staticDuration)
+		try container.encodeIfPresent(polyline, forKey: .polyline)
+		try container.encodeIfPresent(startLocation, forKey: .startLocation)
+		try container.encodeIfPresent(endLocation, forKey: .endLocation)
+		try container.encodeIfPresent(steps, forKey: .steps)
+		try container.encodeIfPresent(travelAdvisory, forKey: .travelAdvisory)
+		try container.encodeIfPresent(localizedValues, forKey: .localizedValues)
+		try container.encodeIfPresent(stepsOverview, forKey: .stepsOverview)
+	}
+}
+
 extension RouteLeg {
 	init(json jsonOrNil: [String: Any]?) {
 		guard let json = jsonOrNil else {
@@ -313,8 +504,9 @@ struct Polyline: Codable, Identifiable {
 	var id = UUID()
 	var encodedPolyline: String? = nil // The string encoding of the polyline using the polyline encoding algorithm
 	var geoJsonLinestring: [String: Any]? = nil // Specifies a polyline using the GeoJSON LineString format.
+}
 
-	enum CodingKeys: String, CodingKey {
+extension Polyline {	enum CodingKeys: String, CodingKey {
 		case encodedPolyline
 		case geoJsonLinestring
 	}
@@ -362,6 +554,50 @@ struct RouteLegStep: Codable, Identifiable {
 	var localizedValues: RouteLegStepLocalizedValues? = nil // Text representations of properties of the RouteLegStep.
 	var transitDetails: RouteLegStepTransitDetails? = nil // Details pertaining to this step if the travel mode is TRANSIT.
 	var travelMode: RouteTravelMode? = nil // The travel mode used for this step.
+}
+
+extension RouteLegStep {	enum CodingKeys: String, CodingKey {
+		case distanceMeters
+		case staticDuration
+		case polyline
+		case startLocation
+		case endLocation
+		case navigationInstruction
+		case travelAdvisory
+		case localizedValues
+		case transitDetails
+		case travelMode
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		distanceMeters = try container.decodeIfPresent(Int.self, forKey: .distanceMeters)
+		staticDuration = try container.decodeIfPresent(String.self, forKey: .staticDuration)
+		polyline = try container.decodeIfPresent(Polyline.self, forKey: .polyline)
+		startLocation = try container.decodeIfPresent(Location.self, forKey: .startLocation)
+		endLocation = try container.decodeIfPresent(Location.self, forKey: .endLocation)
+		navigationInstruction = try container.decodeIfPresent(NavigationInstruction.self, forKey: .navigationInstruction)
+		travelAdvisory = try container.decodeIfPresent(RouteLegStepTravelAdvisory.self, forKey: .travelAdvisory)
+		localizedValues = try container.decodeIfPresent(RouteLegStepLocalizedValues.self, forKey: .localizedValues)
+		transitDetails = try container.decodeIfPresent(RouteLegStepTransitDetails.self, forKey: .transitDetails)
+		travelMode = try container.decodeIfPresent(RouteTravelMode.self, forKey: .travelMode)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(distanceMeters, forKey: .distanceMeters)
+		try container.encodeIfPresent(staticDuration, forKey: .staticDuration)
+		try container.encodeIfPresent(polyline, forKey: .polyline)
+		try container.encodeIfPresent(startLocation, forKey: .startLocation)
+		try container.encodeIfPresent(endLocation, forKey: .endLocation)
+		try container.encodeIfPresent(navigationInstruction, forKey: .navigationInstruction)
+		try container.encodeIfPresent(travelAdvisory, forKey: .travelAdvisory)
+		try container.encodeIfPresent(localizedValues, forKey: .localizedValues)
+		try container.encodeIfPresent(transitDetails, forKey: .transitDetails)
+		try container.encodeIfPresent(travelMode, forKey: .travelMode)
+	}
 }
 
 extension RouteLegStep {
@@ -418,6 +654,26 @@ struct NavigationInstruction: Codable, Identifiable {
 	var instructions: String? = nil // Instructions for navigating this step.
 }
 
+extension NavigationInstruction {	enum CodingKeys: String, CodingKey {
+		case maneuver
+		case instructions
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		maneuver = try container.decodeIfPresent(Maneuver.self, forKey: .maneuver)
+		instructions = try container.decodeIfPresent(String.self, forKey: .instructions)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(maneuver, forKey: .maneuver)
+		try container.encodeIfPresent(instructions, forKey: .instructions)
+	}
+}
+
 extension NavigationInstruction {
 	init(json jsonOrNil: [String: Any]?) {
 		guard let json = jsonOrNil else {
@@ -463,6 +719,23 @@ struct RouteLegStepTravelAdvisory: Codable, Identifiable {
 	var speedReadingIntervals: [SpeedReadingInterval]? = nil // NOTE: This field is not currently populated.
 }
 
+extension RouteLegStepTravelAdvisory {	enum CodingKeys: String, CodingKey {
+		case speedReadingIntervals
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		speedReadingIntervals = try container.decodeIfPresent([SpeedReadingInterval].self, forKey: .speedReadingIntervals)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(speedReadingIntervals, forKey: .speedReadingIntervals)
+	}
+}
+
 extension RouteLegStepTravelAdvisory {
 	init(json jsonOrNil: [String: Any]?) {
 		guard let json = jsonOrNil else {
@@ -478,6 +751,26 @@ struct RouteLegStepLocalizedValues: Codable, Identifiable {
 	var id = UUID()
 	var distance: LocalizedText? = nil // Travel distance represented in text form.
 	var staticDuration: LocalizedText? = nil // Duration without taking traffic conditions into consideration, represented in text form.
+}
+
+extension RouteLegStepLocalizedValues {	enum CodingKeys: String, CodingKey {
+		case distance
+		case staticDuration
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		distance = try container.decodeIfPresent(LocalizedText.self, forKey: .distance)
+		staticDuration = try container.decodeIfPresent(LocalizedText.self, forKey: .staticDuration)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(distance, forKey: .distance)
+		try container.encodeIfPresent(staticDuration, forKey: .staticDuration)
+	}
 }
 
 extension RouteLegStepLocalizedValues {
@@ -505,6 +798,41 @@ struct RouteLegStepTransitDetails: Codable, Identifiable {
 	var transitLine: TransitLine? = nil // Information about the transit line used in this step.
 	var stopCount: Int? = nil // The number of stops from the departure to the arrival stop. This count includes the arrival stop, but excludes the departure stop. For example, if your route leaves from Stop A, passes through stops B and C, and arrives at stop D, stopCount will return 3.
 	var tripShortText: String? = nil // The text that appears in schedules and sign boards to identify a transit trip to passengers. The text should uniquely identify a trip within a service day. For example, "538" is the tripShortText of the Amtrak train that leaves San Jose, CA at 15:10 on weekdays to Sacramento, CA.
+}
+
+extension RouteLegStepTransitDetails {	enum CodingKeys: String, CodingKey {
+		case stopDetails
+		case localizedValues
+		case headsign
+		case headway
+		case transitLine
+		case stopCount
+		case tripShortText
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		stopDetails = try container.decodeIfPresent(TransitStopDetails.self, forKey: .stopDetails)
+		localizedValues = try container.decodeIfPresent(TransitDetailsLocalizedValues.self, forKey: .localizedValues)
+		headsign = try container.decodeIfPresent(String.self, forKey: .headsign)
+		headway = try container.decodeIfPresent(String.self, forKey: .headway)
+		transitLine = try container.decodeIfPresent(TransitLine.self, forKey: .transitLine)
+		stopCount = try container.decodeIfPresent(Int.self, forKey: .stopCount)
+		tripShortText = try container.decodeIfPresent(String.self, forKey: .tripShortText)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(stopDetails, forKey: .stopDetails)
+		try container.encodeIfPresent(localizedValues, forKey: .localizedValues)
+		try container.encodeIfPresent(headsign, forKey: .headsign)
+		try container.encodeIfPresent(headway, forKey: .headway)
+		try container.encodeIfPresent(transitLine, forKey: .transitLine)
+		try container.encodeIfPresent(stopCount, forKey: .stopCount)
+		try container.encodeIfPresent(tripShortText, forKey: .tripShortText)
+	}
 }
 
 extension RouteLegStepTransitDetails {
@@ -551,6 +879,32 @@ struct TransitStopDetails: Codable, Identifiable {
 	var departureTime: String? = nil // The estimated time of departure for the step.
 }
 
+extension TransitStopDetails {	enum CodingKeys: String, CodingKey {
+		case arrivalStop
+		case arrivalTime
+		case departureStop
+		case departureTime
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		arrivalStop = try container.decodeIfPresent(TransitStop.self, forKey: .arrivalStop)
+		arrivalTime = try container.decodeIfPresent(String.self, forKey: .arrivalTime)
+		departureStop = try container.decodeIfPresent(TransitStop.self, forKey: .departureStop)
+		departureTime = try container.decodeIfPresent(String.self, forKey: .departureTime)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(arrivalStop, forKey: .arrivalStop)
+		try container.encodeIfPresent(arrivalTime, forKey: .arrivalTime)
+		try container.encodeIfPresent(departureStop, forKey: .departureStop)
+		try container.encodeIfPresent(departureTime, forKey: .departureTime)
+	}
+}
+
 extension TransitStopDetails {
 	init(json jsonOrNil: [String: Any]?) {
 		guard let json = jsonOrNil else {
@@ -581,6 +935,26 @@ struct TransitStop: Codable, Identifiable {
 	var location: Location? = nil // The location of the stop expressed in latitude/longitude coordinates.
 }
 
+extension TransitStop {	enum CodingKeys: String, CodingKey {
+		case name
+		case location
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		name = try container.decodeIfPresent(String.self, forKey: .name)
+		location = try container.decodeIfPresent(Location.self, forKey: .location)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(name, forKey: .name)
+		try container.encodeIfPresent(location, forKey: .location)
+	}
+}
+
 extension TransitStop {
 	init(json jsonOrNil: [String: Any]?) {
 		guard let json = jsonOrNil else {
@@ -603,6 +977,26 @@ struct TransitDetailsLocalizedValues: Codable, Identifiable {
 	var departureTime: LocalizedTime? = nil // Time in its formatted text representation with a corresponding time zone.
 }
 
+extension TransitDetailsLocalizedValues {	enum CodingKeys: String, CodingKey {
+		case arrivalTime
+		case departureTime
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		arrivalTime = try container.decodeIfPresent(LocalizedTime.self, forKey: .arrivalTime)
+		departureTime = try container.decodeIfPresent(LocalizedTime.self, forKey: .departureTime)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(arrivalTime, forKey: .arrivalTime)
+		try container.encodeIfPresent(departureTime, forKey: .departureTime)
+	}
+}
+
 extension TransitDetailsLocalizedValues {
 	init(json jsonOrNil: [String: Any]?) {
 		guard let json = jsonOrNil else {
@@ -623,6 +1017,26 @@ struct LocalizedTime: Codable, Identifiable {
 	var id = UUID()
 	var time: LocalizedText? = nil // The time specified as a string in a given time zone.
 	var timeZone: String? = nil // Contains the time zone. The value is the name of the time zone as defined in the IANA Time Zone Database, e.g. "America/New_York".
+}
+
+extension LocalizedTime {	enum CodingKeys: String, CodingKey {
+		case time
+		case timeZone
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		time = try container.decodeIfPresent(LocalizedText.self, forKey: .time)
+		timeZone = try container.decodeIfPresent(String.self, forKey: .timeZone)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(time, forKey: .time)
+		try container.encodeIfPresent(timeZone, forKey: .timeZone)
+	}
 }
 
 extension LocalizedTime {
@@ -651,6 +1065,44 @@ struct TransitLine: Codable, Identifiable {
 	var nameShort: String? = nil // The short name of this transit line. This name will normally be a line number, such as "M7" or "355".
 	var textColor: String? = nil // The color commonly used in text on signage for this line. Represented in hexadecimal.
 	var vehicle: TransitVehicle? = nil // The type of vehicle that operates on this transit line.
+}
+
+extension TransitLine {	enum CodingKeys: String, CodingKey {
+		case agencies
+		case name
+		case uri
+		case color
+		case iconUri
+		case nameShort
+		case textColor
+		case vehicle
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		agencies = try container.decodeIfPresent([TransitAgency].self, forKey: .agencies)
+		name = try container.decodeIfPresent(String.self, forKey: .name)
+		uri = try container.decodeIfPresent(String.self, forKey: .uri)
+		color = try container.decodeIfPresent(String.self, forKey: .color)
+		iconUri = try container.decodeIfPresent(String.self, forKey: .iconUri)
+		nameShort = try container.decodeIfPresent(String.self, forKey: .nameShort)
+		textColor = try container.decodeIfPresent(String.self, forKey: .textColor)
+		vehicle = try container.decodeIfPresent(TransitVehicle.self, forKey: .vehicle)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(agencies, forKey: .agencies)
+		try container.encodeIfPresent(name, forKey: .name)
+		try container.encodeIfPresent(uri, forKey: .uri)
+		try container.encodeIfPresent(color, forKey: .color)
+		try container.encodeIfPresent(iconUri, forKey: .iconUri)
+		try container.encodeIfPresent(nameShort, forKey: .nameShort)
+		try container.encodeIfPresent(textColor, forKey: .textColor)
+		try container.encodeIfPresent(vehicle, forKey: .vehicle)
+	}
 }
 
 extension TransitLine {
@@ -699,6 +1151,29 @@ struct TransitAgency: Codable, Identifiable {
 	var uri: String? = nil // The transit agency's URI.
 }
 
+extension TransitAgency {	enum CodingKeys: String, CodingKey {
+		case name
+		case phoneNumber
+		case uri
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		name = try container.decodeIfPresent(String.self, forKey: .name)
+		phoneNumber = try container.decodeIfPresent(String.self, forKey: .phoneNumber)
+		uri = try container.decodeIfPresent(String.self, forKey: .uri)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(name, forKey: .name)
+		try container.encodeIfPresent(phoneNumber, forKey: .phoneNumber)
+		try container.encodeIfPresent(uri, forKey: .uri)
+	}
+}
+
 extension TransitAgency {
 	init(json jsonOrNil: [String: Any]?) {
 		guard let json = jsonOrNil else {
@@ -725,6 +1200,32 @@ struct TransitVehicle: Codable, Identifiable {
 	var type: TransitVehicleType? = nil // The type of vehicle used.
 	var iconUri: String? = nil // The URI for an icon associated with this vehicle type.
 	var localIconUri: String? = nil // The URI for the icon associated with this vehicle type, based on the local transport signage.
+}
+
+extension TransitVehicle {	enum CodingKeys: String, CodingKey {
+		case name
+		case type
+		case iconUri
+		case localIconUri
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		name = try container.decodeIfPresent(LocalizedText.self, forKey: .name)
+		type = try container.decodeIfPresent(TransitVehicleType.self, forKey: .type)
+		iconUri = try container.decodeIfPresent(String.self, forKey: .iconUri)
+		localIconUri = try container.decodeIfPresent(String.self, forKey: .localIconUri)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(name, forKey: .name)
+		try container.encodeIfPresent(type, forKey: .type)
+		try container.encodeIfPresent(iconUri, forKey: .iconUri)
+		try container.encodeIfPresent(localIconUri, forKey: .localIconUri)
+	}
 }
 
 extension TransitVehicle {
@@ -779,6 +1280,26 @@ struct RouteLegTravelAdvisory: Codable, Identifiable {
 	var speedReadingIntervals: [SpeedReadingInterval]? = nil // Speed reading intervals detailing traffic density. Applicable in case of TRAFFIC_AWARE and TRAFFIC_AWARE_OPTIMAL routing preferences. The intervals cover the entire polyline of the RouteLeg without overlap. The start point of a specified interval is the same as the end point of the preceding interval.
 }
 
+extension RouteLegTravelAdvisory {	enum CodingKeys: String, CodingKey {
+		case tollInfo
+		case speedReadingIntervals
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		tollInfo = try container.decodeIfPresent(TollInfo.self, forKey: .tollInfo)
+		speedReadingIntervals = try container.decodeIfPresent([SpeedReadingInterval].self, forKey: .speedReadingIntervals)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(tollInfo, forKey: .tollInfo)
+		try container.encodeIfPresent(speedReadingIntervals, forKey: .speedReadingIntervals)
+	}
+}
+
 extension RouteLegTravelAdvisory {
 	init(json jsonOrNil: [String: Any]?) {
 		guard let json = jsonOrNil else {
@@ -799,6 +1320,29 @@ struct RouteLegLocalizedValues: Codable, Identifiable {
 	var distance: LocalizedText? = nil // Travel distance represented in text form.
 	var duration: LocalizedText? = nil // Duration taking traffic conditions into consideration represented in text form. Note: If you did not request traffic information, this value will be the same value as staticDuration.
 	var staticDuration: LocalizedText? = nil // Duration without taking traffic conditions into consideration, represented in text form.
+}
+
+extension RouteLegLocalizedValues {	enum CodingKeys: String, CodingKey {
+		case distance
+		case duration
+		case staticDuration
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		distance = try container.decodeIfPresent(LocalizedText.self, forKey: .distance)
+		duration = try container.decodeIfPresent(LocalizedText.self, forKey: .duration)
+		staticDuration = try container.decodeIfPresent(LocalizedText.self, forKey: .staticDuration)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(distance, forKey: .distance)
+		try container.encodeIfPresent(duration, forKey: .duration)
+		try container.encodeIfPresent(staticDuration, forKey: .staticDuration)
+	}
 }
 
 extension RouteLegLocalizedValues {
@@ -826,6 +1370,23 @@ struct StepsOverview: Codable, Identifiable {
 	var multiModalSegments: [MultiModalSegment]? = nil // Summarized information about different multi-modal segments of the RouteLeg.steps. This field is not populated if the RouteLeg does not contain any multi-modal segments in the steps.
 }
 
+extension StepsOverview {	enum CodingKeys: String, CodingKey {
+		case multiModalSegments
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		multiModalSegments = try container.decodeIfPresent([MultiModalSegment].self, forKey: .multiModalSegments)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(multiModalSegments, forKey: .multiModalSegments)
+	}
+}
+
 extension StepsOverview {
 	init(json jsonOrNil: [String: Any]?) {
 		guard let json = jsonOrNil else {
@@ -843,6 +1404,32 @@ struct MultiModalSegment: Codable, Identifiable {
 	var travelMode: RouteTravelMode? = nil // The travel mode of the multi-modal segment.
 	var stepStartIndex: Int? = nil // The corresponding RouteLegStep index that is the start of a multi-modal segment.
 	var stepEndIndex: Int? = nil // The corresponding RouteLegStep index that is the end of a multi-modal segment.
+}
+
+extension MultiModalSegment {	enum CodingKeys: String, CodingKey {
+		case navigationInstruction
+		case travelMode
+		case stepStartIndex
+		case stepEndIndex
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		navigationInstruction = try container.decodeIfPresent(NavigationInstruction.self, forKey: .navigationInstruction)
+		travelMode = try container.decodeIfPresent(RouteTravelMode.self, forKey: .travelMode)
+		stepStartIndex = try container.decodeIfPresent(Int.self, forKey: .stepStartIndex)
+		stepEndIndex = try container.decodeIfPresent(Int.self, forKey: .stepEndIndex)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(navigationInstruction, forKey: .navigationInstruction)
+		try container.encodeIfPresent(travelMode, forKey: .travelMode)
+		try container.encodeIfPresent(stepStartIndex, forKey: .stepStartIndex)
+		try container.encodeIfPresent(stepEndIndex, forKey: .stepEndIndex)
+	}
 }
 
 extension MultiModalSegment {
@@ -875,6 +1462,26 @@ struct Viewport: Codable, Identifiable {
 	var high: LatLng? = nil // Required. The high point of the viewport.
 }
 
+extension Viewport {	enum CodingKeys: String, CodingKey {
+		case low
+		case high
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		low = try container.decodeIfPresent(LatLng.self, forKey: .low)
+		high = try container.decodeIfPresent(LatLng.self, forKey: .high)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(low, forKey: .low)
+		try container.encodeIfPresent(high, forKey: .high)
+	}
+}
+
 extension Viewport {
 	init(json jsonOrNil: [String: Any]?) {
 		guard let json = jsonOrNil else {
@@ -897,6 +1504,32 @@ struct RouteLocalizedValues: Codable, Identifiable {
 	var duration: LocalizedText? = nil // Duration taking traffic conditions into consideration, represented in text form. Note: If you did not request traffic information, this value will be the same value as staticDuration.
 	var staticDuration: LocalizedText? = nil // Duration without taking traffic conditions into consideration, represented in text form.
 	var transitFare: LocalizedText? = nil // Transit fare represented in text form.
+}
+
+extension RouteLocalizedValues {	enum CodingKeys: String, CodingKey {
+		case distance
+		case duration
+		case staticDuration
+		case transitFare
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		distance = try container.decodeIfPresent(LocalizedText.self, forKey: .distance)
+		duration = try container.decodeIfPresent(LocalizedText.self, forKey: .duration)
+		staticDuration = try container.decodeIfPresent(LocalizedText.self, forKey: .staticDuration)
+		transitFare = try container.decodeIfPresent(LocalizedText.self, forKey: .transitFare)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(distance, forKey: .distance)
+		try container.encodeIfPresent(duration, forKey: .duration)
+		try container.encodeIfPresent(staticDuration, forKey: .staticDuration)
+		try container.encodeIfPresent(transitFare, forKey: .transitFare)
+	}
 }
 
 extension RouteLocalizedValues {
@@ -930,6 +1563,29 @@ struct GeocodingResults: Codable, Identifiable {
 	var intermediates: [GeocodedWaypoint]? = nil // A list of intermediate geocoded waypoints each containing an index field that corresponds to the zero-based position of the waypoint in the order they were specified in the request.
 }
 
+extension GeocodingResults {	enum CodingKeys: String, CodingKey {
+		case origin
+		case destination
+		case intermediates
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		origin = try container.decodeIfPresent(GeocodedWaypoint.self, forKey: .origin)
+		destination = try container.decodeIfPresent(GeocodedWaypoint.self, forKey: .destination)
+		intermediates = try container.decodeIfPresent([GeocodedWaypoint].self, forKey: .intermediates)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(origin, forKey: .origin)
+		try container.encodeIfPresent(destination, forKey: .destination)
+		try container.encodeIfPresent(intermediates, forKey: .intermediates)
+	}
+}
+
 extension GeocodingResults {
 	init(json jsonOrNil: [String: Any]?) {
 		guard let json = jsonOrNil else {
@@ -956,6 +1612,35 @@ struct GeocodedWaypoint: Codable, Identifiable {
 	var partialMatch: Bool? = nil // Indicates that the geocoder did not return an exact match for the original request, though it was able to match part of the requested address. You may wish to examine the original request for misspellings and/or an incomplete address.
 	var placeId: String? = nil // The place ID for this result.
 	var intermediateWaypointRequestIndex: Int? = nil // The index of the corresponding intermediate waypoint in the request. Only populated if the corresponding waypoint is an intermediate waypoint.
+}
+
+extension GeocodedWaypoint {	enum CodingKeys: String, CodingKey {
+		case geocoderStatus
+		case type
+		case partialMatch
+		case placeId
+		case intermediateWaypointRequestIndex
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		geocoderStatus = try container.decodeIfPresent(Status.self, forKey: .geocoderStatus)
+		type = try container.decodeIfPresent([String].self, forKey: .type)
+		partialMatch = try container.decodeIfPresent(Bool.self, forKey: .partialMatch)
+		placeId = try container.decodeIfPresent(String.self, forKey: .placeId)
+		intermediateWaypointRequestIndex = try container.decodeIfPresent(Int.self, forKey: .intermediateWaypointRequestIndex)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(geocoderStatus, forKey: .geocoderStatus)
+		try container.encodeIfPresent(type, forKey: .type)
+		try container.encodeIfPresent(partialMatch, forKey: .partialMatch)
+		try container.encodeIfPresent(placeId, forKey: .placeId)
+		try container.encodeIfPresent(intermediateWaypointRequestIndex, forKey: .intermediateWaypointRequestIndex)
+	}
 }
 
 extension GeocodedWaypoint {
@@ -990,6 +1675,26 @@ struct FallbackInfo: Codable, Identifiable {
 	var id = UUID()
 	var routingMode: FallbackRoutingMode? = nil // Routing mode used for the response. If fallback was triggered, the mode may be different from routing preference set in the original client request.
 	var reason: FallbackReason? = nil // The reason why fallback response was used instead of the original response. This field is only populated when the fallback mode is triggered and the fallback response is returned.
+}
+
+extension FallbackInfo {	enum CodingKeys: String, CodingKey {
+		case routingMode
+		case reason
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		routingMode = try container.decodeIfPresent(FallbackRoutingMode.self, forKey: .routingMode)
+		reason = try container.decodeIfPresent(FallbackReason.self, forKey: .reason)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(routingMode, forKey: .routingMode)
+		try container.encodeIfPresent(reason, forKey: .reason)
+	}
 }
 
 extension FallbackInfo {
@@ -1027,6 +1732,26 @@ struct LatLng: Codable, Identifiable {
 	var longitude: Double? = nil // The longitude in degrees. It must be in the range [-180.0, +180.0].
 }
 
+extension LatLng {	enum CodingKeys: String, CodingKey {
+		case latitude
+		case longitude
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		latitude = try container.decodeIfPresent(Double.self, forKey: .latitude)
+		longitude = try container.decodeIfPresent(Double.self, forKey: .longitude)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(latitude, forKey: .latitude)
+		try container.encodeIfPresent(longitude, forKey: .longitude)
+	}
+}
+
 extension LatLng {
 	init(json jsonOrNil: [String: Any]?) {
 		guard let json = jsonOrNil else {
@@ -1048,6 +1773,26 @@ struct LocalizedText: Codable, Identifiable {
 	var id = UUID()
 	var text: String? = nil // Localized string in the language corresponding to languageCode below.
 	var languageCode: String? = nil // The text's BCP-47 language code, such as "en-US" or "sr-Latn".
+}
+
+extension LocalizedText {	enum CodingKeys: String, CodingKey {
+		case text
+		case languageCode
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		text = try container.decodeIfPresent(String.self, forKey: .text)
+		languageCode = try container.decodeIfPresent(String.self, forKey: .languageCode)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(text, forKey: .text)
+		try container.encodeIfPresent(languageCode, forKey: .languageCode)
+	}
 }
 
 extension LocalizedText {
@@ -1073,6 +1818,26 @@ struct Location: Codable, Identifiable {
 	var heading: Int? = nil // The compass heading associated with the direction of the flow of traffic. This value specifies the side of the road for pickup and drop-off. Heading values can be from 0 to 360, where 0 specifies a heading of due North, 90 specifies a heading of due East, and so on. You can use this field only for DRIVE and TWO_WHEELER RouteTravelMode.
 }
 
+extension Location {	enum CodingKeys: String, CodingKey {
+		case latLng
+		case heading
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		latLng = try container.decodeIfPresent(LatLng.self, forKey: .latLng)
+		heading = try container.decodeIfPresent(Int.self, forKey: .heading)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(latLng, forKey: .latLng)
+		try container.encodeIfPresent(heading, forKey: .heading)
+	}
+}
+
 extension Location {
 	init(json jsonOrNil: [String: Any]?) {
 		guard let json = jsonOrNil else {
@@ -1095,6 +1860,29 @@ struct Money: Codable, Identifiable {
 	var currencyCode: String? = nil // The three-letter currency code defined in ISO 4217.
 	var units: String? = nil // The whole units of the amount. For example if currencyCode is "USD", then 1 unit is one US dollar.
 	var nanos: Int? = nil // Number of nano (10^-9) units of the amount. The value must be between -999,999,999 and +999,999,999 inclusive. If units is positive, nanos must be positive or zero. If units is zero, nanos can be positive, zero, or negative. If units is negative, nanos must be negative or zero. For example $-1.75 is represented as units=-1 and nanos=-750,000,000.
+}
+
+extension Money {	enum CodingKeys: String, CodingKey {
+		case currencyCode
+		case units
+		case nanos
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		currencyCode = try container.decodeIfPresent(String.self, forKey: .currencyCode)
+		units = try container.decodeIfPresent(String.self, forKey: .units)
+		nanos = try container.decodeIfPresent(Int.self, forKey: .nanos)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(currencyCode, forKey: .currencyCode)
+		try container.encodeIfPresent(units, forKey: .units)
+		try container.encodeIfPresent(nanos, forKey: .nanos)
+	}
 }
 
 extension Money {
@@ -1126,6 +1914,38 @@ struct RouteModifiers: Codable, Identifiable {
 	var avoidIndoor: Bool? = nil // When set to true, avoids navigating indoors where reasonable, giving preference to routes not containing indoor navigation. Applies only to the WALK RouteTravelMode.
 	var vehicleInfo: VehicleInfo? = nil // Specifies the vehicle information.
 	var tollPasses: [TollPass]? = nil // Encapsulates information about toll passes. If toll passes are provided, the API tries to return the pass price. If toll passes are not provided, the API treats the toll pass as unknown and tries to return the cash price. Applies only to the DRIVE and TWO_WHEELER RouteTravelMode.
+}
+
+extension RouteModifiers {	enum CodingKeys: String, CodingKey {
+		case avoidTolls
+		case avoidHighways
+		case avoidFerries
+		case avoidIndoor
+		case vehicleInfo
+		case tollPasses
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		avoidTolls = try container.decodeIfPresent(Bool.self, forKey: .avoidTolls)
+		avoidHighways = try container.decodeIfPresent(Bool.self, forKey: .avoidHighways)
+		avoidFerries = try container.decodeIfPresent(Bool.self, forKey: .avoidFerries)
+		avoidIndoor = try container.decodeIfPresent(Bool.self, forKey: .avoidIndoor)
+		vehicleInfo = try container.decodeIfPresent(VehicleInfo.self, forKey: .vehicleInfo)
+		tollPasses = try container.decodeIfPresent([TollPass].self, forKey: .tollPasses)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(avoidTolls, forKey: .avoidTolls)
+		try container.encodeIfPresent(avoidHighways, forKey: .avoidHighways)
+		try container.encodeIfPresent(avoidFerries, forKey: .avoidFerries)
+		try container.encodeIfPresent(avoidIndoor, forKey: .avoidIndoor)
+		try container.encodeIfPresent(vehicleInfo, forKey: .vehicleInfo)
+		try container.encodeIfPresent(tollPasses, forKey: .tollPasses)
+	}
 }
 
 extension RouteModifiers {
@@ -1162,6 +1982,23 @@ extension RouteModifiers {
 struct VehicleInfo: Codable, Identifiable {
 	var id = UUID()
 	var emissionType: VehicleEmissionType? = nil // Describes the vehicle's emission type. Applies only to the DRIVE RouteTravelMode.
+}
+
+extension VehicleInfo {	enum CodingKeys: String, CodingKey {
+		case emissionType
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		emissionType = try container.decodeIfPresent(VehicleEmissionType.self, forKey: .emissionType)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(emissionType, forKey: .emissionType)
+	}
 }
 
 extension VehicleInfo {
@@ -1296,6 +2133,35 @@ struct RouteTravelAdvisory: Codable, Identifiable {
 	var transitFare: Money? = nil // If present, contains the total fare or ticket costs on this route This property is only returned for TRANSIT requests and only for routes where fare information is available for all transit steps.
 }
 
+extension RouteTravelAdvisory {	enum CodingKeys: String, CodingKey {
+		case tollInfo
+		case speedReadingIntervals
+		case fuelConsumptionMicroliters
+		case routeRestrictionsPartiallyIgnored
+		case transitFare
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		tollInfo = try container.decodeIfPresent(TollInfo.self, forKey: .tollInfo)
+		speedReadingIntervals = try container.decodeIfPresent([SpeedReadingInterval].self, forKey: .speedReadingIntervals)
+		fuelConsumptionMicroliters = try container.decodeIfPresent(String.self, forKey: .fuelConsumptionMicroliters)
+		routeRestrictionsPartiallyIgnored = try container.decodeIfPresent(Bool.self, forKey: .routeRestrictionsPartiallyIgnored)
+		transitFare = try container.decodeIfPresent(Money.self, forKey: .transitFare)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(tollInfo, forKey: .tollInfo)
+		try container.encodeIfPresent(speedReadingIntervals, forKey: .speedReadingIntervals)
+		try container.encodeIfPresent(fuelConsumptionMicroliters, forKey: .fuelConsumptionMicroliters)
+		try container.encodeIfPresent(routeRestrictionsPartiallyIgnored, forKey: .routeRestrictionsPartiallyIgnored)
+		try container.encodeIfPresent(transitFare, forKey: .transitFare)
+	}
+}
+
 extension RouteTravelAdvisory {
 	init(json jsonOrNil: [String: Any]?) {
 		guard let json = jsonOrNil else {
@@ -1349,6 +2215,29 @@ struct SpeedReadingInterval: Codable, Identifiable {
 	var speed: Speed? = nil // Traffic speed in this interval.
 }
 
+extension SpeedReadingInterval {	enum CodingKeys: String, CodingKey {
+		case startPolylinePointIndex
+		case endPolylinePointIndex
+		case speed
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		startPolylinePointIndex = try container.decodeIfPresent(Int.self, forKey: .startPolylinePointIndex)
+		endPolylinePointIndex = try container.decodeIfPresent(Int.self, forKey: .endPolylinePointIndex)
+		speed = try container.decodeIfPresent(Speed.self, forKey: .speed)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(startPolylinePointIndex, forKey: .startPolylinePointIndex)
+		try container.encodeIfPresent(endPolylinePointIndex, forKey: .endPolylinePointIndex)
+		try container.encodeIfPresent(speed, forKey: .speed)
+	}
+}
+
 extension SpeedReadingInterval {
 	init(json jsonOrNil: [String: Any]?) {
 		guard let json = jsonOrNil else {
@@ -1382,8 +2271,9 @@ struct Status: Codable, Identifiable {
 	var code: Int? = nil // The status code, which should be an enum value of google.rpc.Code.
 	var message: String? = nil // A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the google.rpc.Status.details field, or localized by the client.
 	var details: [[String: Any]]? = nil // A list of messages that carry the error details. There is a common set of message types for APIs to use.
+}
 
-	enum CodingKeys: String, CodingKey {
+extension Status {	enum CodingKeys: String, CodingKey {
 		case code
 		case message
 		case details
@@ -1430,6 +2320,23 @@ struct TollInfo: Codable, Identifiable {
 	var estimatedPrice: [Money]? = nil // The monetary amount of tolls for the corresponding Route or RouteLeg. This list contains a money amount for each currency that is expected to be charged by the toll stations. Typically this list will contain only one item for routes with tolls in one currency. For international trips, this list may contain multiple items to reflect tolls in different currencies.
 }
 
+extension TollInfo {	enum CodingKeys: String, CodingKey {
+		case estimatedPrice
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		estimatedPrice = try container.decodeIfPresent([Money].self, forKey: .estimatedPrice)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(estimatedPrice, forKey: .estimatedPrice)
+	}
+}
+
 extension TollInfo {
 	init(json jsonOrNil: [String: Any]?) {
 		guard let json = jsonOrNil else {
@@ -1454,6 +2361,26 @@ struct TransitPreferences: Codable, Identifiable {
 	var id = UUID()
 	var allowedTravelModes: [TransitTravelMode]? = nil // A set of travel modes to use when getting a TRANSIT route. Defaults to all supported modes of travel.
 	var routingPreference: TransitRoutingPreference? = nil // A routing preference that, when specified, influences the TRANSIT route returned.
+}
+
+extension TransitPreferences {	enum CodingKeys: String, CodingKey {
+		case allowedTravelModes
+		case routingPreference
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		allowedTravelModes = try container.decodeIfPresent([TransitTravelMode].self, forKey: .allowedTravelModes)
+		routingPreference = try container.decodeIfPresent(TransitRoutingPreference.self, forKey: .routingPreference)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(allowedTravelModes, forKey: .allowedTravelModes)
+		try container.encodeIfPresent(routingPreference, forKey: .routingPreference)
+	}
 }
 
 extension TransitPreferences {
@@ -1495,6 +2422,38 @@ struct Waypoint: Codable, Identifiable {
 	var location: Location? = nil // A point specified using geographic coordinates, including an optional heading.
 	var placeId: String? = nil // The POI Place ID associated with the waypoint.
 	var address: String? = nil // Human readable address or a plus code. See https://plus.codes for details.
+}
+
+extension Waypoint {	enum CodingKeys: String, CodingKey {
+		case via
+		case vehicleStopover
+		case sideOfRoad
+		case location
+		case placeId
+		case address
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+
+		via = try container.decodeIfPresent(Bool.self, forKey: .via)
+		vehicleStopover = try container.decodeIfPresent(Bool.self, forKey: .vehicleStopover)
+		sideOfRoad = try container.decodeIfPresent(Bool.self, forKey: .sideOfRoad)
+		location = try container.decodeIfPresent(Location.self, forKey: .location)
+		placeId = try container.decodeIfPresent(String.self, forKey: .placeId)
+		address = try container.decodeIfPresent(String.self, forKey: .address)
+	}
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encodeIfPresent(via, forKey: .via)
+		try container.encodeIfPresent(vehicleStopover, forKey: .vehicleStopover)
+		try container.encodeIfPresent(sideOfRoad, forKey: .sideOfRoad)
+		try container.encodeIfPresent(location, forKey: .location)
+		try container.encodeIfPresent(placeId, forKey: .placeId)
+		try container.encodeIfPresent(address, forKey: .address)
+	}
 }
 
 extension Waypoint {

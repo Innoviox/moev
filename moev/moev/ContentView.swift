@@ -96,8 +96,9 @@ struct ContentView: View {
 //                    .offset(CGSize(width: 0.0, height: -geometry.size.height / 2))
                     .opacity(loadingResults ? 1 : 0)
                     
-//                    routesList()
-//                    .opacity(showingResults ? 1 : 0)
+                    routesList()
+                    .offset(CGSize(width: 0.0, height: -geometry.size.height / 2))
+                    .opacity(showingResults ? 1 : 0)
                 }
                 .background(UIColor.Theme.listBackgroundColor)
                 .edgesIgnoringSafeArea(.all)
@@ -235,23 +236,29 @@ struct ContentView: View {
         .scrollContentBackground(.hidden)
     }
     
-//    func routesList() -> some View {
-//        return ForEach(routes) { routes in
-//            List(routes.routes) { route in
-//                HStack {
-//                    ForEach(route.legs!) { leg in
-//                        ForEach(leg.stepsOverview!.multiModalSegments!) { seg in
-//                            VStack {
-//                                Text(seg.navigationInstruction!.instructions!)
-//                                Text(seg.navigationInstruction!.maneuver!.rawValue)
-//                                Text(seg.travelMode!.rawValue)
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
+    func routesList() -> some View {
+        return ForEach(routes) { routes in
+            List(routes.routes) { route in
+                HStack {
+                    ForEach(route.legs!) { leg in
+                        ForEach(leg.stepsOverview!.multiModalSegments!) { seg in
+                            VStack {
+                                if let ni = seg.navigationInstruction?.instructions {
+                                    Text(ni)
+                                }
+                                if let m = seg.navigationInstruction?.maneuver?.rawValue {
+                                    Text(m)
+                                }
+                                if let tm = seg.travelMode?.rawValue {
+                                    Text(tm)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     
     func addMarker(p: UIPlace) {
         APIHandler.shared.get_info(place_id: p.placeID) { data, error in
