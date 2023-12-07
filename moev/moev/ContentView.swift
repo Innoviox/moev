@@ -248,7 +248,10 @@ struct ContentView: View {
                         }
                     }
                 }
+                .listRowBackground(UIColor.Theme.listBackgroundColor)
             }
+            .listStyle(.plain)
+            .scrollContentBackground(.hidden)
         }
     }
     
