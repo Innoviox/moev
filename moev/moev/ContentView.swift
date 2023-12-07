@@ -253,20 +253,18 @@ struct ContentView: View {
     }
     
     func stepsList(_ steps: [RouteLegStep]) -> some View {
-        return ForEach(steps) { step in
+        return ForEach(combineWalks(steps: steps)) { step in
             stepsView(step)
         }
     }
     
-    func stepsView(_ step: RouteLegStep) -> some View {
+    func stepsView(_ step: CombinedStep) -> some View {
         return VStack {
             if let tm = step.travelMode {
                 tm.to_swiftui_image()
             }
 
-            if let dur = step.staticDuration {
-                Text(dur)
-            }
+            Text(String(step.totalDuration))
         }
     }
     

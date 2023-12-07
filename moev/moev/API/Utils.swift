@@ -142,3 +142,79 @@ extension RouteTravelMode {
         return Image(systemName: img)
     }
 }
+
+func convert_duration(_ duration: String?) -> Int {
+    guard let d = duration else {
+        return 0
+    }
+    return Int(String(d.dropLast()))!
+}
+
+//https://stackoverflow.com/questions/32606989/converting-an-unsafepointer-with-length-to-a-swift-array-type
+func convert<T>(count: Int, data: UnsafeMutablePointer<T>) -> [T] {
+    let buffer = UnsafeBufferPointer(start: data, count: count);
+    return Array(buffer)
+}
+
+struct CombinedStep: Identifiable {
+    var id = UUID()
+    var totalDuration: Int
+    var startLocation: Location?
+    var endLocation: Location?
+    var polyline: MKMultiPolyline
+    var transitDetails: RouteLegStepTransitDetails?
+    var travelMode: RouteTravelMode?
+    
+    init(from steps: [RouteLegStep]) {
+        totalDuration = 0
+        var points: [MKPolyline] = []
+        
+        for step in steps {
+            totalDuration += convert_duration(step.staticDuration)
+            if step.travelMode != .WALK {
+                startLocation = step.startLocation
+                endLocation = step.endLocation
+                transitDetails = step.transitDetails
+                travelMode = step.travelMode
+                if let p = step.polyline {
+                    points.append(p.decode())
+                }
+            } else {
+                if startLocation == nil {
+                    startLocation = step.startLocation
+                }
+                endLocation = step.endLocation
+                transitDetails = step.transitDetails
+                travelMode = .WALK
+                if let p = step.polyline {
+                    points.append(p.decode())
+                }
+            }
+        }
+        
+        polyline = MKMultiPolyline(points)
+    }
+}
+
+func combineWalks(steps: [RouteLegStep]) -> [CombinedStep] {
+    var newSteps: [CombinedStep] = []
+    
+    var currentStep: [RouteLegStep] = []
+    for step in steps {
+        if step.travelMode != .WALK {
+            if currentStep.count > 0 {
+                newSteps.append(CombinedStep(from: currentStep))
+                currentStep = []
+            }
+            newSteps.append(CombinedStep(from: [step]))
+        } else {
+            currentStep.append(step)
+        }
+    }
+    
+    if currentStep.count > 0 {
+        newSteps.append(CombinedStep(from: currentStep))
+    }
+    
+    return newSteps
+}
