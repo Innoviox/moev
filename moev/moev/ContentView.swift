@@ -243,7 +243,7 @@ struct ContentView: View {
     
     func timeMarks() -> some View {
         return HStack {
-            ForEach(1..<6, id: \.self) { i in // todo calculate based on length of route
+            ForEach(0..<6, id: \.self) { i in // todo calculate based on length of route
                 Text(time(plus: i))
                     .offset(x: CGFloat(xposition(for: time(plus: i))))
             }

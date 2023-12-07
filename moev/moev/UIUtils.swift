@@ -43,13 +43,26 @@ func time(plus: Int) -> String {
 func time(plus: Int) -> Int {
     let (h1, m1) = _hm(date: Date())
     let (h2, m2) = _hm(plus: plus)
-    let cal = Calendar.current
-    print(plus, (h2 - h1) * 3600 + (m2 - m1) * 60)
     return (h2 - h1) * 3600 + (m2 - m1) * 60
+}
+
+func time(date: Date) -> Int {
+    let (h1, m1) = _hm(date: Date())
+    let (h2, m2) = _hm(date: date)
+    return (h2 - h1) * 3600 + (m2 - m1) * 60
+}
+
+func time(timestamp: String?) -> Int? {
+    if timestamp == nil {
+        return nil
+    }
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+    let localDate = formatter.date(from: timestamp!)
+    return localDate == nil ? nil : time(date: localDate!)
 }
 
 func xposition(for time: Int) -> Int {
     // time in seconds from now
-//    print(time)
     return time / 60 * 2  // 2 pixels per minute
 }
