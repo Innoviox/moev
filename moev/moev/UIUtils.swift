@@ -51,5 +51,5 @@ func time(plus: Int) -> Int {
 func xposition(for time: Int) -> Int {
     // time in seconds from now
 //    print(time)
-    return time / 60  // 10 pixels per minute
+    return time / 60 * 2  // 2 pixels per minute
 }
