@@ -137,9 +137,7 @@ class APIHandler {
             
             
             let results = PlacesAutocompleteResponse.from(jsonData: d)
-            
-            print("r", results)
-            
+                        
             handler(results, error)
         }
     }

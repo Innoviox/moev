@@ -144,7 +144,7 @@ struct ContentView: View {
                 return
             }
             
-            print("GOT ROUTE", route)
+//            print("GOT ROUTE", route)
             
 //            let polyline = route.polyline.decode()
 //            updatePolylines(withID: id1, newPolyline: polyline)
@@ -239,9 +239,9 @@ struct ContentView: View {
     func routesList() -> some View {
         return ForEach(routes) { routes in
             List(routes.routes) { route in
-                HStack {
-                    ForEach(route.legs!) { leg in
-                        HStack {
+                ScrollView(.horizontal) {
+                    HStack {
+                        ForEach(route.legs!) { leg in
                             if let steps = leg.steps {
                                 stepsList(steps)
                             }
