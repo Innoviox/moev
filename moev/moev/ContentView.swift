@@ -238,18 +238,12 @@ struct ContentView: View {
     
     func routesList() -> some View {
         return ForEach(routes) { routes in
+//            ScrollView(.horizontal) {
             List(routes.routes) { route in
-                ScrollView(.horizontal) {
-                    HStack {
-                        ForEach(route.legs!) { leg in
-                            if let steps = leg.steps {
-                                stepsList(steps)
-                            }
-                        }
-                    }
-                }
-                .listRowBackground(UIColor.Theme.listBackgroundColor)
+                RouteView(route: route)
+                    .listRowBackground(UIColor.Theme.listBackgroundColor)
             }
+//            }
             .listStyle(.plain)
             .scrollContentBackground(.hidden)
         }
