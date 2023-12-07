@@ -1,4 +1,3 @@
-
 import Foundation
 struct ComputeRoutesRequest: Codable {
     var origin: Waypoint? = nil // Required. Origin waypoint.
@@ -121,7 +120,7 @@ struct Polyline: Codable {
 
         encodedPolyline = try container.decodeIfPresent(String.self, forKey: .encodedPolyline)
         geoJsonLinestring = try container.decodeIfPresent([String: Any].self, forKey: .geoJsonLinestring)
-}
+    }
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -563,7 +562,7 @@ struct Status: Codable {
         code = try container.decodeIfPresent(Int.self, forKey: .code)
         message = try container.decodeIfPresent(String.self, forKey: .message)
         details = try container.decodeIfPresent([[String: Any]].self, forKey: .details)
-}
+    }
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)

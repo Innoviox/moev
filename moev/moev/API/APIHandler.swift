@@ -94,8 +94,8 @@ class APIHandler {
             "routes.distanceMeters",
             "routes.polyline.encodedPolyline",
             // todo this mess
-//            "routes.legs",
-//            "routes.travelAdvisory",
+            "routes.legs",
+            "routes.travelAdvisory",
             "routes.viewport"
         ]
         
