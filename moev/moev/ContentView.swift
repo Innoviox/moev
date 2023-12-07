@@ -32,10 +32,9 @@ struct UIPlace: Identifiable {
     var placeID: String
 }
 
-struct UIRoute: Identifiable {
+struct UIRoutes: Identifiable {
     var id: Int
-    
-    var route: ComputeRoutesResponse
+    var routes: [Route]
 }
 
 struct ContentView: View {
@@ -63,7 +62,7 @@ struct ContentView: View {
     @State public var loadingResults: Bool = false
     @State public var showingResults: Bool = false
     
-    @State private var routes: [UIRoute] = []
+    @State private var routes: [UIRoutes] = []
 
     var body: some View {
         GeometryReader { geometry in
@@ -166,13 +165,15 @@ struct ContentView: View {
     }
     
     func updateRoutes(withID id: Int, newRoute: ComputeRoutesResponse) {
+        let r = newRoute.routes!
+        
         for i in routes.indices {
             if routes[i].id == id {
-                routes[i].route = newRoute
+                routes[i].routes = r
                 return
             }
         }
-        routes.append(UIRoute(id: id, route: newRoute))
+        routes.append(UIRoutes(id: id, routes: r))
     }
     
     func updatePolylines(withID id: Int, newPolyline: MKPolyline) {
@@ -235,9 +236,13 @@ struct ContentView: View {
     }
     
     func routesList() -> some View {
-        return List(routes) { route in
+        return List(routes[0].routes) { route in
             HStack {
-                Text(route.route.routes![0].description!)
+                ForEach(route.legs!) { leg in
+                    VStack {
+                        
+                    }
+                }
             }
         }
     }
