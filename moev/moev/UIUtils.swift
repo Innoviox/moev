@@ -15,8 +15,7 @@ extension UIColor {
   }
 }
 
-func time(plus: Int) -> String {
-    let date = Date(timeIntervalSinceNow: TimeInterval(plus * 30 * 60))
+func _hm(date: Date) -> (Int, Int) {
     let cal = Calendar.current
     var hour = cal.component(.hour, from: date)
     var minutes = cal.component(.minute, from: date)
@@ -26,7 +25,31 @@ func time(plus: Int) -> String {
     } else {
         minutes = 30
     }
+    return (hour, minutes)
+}
+
+func _hm(plus: Int) -> (Int, Int) {
+    let date = Date(timeIntervalSinceNow: TimeInterval(plus * 30 * 60))
+    return _hm(date: date)
+}
+
+func time(plus: Int) -> String {
+    let (hour, minutes) = _hm(plus: plus)
     let padh = String(repeating: "0", count: hour < 10 ? 1 : 0)
     let padm = String(repeating: "0", count: minutes < 10 ? 1 : 0)
     return "\(padh)\(hour):\(padm)\(minutes)"
+}
+
+func time(plus: Int) -> Int {
+    let (h1, m1) = _hm(date: Date())
+    let (h2, m2) = _hm(plus: plus)
+    let cal = Calendar.current
+    print(plus, (h2 - h1) * 3600 + (m2 - m1) * 60)
+    return (h2 - h1) * 3600 + (m2 - m1) * 60
+}
+
+func xposition(for time: Int) -> Int {
+    // time in seconds from now
+//    print(time)
+    return time / 60  // 10 pixels per minute
 }

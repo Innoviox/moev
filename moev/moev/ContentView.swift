@@ -245,36 +245,19 @@ struct ContentView: View {
         return HStack {
             ForEach(1..<6, id: \.self) { i in // todo calculate based on length of route
                 Text(time(plus: i))
+                    .offset(x: CGFloat(xposition(for: time(plus: i))))
             }
         }
     }
     
     func routesList() -> some View {
         return ForEach(routes) { routes in
-//            ScrollView(.horizontal) {
             List(routes.routes) { route in
                 RouteView(route: route)
                     .listRowBackground(UIColor.Theme.listBackgroundColor)
             }
-//            }
             .listStyle(.plain)
             .scrollContentBackground(.hidden)
-        }
-    }
-    
-    func stepsList(_ steps: [RouteLegStep]) -> some View {
-        return ForEach(combineWalks(steps: steps)) { step in
-            stepsView(step)
-        }
-    }
-    
-    func stepsView(_ step: CombinedStep) -> some View {
-        return VStack {
-            if let tm = step.travelMode {
-                tm.to_swiftui_image()
-            }
-
-            Text(String(step.totalDuration))
         }
     }
     

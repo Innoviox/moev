@@ -22,8 +22,10 @@ struct RouteView: View {
     }
     
     func stepsList(_ steps: [RouteLegStep]) -> some View {
-        return ForEach(combineWalks(steps: steps)) { step in
-            stepsView(step)
+        return HStack {
+            ForEach(combineWalks(steps: steps)) { step in
+                stepsView(step)
+            }
         }
     }
     
