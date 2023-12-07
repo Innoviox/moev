@@ -94,3 +94,13 @@ extension Polyline {
         return MKPolyline(coordinates: points, count: points.count)
     }
 }
+
+// https://developers.google.com/maps/documentation/places/web-service/autocomplete#PlaceAutocompletePrediction
+enum PlacesAutocompleteStatus: String, Codable {
+    case OK
+    case ZERO_RESULTS
+    case INVALID_REQUEST
+    case OVER_QUERY_LIMIT
+    case REQUEST_DENIED
+    case UNKNOWN_ERROR
+}

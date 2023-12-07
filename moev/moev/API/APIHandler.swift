@@ -120,7 +120,7 @@ class APIHandler {
         session = UUID()
     }
     
-    func autocomplete(query: String, handler: @escaping (AutocompleteResults?, Error?) -> Void) {
+    func autocomplete(query: String, handler: @escaping (PlacesAutocompleteResponse?, Error?) -> Void) {
         if session == nil {
             start_session()
         }
@@ -134,8 +134,7 @@ class APIHandler {
                 return handler(nil, error)
             }
             
-            let places = try! JSONSerialization.jsonObject(with: d, options: []) as! [String : Any]
-            let results = AutocompleteResults(json: places)
+            let results = PlacesAutocompleteResponse.from(jsonData: d)
             
             handler(results, error)
         }
