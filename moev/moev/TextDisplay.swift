@@ -13,7 +13,7 @@ struct TextDisplay: View {
     @Binding public var searching: Bool
     @Binding public var searchingFastAnimated: Bool
     @Binding public var searchingSlowAnimated: Bool
-    @Binding public var possibilities: [Place]
+    @Binding public var possibilities: [UIPlace]
     @Binding public var searchingIdx: Int
     
     public var getDirections: (Int) -> Void
@@ -68,7 +68,7 @@ struct TextDisplay: View {
             }
             
             possibilities = places.predictions.map { place in
-                return Place(main_text: place.structured_formatting.main_text, secondary_text: place.structured_formatting.secondary_text, placeID: place.place_id)
+                return UIPlace(main_text: place.structured_formatting.main_text, secondary_text: place.structured_formatting.secondary_text, placeID: place.place_id)
             }
         }
     }

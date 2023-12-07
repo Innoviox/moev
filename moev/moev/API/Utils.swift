@@ -104,3 +104,12 @@ enum PlacesAutocompleteStatus: String, Codable {
     case REQUEST_DENIED
     case UNKNOWN_ERROR
 }
+
+enum PlacesDetailsStatus: String, Codable {
+    case OK
+    case ZERO_RESULTS
+    case INVALID_REQUEST
+    case OVER_QUERY_LIMIT
+    case REQUEST_DENIED
+    case UNKNOWN_ERROR
+}

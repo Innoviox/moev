@@ -1,3 +1,4 @@
+
 import Foundation
 struct PlacesAutocompleteResponse: Codable {
     var predictions: [PlaceAutocompletePrediction]? = nil //
@@ -12,6 +13,9 @@ extension PlacesAutocompleteResponse {
     }
 }
 
+
+
+
 struct PlaceAutocompletePrediction: Codable {
     var description: String? = nil //
     var matched_substrings: [PlaceAutocompleteMatchedSubstring]? = nil //
@@ -25,8 +29,8 @@ struct PlaceAutocompletePrediction: Codable {
 
 
 struct PlaceAutocompleteMatchedSubstring: Codable {
-    var length: Int? = nil // Length of the matched substring in the prediction result text.
-    var offset: Int? = nil // Start location of the matched substring in the prediction result             text.
+    var length: Double? = nil // Length of the matched substring in the prediction result text.
+    var offset: Double? = nil // Start location of the matched substring in the prediction result             text.
 }
 
 
@@ -39,7 +43,7 @@ struct PlaceAutocompleteStructuredFormat: Codable {
 
 
 struct PlaceAutocompleteTerm: Codable {
-    var offset: Int? = nil // Defines the start position of this term in the description, measured             in Unicode characters
+    var offset: Double? = nil // Defines the start position of this term in the description, measured             in Unicode characters
     var value: String? = nil // The text of the term.
 }
 

@@ -348,8 +348,8 @@ enum FallbackReason: String, Codable {
 
 
 struct LatLng: Codable {
-	var latitude: Int? = nil // The latitude in degrees. It must be in the range [-90.0, +90.0].
-	var longitude: Int? = nil // The longitude in degrees. It must be in the range [-180.0, +180.0].
+	var latitude: Double? = nil // The latitude in degrees. It must be in the range [-90.0, +90.0].
+	var longitude: Double? = nil // The longitude in degrees. It must be in the range [-180.0, +180.0].
 }
 
 

@@ -24,7 +24,7 @@ struct UIPolyline: Identifiable {
     var polyline: MKPolyline
 }
 
-struct Place: Identifiable {
+struct UIPlace: Identifiable {
     var id = UUID()
     
     var main_text: String
@@ -47,7 +47,7 @@ struct ContentView: View {
     
     @StateObject var locationManager = LocationManager()
     
-    @State private var possibilities: [Place] = []
+    @State private var possibilities: [UIPlace] = []
         
     @State private var annotations: [Annotation] = [
         Annotation(id: 0, name: "", placeHolder: "Current location"),
@@ -243,7 +243,7 @@ struct ContentView: View {
         }
     }
     
-    func addMarker(p: Place) {
+    func addMarker(p: UIPlace) {
         APIHandler.shared.get_info(place_id: p.placeID) { data, error in
             guard let d = data else {
                 print(error)

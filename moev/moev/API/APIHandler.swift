@@ -62,27 +62,27 @@ class APIHandler {
         _request(url: url, headers: [:], body: nil, method: "GET", handler: handler)
     }
     
-    func nearbyPlaces(center: CLLocationCoordinate2D, radius: Int = 100, handler: @escaping RequestHandler) {
-        let url = "https://places.googleapis.com/v1/places:searchNearby"
-        let body = NearbyPlacesBody(
-            maxResultCount: 10,
-            rankPreference: "DISTANCE",
-            locationRestriction: LocationRestriction(
-                circle: Circle(center: [
-                    "latitude": center.latitude,
-                    "longitude": center.longitude
-                ],
-                radius: radius)
-            )
-        )
-
-        let headers: [String: String] = [
-            "X-Goog-Api-Key": GMAK,
-            "X-Goog-FieldMask": "places.displayName,places.photos"
-        ]
-        
-        _request(url: url, headers: headers, body: body, method: "POST", handler: handler)
-    }
+//    func nearbyPlaces(center: CLLocationCoordinate2D, radius: Int = 100, handler: @escaping RequestHandler) {
+//        let url = "https://places.googleapis.com/v1/places:searchNearby"
+//        let body = NearbyPlacesBody(
+//            maxResultCount: 10,
+//            rankPreference: "DISTANCE",
+//            locationRestriction: LocationRestriction(
+//                circle: Circle(center: [
+//                    "latitude": center.latitude,
+//                    "longitude": center.longitude
+//                ],
+//                radius: radius)
+//            )
+//        )
+//
+//        let headers: [String: String] = [
+//            "X-Goog-Api-Key": GMAK,
+//            "X-Goog-FieldMask": "places.displayName,places.photos"
+//        ]
+//        
+//        _request(url: url, headers: headers, body: body, method: "POST", handler: handler)
+//    }
     
     func directions(origin: Waypoint, destination: Waypoint, handler: @escaping(ComputeRoutesResponse?, Error?) -> Void) {
         let url = "https://routes.googleapis.com/directions/v2:computeRoutes"
@@ -140,7 +140,7 @@ class APIHandler {
         }
     }
     
-    func get_info(place_id: String, handler: @escaping (DetailsResults?, Error?) -> Void) {
+    func get_info(place_id: String, handler: @escaping (PlacesDetailsResponse?, Error?) -> Void) {
         _get_request(baseurl: "https://maps.googleapis.com/maps/api/place/details/json?", params: [
             "place_id": place_id,
             "fields": "geometry,name",
@@ -153,8 +153,7 @@ class APIHandler {
                 return handler(nil, e)
             }
             
-            let data = try! JSONSerialization.jsonObject(with: j, options: []) as! [String : Any]
-            let results = DetailsResults(json: data)
+            let results = PlacesDetailsResponse.from(jsonData: j)
             
             handler(results, e)
         }
@@ -164,8 +163,8 @@ class APIHandler {
 extension CLLocationCoordinate2D {
     func toWaypoint() -> Waypoint {
         return Waypoint(
-            location: LatLng(
-                latLng: LatitudeLongitude(
+            location: Location(
+                latLng: LatLng(
                     latitude: latitude,
                     longitude: longitude
                 )

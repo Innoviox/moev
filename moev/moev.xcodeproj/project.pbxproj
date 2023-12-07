@@ -22,6 +22,7 @@
 		2064533A2B2041F800E288C9 /* ComputeRoutesModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206453392B2041F800E288C9 /* ComputeRoutesModels.swift */; };
 		2064533C2B215D5700E288C9 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2064533B2B215D5700E288C9 /* Utils.swift */; };
 		2064533E2B2164C200E288C9 /* PlaceAutocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2064533D2B2164C200E288C9 /* PlaceAutocomplete.swift */; };
+		20853EA32B216EEE00D14116 /* PlaceDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20853EA22B216EEE00D14116 /* PlaceDetails.swift */; };
 		20F70B252B1679F100B363FA /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F70B242B1679F100B363FA /* LocationManager.swift */; };
 		20F70B272B16AB8B00B363FA /* TextDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F70B262B16AB8B00B363FA /* TextDisplay.swift */; };
 /* End PBXBuildFile section */
@@ -62,6 +63,7 @@
 		206453392B2041F800E288C9 /* ComputeRoutesModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComputeRoutesModels.swift; sourceTree = "<group>"; };
 		2064533B2B215D5700E288C9 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		2064533D2B2164C200E288C9 /* PlaceAutocomplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceAutocomplete.swift; sourceTree = "<group>"; };
+		20853EA22B216EEE00D14116 /* PlaceDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceDetails.swift; sourceTree = "<group>"; };
 		20A381322B15AECE00172E8A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		20AFC92F2B14ED7700F5B3CC /* API_KEY.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = API_KEY.xcconfig; sourceTree = "<group>"; };
 		20E272432B1791BE00534C2F /* moev.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = moev.xctestplan; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 				206453392B2041F800E288C9 /* ComputeRoutesModels.swift */,
 				2064533B2B215D5700E288C9 /* Utils.swift */,
 				2064533D2B2164C200E288C9 /* PlaceAutocomplete.swift */,
+				20853EA22B216EEE00D14116 /* PlaceDetails.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -307,6 +310,7 @@
 				2064533E2B2164C200E288C9 /* PlaceAutocomplete.swift in Sources */,
 				2064533A2B2041F800E288C9 /* ComputeRoutesModels.swift in Sources */,
 				206453312B1ECA7F00E288C9 /* Colors.swift in Sources */,
+				20853EA32B216EEE00D14116 /* PlaceDetails.swift in Sources */,
 				20202B312B14F0DD007CC8AA /* APIHandler.swift in Sources */,
 				206453362B2019F000E288C9 /* RequestModels.swift in Sources */,
 				20400EB62B145A6D00CA7D7A /* ContentView.swift in Sources */,
