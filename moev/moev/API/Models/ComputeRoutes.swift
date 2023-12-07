@@ -22,7 +22,8 @@ struct ComputeRoutesRequest: Codable, Identifiable {
 	var transitPreferences: TransitPreferences? = nil // Optional. Specifies preferences that influence the route returned for TRANSIT routes. NOTE: You can only specify a transitPreferences when RouteTravelMode is set to TRANSIT.
 }
 
-extension ComputeRoutesRequest {	enum CodingKeys: String, CodingKey {
+extension ComputeRoutesRequest {
+	enum CodingKeys: String, CodingKey {
 		case origin
 		case destination
 		case intermediates
@@ -181,7 +182,8 @@ struct ComputeRoutesResponse: Codable, Identifiable {
 	var geocodingResults: GeocodingResults? = nil // Contains geocoding response info for waypoints specified as addresses.
 }
 
-extension ComputeRoutesResponse {	enum CodingKeys: String, CodingKey {
+extension ComputeRoutesResponse {
+	enum CodingKeys: String, CodingKey {
 		case routes
 		case fallbackInfo
 		case geocodingResults
@@ -279,7 +281,8 @@ struct Route: Codable, Identifiable {
 	var routeToken: String? = nil // A web-safe, base64-encoded route token that can be passed to the Navigation SDK, that allows the Navigation SDK to reconstruct the route during navigation, and, in the event of rerouting, honor the original intention when you created the route by calling v2.computeRoutes. Customers should treat this token as an opaque blob. It is not meant for reading or mutating. NOTE: Route.route_token is only available for requests that have set ComputeRoutesRequest.routing_preference to TRAFFIC_AWARE or TRAFFIC_AWARE_OPTIMAL. Route.route_token is not supported for requests that have Via waypoints.
 }
 
-extension Route {	enum CodingKeys: String, CodingKey {
+extension Route {
+	enum CodingKeys: String, CodingKey {
 		case routeLabels
 		case legs
 		case distanceMeters
@@ -409,7 +412,8 @@ struct RouteLeg: Codable, Identifiable {
 	var stepsOverview: StepsOverview? = nil // Overview information about the steps in this RouteLeg. This field is only populated for TRANSIT routes.
 }
 
-extension RouteLeg {	enum CodingKeys: String, CodingKey {
+extension RouteLeg {
+	enum CodingKeys: String, CodingKey {
 		case distanceMeters
 		case duration
 		case staticDuration
@@ -506,7 +510,8 @@ struct Polyline: Codable, Identifiable {
 	var geoJsonLinestring: [String: Any]? = nil // Specifies a polyline using the GeoJSON LineString format.
 }
 
-extension Polyline {	enum CodingKeys: String, CodingKey {
+extension Polyline {
+	enum CodingKeys: String, CodingKey {
 		case encodedPolyline
 		case geoJsonLinestring
 	}
@@ -556,7 +561,8 @@ struct RouteLegStep: Codable, Identifiable {
 	var travelMode: RouteTravelMode? = nil // The travel mode used for this step.
 }
 
-extension RouteLegStep {	enum CodingKeys: String, CodingKey {
+extension RouteLegStep {
+	enum CodingKeys: String, CodingKey {
 		case distanceMeters
 		case staticDuration
 		case polyline
@@ -654,7 +660,8 @@ struct NavigationInstruction: Codable, Identifiable {
 	var instructions: String? = nil // Instructions for navigating this step.
 }
 
-extension NavigationInstruction {	enum CodingKeys: String, CodingKey {
+extension NavigationInstruction {
+	enum CodingKeys: String, CodingKey {
 		case maneuver
 		case instructions
 	}
@@ -719,7 +726,8 @@ struct RouteLegStepTravelAdvisory: Codable, Identifiable {
 	var speedReadingIntervals: [SpeedReadingInterval]? = nil // NOTE: This field is not currently populated.
 }
 
-extension RouteLegStepTravelAdvisory {	enum CodingKeys: String, CodingKey {
+extension RouteLegStepTravelAdvisory {
+	enum CodingKeys: String, CodingKey {
 		case speedReadingIntervals
 	}
 
@@ -753,7 +761,8 @@ struct RouteLegStepLocalizedValues: Codable, Identifiable {
 	var staticDuration: LocalizedText? = nil // Duration without taking traffic conditions into consideration, represented in text form.
 }
 
-extension RouteLegStepLocalizedValues {	enum CodingKeys: String, CodingKey {
+extension RouteLegStepLocalizedValues {
+	enum CodingKeys: String, CodingKey {
 		case distance
 		case staticDuration
 	}
@@ -800,7 +809,8 @@ struct RouteLegStepTransitDetails: Codable, Identifiable {
 	var tripShortText: String? = nil // The text that appears in schedules and sign boards to identify a transit trip to passengers. The text should uniquely identify a trip within a service day. For example, "538" is the tripShortText of the Amtrak train that leaves San Jose, CA at 15:10 on weekdays to Sacramento, CA.
 }
 
-extension RouteLegStepTransitDetails {	enum CodingKeys: String, CodingKey {
+extension RouteLegStepTransitDetails {
+	enum CodingKeys: String, CodingKey {
 		case stopDetails
 		case localizedValues
 		case headsign
@@ -879,7 +889,8 @@ struct TransitStopDetails: Codable, Identifiable {
 	var departureTime: String? = nil // The estimated time of departure for the step.
 }
 
-extension TransitStopDetails {	enum CodingKeys: String, CodingKey {
+extension TransitStopDetails {
+	enum CodingKeys: String, CodingKey {
 		case arrivalStop
 		case arrivalTime
 		case departureStop
@@ -935,7 +946,8 @@ struct TransitStop: Codable, Identifiable {
 	var location: Location? = nil // The location of the stop expressed in latitude/longitude coordinates.
 }
 
-extension TransitStop {	enum CodingKeys: String, CodingKey {
+extension TransitStop {
+	enum CodingKeys: String, CodingKey {
 		case name
 		case location
 	}
@@ -977,7 +989,8 @@ struct TransitDetailsLocalizedValues: Codable, Identifiable {
 	var departureTime: LocalizedTime? = nil // Time in its formatted text representation with a corresponding time zone.
 }
 
-extension TransitDetailsLocalizedValues {	enum CodingKeys: String, CodingKey {
+extension TransitDetailsLocalizedValues {
+	enum CodingKeys: String, CodingKey {
 		case arrivalTime
 		case departureTime
 	}
@@ -1019,7 +1032,8 @@ struct LocalizedTime: Codable, Identifiable {
 	var timeZone: String? = nil // Contains the time zone. The value is the name of the time zone as defined in the IANA Time Zone Database, e.g. "America/New_York".
 }
 
-extension LocalizedTime {	enum CodingKeys: String, CodingKey {
+extension LocalizedTime {
+	enum CodingKeys: String, CodingKey {
 		case time
 		case timeZone
 	}
@@ -1067,7 +1081,8 @@ struct TransitLine: Codable, Identifiable {
 	var vehicle: TransitVehicle? = nil // The type of vehicle that operates on this transit line.
 }
 
-extension TransitLine {	enum CodingKeys: String, CodingKey {
+extension TransitLine {
+	enum CodingKeys: String, CodingKey {
 		case agencies
 		case name
 		case uri
@@ -1151,7 +1166,8 @@ struct TransitAgency: Codable, Identifiable {
 	var uri: String? = nil // The transit agency's URI.
 }
 
-extension TransitAgency {	enum CodingKeys: String, CodingKey {
+extension TransitAgency {
+	enum CodingKeys: String, CodingKey {
 		case name
 		case phoneNumber
 		case uri
@@ -1202,7 +1218,8 @@ struct TransitVehicle: Codable, Identifiable {
 	var localIconUri: String? = nil // The URI for the icon associated with this vehicle type, based on the local transport signage.
 }
 
-extension TransitVehicle {	enum CodingKeys: String, CodingKey {
+extension TransitVehicle {
+	enum CodingKeys: String, CodingKey {
 		case name
 		case type
 		case iconUri
@@ -1280,7 +1297,8 @@ struct RouteLegTravelAdvisory: Codable, Identifiable {
 	var speedReadingIntervals: [SpeedReadingInterval]? = nil // Speed reading intervals detailing traffic density. Applicable in case of TRAFFIC_AWARE and TRAFFIC_AWARE_OPTIMAL routing preferences. The intervals cover the entire polyline of the RouteLeg without overlap. The start point of a specified interval is the same as the end point of the preceding interval.
 }
 
-extension RouteLegTravelAdvisory {	enum CodingKeys: String, CodingKey {
+extension RouteLegTravelAdvisory {
+	enum CodingKeys: String, CodingKey {
 		case tollInfo
 		case speedReadingIntervals
 	}
@@ -1322,7 +1340,8 @@ struct RouteLegLocalizedValues: Codable, Identifiable {
 	var staticDuration: LocalizedText? = nil // Duration without taking traffic conditions into consideration, represented in text form.
 }
 
-extension RouteLegLocalizedValues {	enum CodingKeys: String, CodingKey {
+extension RouteLegLocalizedValues {
+	enum CodingKeys: String, CodingKey {
 		case distance
 		case duration
 		case staticDuration
@@ -1370,7 +1389,8 @@ struct StepsOverview: Codable, Identifiable {
 	var multiModalSegments: [MultiModalSegment]? = nil // Summarized information about different multi-modal segments of the RouteLeg.steps. This field is not populated if the RouteLeg does not contain any multi-modal segments in the steps.
 }
 
-extension StepsOverview {	enum CodingKeys: String, CodingKey {
+extension StepsOverview {
+	enum CodingKeys: String, CodingKey {
 		case multiModalSegments
 	}
 
@@ -1406,7 +1426,8 @@ struct MultiModalSegment: Codable, Identifiable {
 	var stepEndIndex: Int? = nil // The corresponding RouteLegStep index that is the end of a multi-modal segment.
 }
 
-extension MultiModalSegment {	enum CodingKeys: String, CodingKey {
+extension MultiModalSegment {
+	enum CodingKeys: String, CodingKey {
 		case navigationInstruction
 		case travelMode
 		case stepStartIndex
@@ -1462,7 +1483,8 @@ struct Viewport: Codable, Identifiable {
 	var high: LatLng? = nil // Required. The high point of the viewport.
 }
 
-extension Viewport {	enum CodingKeys: String, CodingKey {
+extension Viewport {
+	enum CodingKeys: String, CodingKey {
 		case low
 		case high
 	}
@@ -1506,7 +1528,8 @@ struct RouteLocalizedValues: Codable, Identifiable {
 	var transitFare: LocalizedText? = nil // Transit fare represented in text form.
 }
 
-extension RouteLocalizedValues {	enum CodingKeys: String, CodingKey {
+extension RouteLocalizedValues {
+	enum CodingKeys: String, CodingKey {
 		case distance
 		case duration
 		case staticDuration
@@ -1563,7 +1586,8 @@ struct GeocodingResults: Codable, Identifiable {
 	var intermediates: [GeocodedWaypoint]? = nil // A list of intermediate geocoded waypoints each containing an index field that corresponds to the zero-based position of the waypoint in the order they were specified in the request.
 }
 
-extension GeocodingResults {	enum CodingKeys: String, CodingKey {
+extension GeocodingResults {
+	enum CodingKeys: String, CodingKey {
 		case origin
 		case destination
 		case intermediates
@@ -1614,7 +1638,8 @@ struct GeocodedWaypoint: Codable, Identifiable {
 	var intermediateWaypointRequestIndex: Int? = nil // The index of the corresponding intermediate waypoint in the request. Only populated if the corresponding waypoint is an intermediate waypoint.
 }
 
-extension GeocodedWaypoint {	enum CodingKeys: String, CodingKey {
+extension GeocodedWaypoint {
+	enum CodingKeys: String, CodingKey {
 		case geocoderStatus
 		case type
 		case partialMatch
@@ -1677,7 +1702,8 @@ struct FallbackInfo: Codable, Identifiable {
 	var reason: FallbackReason? = nil // The reason why fallback response was used instead of the original response. This field is only populated when the fallback mode is triggered and the fallback response is returned.
 }
 
-extension FallbackInfo {	enum CodingKeys: String, CodingKey {
+extension FallbackInfo {
+	enum CodingKeys: String, CodingKey {
 		case routingMode
 		case reason
 	}
@@ -1732,7 +1758,8 @@ struct LatLng: Codable, Identifiable {
 	var longitude: Double? = nil // The longitude in degrees. It must be in the range [-180.0, +180.0].
 }
 
-extension LatLng {	enum CodingKeys: String, CodingKey {
+extension LatLng {
+	enum CodingKeys: String, CodingKey {
 		case latitude
 		case longitude
 	}
@@ -1775,7 +1802,8 @@ struct LocalizedText: Codable, Identifiable {
 	var languageCode: String? = nil // The text's BCP-47 language code, such as "en-US" or "sr-Latn".
 }
 
-extension LocalizedText {	enum CodingKeys: String, CodingKey {
+extension LocalizedText {
+	enum CodingKeys: String, CodingKey {
 		case text
 		case languageCode
 	}
@@ -1818,7 +1846,8 @@ struct Location: Codable, Identifiable {
 	var heading: Int? = nil // The compass heading associated with the direction of the flow of traffic. This value specifies the side of the road for pickup and drop-off. Heading values can be from 0 to 360, where 0 specifies a heading of due North, 90 specifies a heading of due East, and so on. You can use this field only for DRIVE and TWO_WHEELER RouteTravelMode.
 }
 
-extension Location {	enum CodingKeys: String, CodingKey {
+extension Location {
+	enum CodingKeys: String, CodingKey {
 		case latLng
 		case heading
 	}
@@ -1862,7 +1891,8 @@ struct Money: Codable, Identifiable {
 	var nanos: Int? = nil // Number of nano (10^-9) units of the amount. The value must be between -999,999,999 and +999,999,999 inclusive. If units is positive, nanos must be positive or zero. If units is zero, nanos can be positive, zero, or negative. If units is negative, nanos must be negative or zero. For example $-1.75 is represented as units=-1 and nanos=-750,000,000.
 }
 
-extension Money {	enum CodingKeys: String, CodingKey {
+extension Money {
+	enum CodingKeys: String, CodingKey {
 		case currencyCode
 		case units
 		case nanos
@@ -1916,7 +1946,8 @@ struct RouteModifiers: Codable, Identifiable {
 	var tollPasses: [TollPass]? = nil // Encapsulates information about toll passes. If toll passes are provided, the API tries to return the pass price. If toll passes are not provided, the API treats the toll pass as unknown and tries to return the cash price. Applies only to the DRIVE and TWO_WHEELER RouteTravelMode.
 }
 
-extension RouteModifiers {	enum CodingKeys: String, CodingKey {
+extension RouteModifiers {
+	enum CodingKeys: String, CodingKey {
 		case avoidTolls
 		case avoidHighways
 		case avoidFerries
@@ -1984,7 +2015,8 @@ struct VehicleInfo: Codable, Identifiable {
 	var emissionType: VehicleEmissionType? = nil // Describes the vehicle's emission type. Applies only to the DRIVE RouteTravelMode.
 }
 
-extension VehicleInfo {	enum CodingKeys: String, CodingKey {
+extension VehicleInfo {
+	enum CodingKeys: String, CodingKey {
 		case emissionType
 	}
 
@@ -2133,7 +2165,8 @@ struct RouteTravelAdvisory: Codable, Identifiable {
 	var transitFare: Money? = nil // If present, contains the total fare or ticket costs on this route This property is only returned for TRANSIT requests and only for routes where fare information is available for all transit steps.
 }
 
-extension RouteTravelAdvisory {	enum CodingKeys: String, CodingKey {
+extension RouteTravelAdvisory {
+	enum CodingKeys: String, CodingKey {
 		case tollInfo
 		case speedReadingIntervals
 		case fuelConsumptionMicroliters
@@ -2215,7 +2248,8 @@ struct SpeedReadingInterval: Codable, Identifiable {
 	var speed: Speed? = nil // Traffic speed in this interval.
 }
 
-extension SpeedReadingInterval {	enum CodingKeys: String, CodingKey {
+extension SpeedReadingInterval {
+	enum CodingKeys: String, CodingKey {
 		case startPolylinePointIndex
 		case endPolylinePointIndex
 		case speed
@@ -2273,7 +2307,8 @@ struct Status: Codable, Identifiable {
 	var details: [[String: Any]]? = nil // A list of messages that carry the error details. There is a common set of message types for APIs to use.
 }
 
-extension Status {	enum CodingKeys: String, CodingKey {
+extension Status {
+	enum CodingKeys: String, CodingKey {
 		case code
 		case message
 		case details
@@ -2320,7 +2355,8 @@ struct TollInfo: Codable, Identifiable {
 	var estimatedPrice: [Money]? = nil // The monetary amount of tolls for the corresponding Route or RouteLeg. This list contains a money amount for each currency that is expected to be charged by the toll stations. Typically this list will contain only one item for routes with tolls in one currency. For international trips, this list may contain multiple items to reflect tolls in different currencies.
 }
 
-extension TollInfo {	enum CodingKeys: String, CodingKey {
+extension TollInfo {
+	enum CodingKeys: String, CodingKey {
 		case estimatedPrice
 	}
 
@@ -2363,7 +2399,8 @@ struct TransitPreferences: Codable, Identifiable {
 	var routingPreference: TransitRoutingPreference? = nil // A routing preference that, when specified, influences the TRANSIT route returned.
 }
 
-extension TransitPreferences {	enum CodingKeys: String, CodingKey {
+extension TransitPreferences {
+	enum CodingKeys: String, CodingKey {
 		case allowedTravelModes
 		case routingPreference
 	}
@@ -2424,7 +2461,8 @@ struct Waypoint: Codable, Identifiable {
 	var address: String? = nil // Human readable address or a plus code. See https://plus.codes for details.
 }
 
-extension Waypoint {	enum CodingKeys: String, CodingKey {
+extension Waypoint {
+	enum CodingKeys: String, CodingKey {
 		case via
 		case vehicleStopover
 		case sideOfRoad

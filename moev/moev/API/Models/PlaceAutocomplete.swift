@@ -7,7 +7,8 @@ struct PlacesAutocompleteResponse: Codable, Identifiable {
 	var info_messages: [String]? = nil // 
 }
 
-extension PlacesAutocompleteResponse {	enum CodingKeys: String, CodingKey {
+extension PlacesAutocompleteResponse {
+	enum CodingKeys: String, CodingKey {
 		case predictions
 		case status
 		case error_message
@@ -75,7 +76,8 @@ struct PlaceAutocompletePrediction: Codable, Identifiable {
 	var types: [String]? = nil // 
 }
 
-extension PlaceAutocompletePrediction {	enum CodingKeys: String, CodingKey {
+extension PlaceAutocompletePrediction {
+	enum CodingKeys: String, CodingKey {
 		case description
 		case matched_substrings
 		case structured_formatting
@@ -156,7 +158,8 @@ struct PlaceAutocompleteMatchedSubstring: Codable, Identifiable {
 	var offset: Double? = nil // Start location of the matched substring in the prediction result             text.
 }
 
-extension PlaceAutocompleteMatchedSubstring {	enum CodingKeys: String, CodingKey {
+extension PlaceAutocompleteMatchedSubstring {
+	enum CodingKeys: String, CodingKey {
 		case length
 		case offset
 	}
@@ -200,7 +203,8 @@ struct PlaceAutocompleteStructuredFormat: Codable, Identifiable {
 	var secondary_text_matched_substrings: [PlaceAutocompleteMatchedSubstring]? = nil // 
 }
 
-extension PlaceAutocompleteStructuredFormat {	enum CodingKeys: String, CodingKey {
+extension PlaceAutocompleteStructuredFormat {
+	enum CodingKeys: String, CodingKey {
 		case main_text
 		case main_text_matched_substrings
 		case secondary_text
@@ -254,7 +258,8 @@ struct PlaceAutocompleteTerm: Codable, Identifiable {
 	var value: String? = nil // The text of the term.
 }
 
-extension PlaceAutocompleteTerm {	enum CodingKeys: String, CodingKey {
+extension PlaceAutocompleteTerm {
+	enum CodingKeys: String, CodingKey {
 		case offset
 		case value
 	}

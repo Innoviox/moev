@@ -7,7 +7,8 @@ struct PlacesDetailsResponse: Codable, Identifiable {
 	var info_messages: [String]? = nil // 
 }
 
-extension PlacesDetailsResponse {	enum CodingKeys: String, CodingKey {
+extension PlacesDetailsResponse {
+	enum CodingKeys: String, CodingKey {
 		case html_attributions
 		case result
 		case status
@@ -110,7 +111,8 @@ struct Place: Codable, Identifiable {
 	var wheelchair_accessible_entrance: Bool? = nil // Specifies if the place has an entrance that is             wheelchair-accessible.
 }
 
-extension Place {	enum CodingKeys: String, CodingKey {
+extension Place {
+	enum CodingKeys: String, CodingKey {
 		case address_components
 		case adr_address
 		case business_status
@@ -435,7 +437,8 @@ struct AddressComponent: Codable, Identifiable {
 	var types: [String]? = nil // 
 }
 
-extension AddressComponent {	enum CodingKeys: String, CodingKey {
+extension AddressComponent {
+	enum CodingKeys: String, CodingKey {
 		case long_name
 		case short_name
 		case types
@@ -483,7 +486,8 @@ struct PlaceEditorialSummary: Codable, Identifiable {
 	var overview: String? = nil // A medium-length textual summary of the place.
 }
 
-extension PlaceEditorialSummary {	enum CodingKeys: String, CodingKey {
+extension PlaceEditorialSummary {
+	enum CodingKeys: String, CodingKey {
 		case language
 		case overview
 	}
@@ -525,7 +529,8 @@ struct Geometry: Codable, Identifiable {
 	var viewport: Bounds? = nil // See Bounds for more information.
 }
 
-extension Geometry {	enum CodingKeys: String, CodingKey {
+extension Geometry {
+	enum CodingKeys: String, CodingKey {
 		case location
 		case viewport
 	}
@@ -567,7 +572,8 @@ struct LatLngLiteral: Codable, Identifiable {
 	var lng: Double? = nil // Longitude in decimal degrees
 }
 
-extension LatLngLiteral {	enum CodingKeys: String, CodingKey {
+extension LatLngLiteral {
+	enum CodingKeys: String, CodingKey {
 		case lat
 		case lng
 	}
@@ -609,7 +615,8 @@ struct Bounds: Codable, Identifiable {
 	var southwest: LatLngLiteral? = nil // See LatLngLiteral for         more information.
 }
 
-extension Bounds {	enum CodingKeys: String, CodingKey {
+extension Bounds {
+	enum CodingKeys: String, CodingKey {
 		case northeast
 		case southwest
 	}
@@ -654,7 +661,8 @@ struct PlaceOpeningHours: Codable, Identifiable {
 	var weekday_text: [String]? = nil // An array of strings describing in human-readable text the hours of             the place.
 }
 
-extension PlaceOpeningHours {	enum CodingKeys: String, CodingKey {
+extension PlaceOpeningHours {
+	enum CodingKeys: String, CodingKey {
 		case open_now
 		case periods
 		case special_days
@@ -714,7 +722,8 @@ struct PlaceOpeningHoursPeriod: Codable, Identifiable {
 	var close: PlaceOpeningHoursPeriodDetail? = nil // 
 }
 
-extension PlaceOpeningHoursPeriod {	enum CodingKeys: String, CodingKey {
+extension PlaceOpeningHoursPeriod {
+	enum CodingKeys: String, CodingKey {
 		case open
 		case close
 	}
@@ -756,7 +765,8 @@ struct PlaceSpecialDay: Codable, Identifiable {
 	var exceptional_hours: Bool? = nil // 
 }
 
-extension PlaceSpecialDay {	enum CodingKeys: String, CodingKey {
+extension PlaceSpecialDay {
+	enum CodingKeys: String, CodingKey {
 		case date
 		case exceptional_hours
 	}
@@ -800,7 +810,8 @@ struct PlaceOpeningHoursPeriodDetail: Codable, Identifiable {
 	var truncated: Bool? = nil // True if a given period was truncated due to a seven-day cutoff,             where the period starts before midnight on the date of the request             and/or ends at or after midnight on the last day. This property             indicates that the period for open or close can extend past this             seven-day cutoff.
 }
 
-extension PlaceOpeningHoursPeriodDetail {	enum CodingKeys: String, CodingKey {
+extension PlaceOpeningHoursPeriodDetail {
+	enum CodingKeys: String, CodingKey {
 		case day
 		case time
 		case date
@@ -858,7 +869,8 @@ struct PlacePhoto: Codable, Identifiable {
 	var width: Double? = nil // The width of the photo.
 }
 
-extension PlacePhoto {	enum CodingKeys: String, CodingKey {
+extension PlacePhoto {
+	enum CodingKeys: String, CodingKey {
 		case height
 		case html_attributions
 		case photo_reference
@@ -913,7 +925,8 @@ struct PlusCode: Codable, Identifiable {
 	var compound_code: String? = nil // 
 }
 
-extension PlusCode {	enum CodingKeys: String, CodingKey {
+extension PlusCode {
+	enum CodingKeys: String, CodingKey {
 		case global_code
 		case compound_code
 	}
@@ -963,7 +976,8 @@ struct PlaceReview: Codable, Identifiable {
 	var translated: Bool? = nil // A boolean value indicating if the review was translated from the             original language it was written in.If a review has been translated,             corresponding to a value of true, Google recommends that you             indicate this to your users. For example, you can add the following             string, “Translated by Google”, to the review.
 }
 
-extension PlaceReview {	enum CodingKeys: String, CodingKey {
+extension PlaceReview {
+	enum CodingKeys: String, CodingKey {
 		case author_name
 		case rating
 		case relative_time_description
