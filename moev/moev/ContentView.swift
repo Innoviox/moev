@@ -35,7 +35,7 @@ struct UIPlace: Identifiable {
 struct UIRoute: Identifiable {
     var id: Int
     
-    var route: DirectionsResults
+    var route: ComputeRoutesResponse
 }
 
 struct ContentView: View {
@@ -165,7 +165,7 @@ struct ContentView: View {
         return coord?.toWaypoint()
     }
     
-    func updateRoutes(withID id: Int, newRoute: DirectionsResults) {
+    func updateRoutes(withID id: Int, newRoute: ComputeRoutesResponse) {
         for i in routes.indices {
             if routes[i].id == id {
                 routes[i].route = newRoute
@@ -237,8 +237,7 @@ struct ContentView: View {
     func routesList() -> some View {
         return List(routes) { route in
             HStack {
-                Text(route.route.duration)
-                Text(String(route.route.distanceMeters))
+                Text(route.route.routes![0].description!)
             }
         }
     }
@@ -250,11 +249,11 @@ struct ContentView: View {
                 return
             }
 
-            let geom = d.result.geometry.location
-            let location = CLLocationCoordinate2D(latitude: geom.lat,
-                                                  longitude: geom.lng)
+            let geom = d.result!.geometry!.location!
+            let location = CLLocationCoordinate2D(latitude: geom.lat!,
+                                                  longitude: geom.lng!)
             
-            annotations[searchingIdx].name = d.result.name
+            annotations[searchingIdx].name = d.result!.name!
             annotations[searchingIdx].location = location
             annotations[searchingIdx].placeID = p.placeID
             
