@@ -96,8 +96,8 @@ struct ContentView: View {
 //                    .offset(CGSize(width: 0.0, height: -geometry.size.height / 2))
                     .opacity(loadingResults ? 1 : 0)
                     
-                    routesList()
-                    .opacity(showingResults ? 1 : 0)
+//                    routesList()
+//                    .opacity(showingResults ? 1 : 0)
                 }
                 .background(UIColor.Theme.listBackgroundColor)
                 .edgesIgnoringSafeArea(.all)
@@ -139,7 +139,7 @@ struct ContentView: View {
         
         APIHandler.shared.directions(origin: o, destination: d) { results, error in
             guard let route = results else {
-                print(error)
+                print("e", error)
                 return
             }
             
@@ -235,22 +235,28 @@ struct ContentView: View {
         .scrollContentBackground(.hidden)
     }
     
-    func routesList() -> some View {
-        return List(routes[0].routes) { route in
-            HStack {
-                ForEach(route.legs!) { leg in
-                    VStack {
-                        
-                    }
-                }
-            }
-        }
-    }
+//    func routesList() -> some View {
+//        return ForEach(routes) { routes in
+//            List(routes.routes) { route in
+//                HStack {
+//                    ForEach(route.legs!) { leg in
+//                        ForEach(leg.stepsOverview!.multiModalSegments!) { seg in
+//                            VStack {
+//                                Text(seg.navigationInstruction!.instructions!)
+//                                Text(seg.navigationInstruction!.maneuver!.rawValue)
+//                                Text(seg.travelMode!.rawValue)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
     
     func addMarker(p: UIPlace) {
         APIHandler.shared.get_info(place_id: p.placeID) { data, error in
             guard let d = data else {
-                print(error)
+                print("i", error)
                 return
             }
 

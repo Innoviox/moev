@@ -1,6 +1,6 @@
 import Foundation
-struct ComputeRoutesRequest: Codable, Identifiable {
-	var id = UUID()
+struct ComputeRoutesRequest: Codable {
+	
 	var origin: Waypoint? = nil // Required. Origin waypoint.
 	var destination: Waypoint? = nil // Required. Destination waypoint.
 	var intermediates: [Waypoint]? = nil // Optional. A set of waypoints along the route (excluding terminal points), for either stopping at or passing by. Up to 25 intermediate waypoints are supported.
@@ -23,8 +23,8 @@ struct ComputeRoutesRequest: Codable, Identifiable {
 }
 
 
-struct ComputeRoutesResponse: Codable, Identifiable {
-	var id = UUID()
+struct ComputeRoutesResponse: Codable {
+	
 	var routes: [Route]? = nil // Contains an array of computed routes (up to three) when you specify compute_alternatives_routes, and contains just one route when you don't. When this array contains multiple entries, the first one is the most recommended route. If the array is empty, then it means no route could be found.
 	var fallbackInfo: FallbackInfo? = nil // In some cases when the server is not able to compute the route results with all of the input preferences, it may fallback to using a different way of computation. When fallback mode is used, this field contains detailed info about the fallback response. Otherwise this field is unset.
 	var geocodingResults: GeocodingResults? = nil // Contains geocoding response info for waypoints specified as addresses.
@@ -70,8 +70,8 @@ enum ExtraComputation: String, Codable {
 	case HTML_FORMATTED_NAVIGATION_INSTRUCTIONS // NavigationInstructions presented as a formatted HTML text string. This content is meant to be read as-is. This content is for display only. Do not programmatically parse it.
 }
 
-struct Route: Codable, Identifiable {
-	var id = UUID()
+struct Route: Codable {
+	
 	var routeLabels: [RouteLabel]? = nil // Labels for the Route that are useful to identify specific properties of the route to compare against others.
 	var legs: [RouteLeg]? = nil // A collection of legs (path segments between waypoints) that make up the route. Each leg corresponds to the trip between two non-via Waypoints. For example, a route with no intermediate waypoints has only one leg. A route that includes one non-via intermediate waypoint has two legs. A route that includes one via intermediate waypoint has one leg. The order of the legs matches the order of waypoints from origin to intermediates to destination.
 	var distanceMeters: Int? = nil // The travel distance of the route, in meters.
@@ -95,8 +95,8 @@ enum RouteLabel: String, Codable {
 	case FUEL_EFFICIENT // Fuel efficient route. Routes labeled with this value are determined to be optimized for Eco parameters such as fuel consumption.
 }
 
-struct RouteLeg: Codable, Identifiable {
-	var id = UUID()
+struct RouteLeg: Codable {
+	
 	var distanceMeters: Int? = nil // The travel distance of the route leg, in meters.
 	var duration: String? = nil // The length of time needed to navigate the leg. If the route_preference is set to TRAFFIC_UNAWARE, then this value is the same as staticDuration. If the route_preference is either TRAFFIC_AWARE or TRAFFIC_AWARE_OPTIMAL, then this value is calculated taking traffic conditions into account.
 	var staticDuration: String? = nil // The duration of travel through the leg, calculated without taking traffic conditions into consideration.
@@ -110,8 +110,8 @@ struct RouteLeg: Codable, Identifiable {
 }
 
 
-struct Polyline: Codable, Identifiable {
-	var id = UUID()
+struct Polyline: Codable {
+	
 	var encodedPolyline: String? = nil // The string encoding of the polyline using the polyline encoding algorithm
 	var geoJsonLinestring: [String: Any]? = nil // Specifies a polyline using the GeoJSON LineString format.
 
@@ -136,8 +136,8 @@ struct Polyline: Codable, Identifiable {
 }
 
 
-struct RouteLegStep: Codable, Identifiable {
-	var id = UUID()
+struct RouteLegStep: Codable {
+	
 	var distanceMeters: Int? = nil // The travel distance of this step, in meters. In some circumstances, this field might not have a value.
 	var staticDuration: String? = nil // The duration of travel through this step without taking traffic conditions into consideration. In some circumstances, this field might not have a value.
 	var polyline: Polyline? = nil // The polyline associated with this step.
@@ -151,8 +151,8 @@ struct RouteLegStep: Codable, Identifiable {
 }
 
 
-struct NavigationInstruction: Codable, Identifiable {
-	var id = UUID()
+struct NavigationInstruction: Codable {
+	
 	var maneuver: Maneuver? = nil // Encapsulates the navigation instructions for the current step (for example, turn left, merge, or straight). This field determines which icon to display.
 	var instructions: String? = nil // Instructions for navigating this step.
 }
@@ -182,21 +182,21 @@ enum Maneuver: String, Codable {
 	case NAME_CHANGE // Used to indicate a street name change.
 }
 
-struct RouteLegStepTravelAdvisory: Codable, Identifiable {
-	var id = UUID()
+struct RouteLegStepTravelAdvisory: Codable {
+	
 	var speedReadingIntervals: [SpeedReadingInterval]? = nil // NOTE: This field is not currently populated.
 }
 
 
-struct RouteLegStepLocalizedValues: Codable, Identifiable {
-	var id = UUID()
+struct RouteLegStepLocalizedValues: Codable {
+	
 	var distance: LocalizedText? = nil // Travel distance represented in text form.
 	var staticDuration: LocalizedText? = nil // Duration without taking traffic conditions into consideration, represented in text form.
 }
 
 
-struct RouteLegStepTransitDetails: Codable, Identifiable {
-	var id = UUID()
+struct RouteLegStepTransitDetails: Codable {
+	
 	var stopDetails: TransitStopDetails? = nil // Information about the arrival and departure stops for the step.
 	var localizedValues: TransitDetailsLocalizedValues? = nil // Text representations of properties of the RouteLegStepTransitDetails.
 	var headsign: String? = nil // Specifies the direction in which to travel on this line as marked on the vehicle or at the departure stop. The direction is often the terminus station.
@@ -207,8 +207,8 @@ struct RouteLegStepTransitDetails: Codable, Identifiable {
 }
 
 
-struct TransitStopDetails: Codable, Identifiable {
-	var id = UUID()
+struct TransitStopDetails: Codable {
+	
 	var arrivalStop: TransitStop? = nil // Information about the arrival stop for the step.
 	var arrivalTime: String? = nil // The estimated time of arrival for the step.
 	var departureStop: TransitStop? = nil // Information about the departure stop for the step.
@@ -216,29 +216,29 @@ struct TransitStopDetails: Codable, Identifiable {
 }
 
 
-struct TransitStop: Codable, Identifiable {
-	var id = UUID()
+struct TransitStop: Codable {
+	
 	var name: String? = nil // The name of the transit stop.
 	var location: Location? = nil // The location of the stop expressed in latitude/longitude coordinates.
 }
 
 
-struct TransitDetailsLocalizedValues: Codable, Identifiable {
-	var id = UUID()
+struct TransitDetailsLocalizedValues: Codable {
+	
 	var arrivalTime: LocalizedTime? = nil // Time in its formatted text representation with a corresponding time zone.
 	var departureTime: LocalizedTime? = nil // Time in its formatted text representation with a corresponding time zone.
 }
 
 
-struct LocalizedTime: Codable, Identifiable {
-	var id = UUID()
+struct LocalizedTime: Codable {
+	
 	var time: LocalizedText? = nil // The time specified as a string in a given time zone.
 	var timeZone: String? = nil // Contains the time zone. The value is the name of the time zone as defined in the IANA Time Zone Database, e.g. "America/New_York".
 }
 
 
-struct TransitLine: Codable, Identifiable {
-	var id = UUID()
+struct TransitLine: Codable {
+	
 	var agencies: [TransitAgency]? = nil // The transit agency (or agencies) that operates this transit line.
 	var name: String? = nil // The full name of this transit line, For example, "8 Avenue Local".
 	var uri: String? = nil // the URI for this transit line as provided by the transit agency.
@@ -250,16 +250,16 @@ struct TransitLine: Codable, Identifiable {
 }
 
 
-struct TransitAgency: Codable, Identifiable {
-	var id = UUID()
+struct TransitAgency: Codable {
+	
 	var name: String? = nil // The name of this transit agency.
 	var phoneNumber: String? = nil // The transit agency's locale-specific formatted phone number.
 	var uri: String? = nil // The transit agency's URI.
 }
 
 
-struct TransitVehicle: Codable, Identifiable {
-	var id = UUID()
+struct TransitVehicle: Codable {
+	
 	var name: LocalizedText? = nil // The name of this vehicle, capitalized.
 	var type: TransitVehicleType? = nil // The type of vehicle used.
 	var iconUri: String? = nil // The URI for an icon associated with this vehicle type.
@@ -289,29 +289,29 @@ enum TransitVehicleType: String, Codable {
 	case TROLLEYBUS // Trolleybus.
 }
 
-struct RouteLegTravelAdvisory: Codable, Identifiable {
-	var id = UUID()
+struct RouteLegTravelAdvisory: Codable {
+	
 	var tollInfo: TollInfo? = nil // Contains information about tolls on the specific RouteLeg. This field is only populated if we expect there are tolls on the RouteLeg. If this field is set but the estimatedPrice subfield is not populated, we expect that road contains tolls but we do not know an estimated price. If this field does not exist, then there is no toll on the RouteLeg.
 	var speedReadingIntervals: [SpeedReadingInterval]? = nil // Speed reading intervals detailing traffic density. Applicable in case of TRAFFIC_AWARE and TRAFFIC_AWARE_OPTIMAL routing preferences. The intervals cover the entire polyline of the RouteLeg without overlap. The start point of a specified interval is the same as the end point of the preceding interval.
 }
 
 
-struct RouteLegLocalizedValues: Codable, Identifiable {
-	var id = UUID()
+struct RouteLegLocalizedValues: Codable {
+	
 	var distance: LocalizedText? = nil // Travel distance represented in text form.
 	var duration: LocalizedText? = nil // Duration taking traffic conditions into consideration represented in text form. Note: If you did not request traffic information, this value will be the same value as staticDuration.
 	var staticDuration: LocalizedText? = nil // Duration without taking traffic conditions into consideration, represented in text form.
 }
 
 
-struct StepsOverview: Codable, Identifiable {
-	var id = UUID()
+struct StepsOverview: Codable {
+	
 	var multiModalSegments: [MultiModalSegment]? = nil // Summarized information about different multi-modal segments of the RouteLeg.steps. This field is not populated if the RouteLeg does not contain any multi-modal segments in the steps.
 }
 
 
-struct MultiModalSegment: Codable, Identifiable {
-	var id = UUID()
+struct MultiModalSegment: Codable {
+	
 	var navigationInstruction: NavigationInstruction? = nil // NavigationInstruction for the multi-modal segment.
 	var travelMode: RouteTravelMode? = nil // The travel mode of the multi-modal segment.
 	var stepStartIndex: Int? = nil // The corresponding RouteLegStep index that is the start of a multi-modal segment.
@@ -319,15 +319,15 @@ struct MultiModalSegment: Codable, Identifiable {
 }
 
 
-struct Viewport: Codable, Identifiable {
-	var id = UUID()
+struct Viewport: Codable {
+	
 	var low: LatLng? = nil // Required. The low point of the viewport.
 	var high: LatLng? = nil // Required. The high point of the viewport.
 }
 
 
-struct RouteLocalizedValues: Codable, Identifiable {
-	var id = UUID()
+struct RouteLocalizedValues: Codable {
+	
 	var distance: LocalizedText? = nil // Travel distance represented in text form.
 	var duration: LocalizedText? = nil // Duration taking traffic conditions into consideration, represented in text form. Note: If you did not request traffic information, this value will be the same value as staticDuration.
 	var staticDuration: LocalizedText? = nil // Duration without taking traffic conditions into consideration, represented in text form.
@@ -335,16 +335,16 @@ struct RouteLocalizedValues: Codable, Identifiable {
 }
 
 
-struct GeocodingResults: Codable, Identifiable {
-	var id = UUID()
+struct GeocodingResults: Codable {
+	
 	var origin: GeocodedWaypoint? = nil // Origin geocoded waypoint.
 	var destination: GeocodedWaypoint? = nil // Destination geocoded waypoint.
 	var intermediates: [GeocodedWaypoint]? = nil // A list of intermediate geocoded waypoints each containing an index field that corresponds to the zero-based position of the waypoint in the order they were specified in the request.
 }
 
 
-struct GeocodedWaypoint: Codable, Identifiable {
-	var id = UUID()
+struct GeocodedWaypoint: Codable {
+	
 	var geocoderStatus: Status? = nil // Indicates the status code resulting from the geocoding operation.
 	var type: [String]? = nil // The type(s) of the result, in the form of zero or more type tags. Supported types: Address types and address component types.
 	var partialMatch: Bool? = nil // Indicates that the geocoder did not return an exact match for the original request, though it was able to match part of the requested address. You may wish to examine the original request for misspellings and/or an incomplete address.
@@ -353,8 +353,8 @@ struct GeocodedWaypoint: Codable, Identifiable {
 }
 
 
-struct FallbackInfo: Codable, Identifiable {
-	var id = UUID()
+struct FallbackInfo: Codable {
+	
 	var routingMode: FallbackRoutingMode? = nil // Routing mode used for the response. If fallback was triggered, the mode may be different from routing preference set in the original client request.
 	var reason: FallbackReason? = nil // The reason why fallback response was used instead of the original response. This field is only populated when the fallback mode is triggered and the fallback response is returned.
 }
@@ -373,32 +373,32 @@ enum FallbackReason: String, Codable {
 }
 
 
-struct LatLng: Codable, Identifiable {
-	var id = UUID()
+struct LatLng: Codable {
+	
 	var latitude: Double? = nil // The latitude in degrees. It must be in the range [-90.0, +90.0].
 	var longitude: Double? = nil // The longitude in degrees. It must be in the range [-180.0, +180.0].
 }
 
 
 
-struct LocalizedText: Codable, Identifiable {
-	var id = UUID()
+struct LocalizedText: Codable {
+	
 	var text: String? = nil // Localized string in the language corresponding to languageCode below.
 	var languageCode: String? = nil // The text's BCP-47 language code, such as "en-US" or "sr-Latn".
 }
 
 
 
-struct Location: Codable, Identifiable {
-	var id = UUID()
+struct Location: Codable {
+	
 	var latLng: LatLng? = nil // The waypoint's geographic coordinates.
 	var heading: Int? = nil // The compass heading associated with the direction of the flow of traffic. This value specifies the side of the road for pickup and drop-off. Heading values can be from 0 to 360, where 0 specifies a heading of due North, 90 specifies a heading of due East, and so on. You can use this field only for DRIVE and TWO_WHEELER RouteTravelMode.
 }
 
 
 
-struct Money: Codable, Identifiable {
-	var id = UUID()
+struct Money: Codable {
+	
 	var currencyCode: String? = nil // The three-letter currency code defined in ISO 4217.
 	var units: String? = nil // The whole units of the amount. For example if currencyCode is "USD", then 1 unit is one US dollar.
 	var nanos: Int? = nil // Number of nano (10^-9) units of the amount. The value must be between -999,999,999 and +999,999,999 inclusive. If units is positive, nanos must be positive or zero. If units is zero, nanos can be positive, zero, or negative. If units is negative, nanos must be negative or zero. For example $-1.75 is represented as units=-1 and nanos=-750,000,000.
@@ -406,8 +406,8 @@ struct Money: Codable, Identifiable {
 
 
 
-struct RouteModifiers: Codable, Identifiable {
-	var id = UUID()
+struct RouteModifiers: Codable {
+	
 	var avoidTolls: Bool? = nil // When set to true, avoids toll roads where reasonable, giving preference to routes not containing toll roads. Applies only to the DRIVE and TWO_WHEELER RouteTravelMode.
 	var avoidHighways: Bool? = nil // When set to true, avoids highways where reasonable, giving preference to routes not containing highways. Applies only to the DRIVE and TWO_WHEELER RouteTravelMode.
 	var avoidFerries: Bool? = nil // When set to true, avoids ferries where reasonable, giving preference to routes not containing ferries. Applies only to the DRIVE andTWO_WHEELER RouteTravelMode.
@@ -417,8 +417,8 @@ struct RouteModifiers: Codable, Identifiable {
 }
 
 
-struct VehicleInfo: Codable, Identifiable {
-	var id = UUID()
+struct VehicleInfo: Codable {
+	
 	var emissionType: VehicleEmissionType? = nil // Describes the vehicle's emission type. Applies only to the DRIVE RouteTravelMode.
 }
 
@@ -534,8 +534,8 @@ enum TollPass: String, Codable {
 }
 
 
-struct RouteTravelAdvisory: Codable, Identifiable {
-	var id = UUID()
+struct RouteTravelAdvisory: Codable {
+	
 	var tollInfo: TollInfo? = nil // Contains information about tolls on the route. This field is only populated if tolls are expected on the route. If this field is set, but the estimatedPrice subfield is not populated, then the route contains tolls, but the estimated price is unknown. If this field is not set, then there are no tolls expected on the route.
 	var speedReadingIntervals: [SpeedReadingInterval]? = nil // Speed reading intervals detailing traffic density. Applicable in case of TRAFFIC_AWARE and TRAFFIC_AWARE_OPTIMAL routing preferences. The intervals cover the entire polyline of the route without overlap. The start point of a specified interval is the same as the end point of the preceding interval.
 	var fuelConsumptionMicroliters: String? = nil // The predicted fuel consumption in microliters.
@@ -563,8 +563,8 @@ enum RoutingPreference: String, Codable {
 }
 
 
-struct SpeedReadingInterval: Codable, Identifiable {
-	var id = UUID()
+struct SpeedReadingInterval: Codable {
+	
 	var startPolylinePointIndex: Int? = nil // The starting index of this interval in the polyline.
 	var endPolylinePointIndex: Int? = nil // The ending index of this interval in the polyline.
 	var speed: Speed? = nil // Traffic speed in this interval.
@@ -579,8 +579,8 @@ enum Speed: String, Codable {
 }
 
 
-struct Status: Codable, Identifiable {
-	var id = UUID()
+struct Status: Codable {
+	
 	var code: Int? = nil // The status code, which should be an enum value of google.rpc.Code.
 	var message: String? = nil // A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the google.rpc.Status.details field, or localized by the client.
 	var details: [[String: Any]]? = nil // A list of messages that carry the error details. There is a common set of message types for APIs to use.
@@ -610,8 +610,8 @@ struct Status: Codable, Identifiable {
 
 
 
-struct TollInfo: Codable, Identifiable {
-	var id = UUID()
+struct TollInfo: Codable {
+	
 	var estimatedPrice: [Money]? = nil // The monetary amount of tolls for the corresponding Route or RouteLeg. This list contains a money amount for each currency that is expected to be charged by the toll stations. Typically this list will contain only one item for routes with tolls in one currency. For international trips, this list may contain multiple items to reflect tolls in different currencies.
 }
 
@@ -625,8 +625,8 @@ enum TrafficModel: String, Codable {
 }
 
 
-struct TransitPreferences: Codable, Identifiable {
-	var id = UUID()
+struct TransitPreferences: Codable {
+	
 	var allowedTravelModes: [TransitTravelMode]? = nil // A set of travel modes to use when getting a TRANSIT route. Defaults to all supported modes of travel.
 	var routingPreference: TransitRoutingPreference? = nil // A routing preference that, when specified, influences the TRANSIT route returned.
 }
@@ -648,8 +648,8 @@ enum TransitRoutingPreference: String, Codable {
 }
 
 
-struct Waypoint: Codable, Identifiable {
-	var id = UUID()
+struct Waypoint: Codable {
+	
 	var via: Bool? = nil // Marks this waypoint as a milestone rather a stopping point. For each non-via waypoint in the request, the response appends an entry to the legs array to provide the details for stopovers on that leg of the trip. Set this value to true when you want the route to pass through this waypoint without stopping over. Via waypoints don't cause an entry to be added to the legs array, but they do route the journey through the waypoint. You can only set this value on waypoints that are intermediates. The request fails if you set this field on terminal waypoints. If ComputeRoutesRequest.optimize_waypoint_order is set to true then this field cannot be set to true; otherwise, the request fails.
 	var vehicleStopover: Bool? = nil // Indicates that the waypoint is meant for vehicles to stop at, where the intention is to either pickup or drop-off. When you set this value, the calculated route won't include non-via waypoints on roads that are unsuitable for pickup and drop-off. This option works only for DRIVE and TWO_WHEELER travel modes, and when the locationType is Location.
 	var sideOfRoad: Bool? = nil // Indicates that the location of this waypoint is meant to have a preference for the vehicle to stop at a particular side of road. When you set this value, the route will pass through the location so that the vehicle can stop at the side of road that the location is biased towards from the center of the road. This option works only for 'DRIVE' and 'TWO_WHEELER' RouteTravelMode.

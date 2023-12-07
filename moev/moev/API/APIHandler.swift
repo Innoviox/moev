@@ -131,10 +131,14 @@ class APIHandler {
             "key": GMAK
         ]) { data, response, error in
             guard let d = data else {
+                print("e", error)
                 return handler(nil, error)
             }
             
+            
             let results = PlacesAutocompleteResponse.from(jsonData: d)
+            
+            print("r", results)
             
             handler(results, error)
         }

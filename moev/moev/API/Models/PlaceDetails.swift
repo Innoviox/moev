@@ -1,6 +1,6 @@
 import Foundation
-struct PlacesDetailsResponse: Codable, Identifiable {
-	var id = UUID()
+struct PlacesDetailsResponse: Codable {
+	
 	var html_attributions: [String]? = nil // May contain a set of attributions about this listing which must be             displayed to the user (some listings may not have attribution).
 	var result: Place? = nil // 
 	var status: PlacesDetailsStatus? = nil // 
@@ -16,8 +16,8 @@ extension PlacesDetailsResponse {
 
 
 
-struct Place: Codable, Identifiable {
-	var id = UUID()
+struct Place: Codable {
+	
 	var address_components: [AddressComponent]? = nil // 
 	var adr_address: String? = nil // 
 	var business_status: String? = nil // 
@@ -64,44 +64,44 @@ struct Place: Codable, Identifiable {
 }
 
 
-struct AddressComponent: Codable, Identifiable {
-	var id = UUID()
+struct AddressComponent: Codable {
+	
 	var long_name: String? = nil // The full text description or name of the address component as             returned by the Geocoder.
 	var short_name: String? = nil // An abbreviated textual name for the address component, if available.             For example, an address component for the state of Alaska may have a             long_name of "Alaska" and a short_name of "AK" using the 2-letter             postal abbreviation.
 	var types: [String]? = nil // 
 }
 
 
-struct PlaceEditorialSummary: Codable, Identifiable {
-	var id = UUID()
+struct PlaceEditorialSummary: Codable {
+	
 	var language: String? = nil // The language of the previous fields. May not always be present.
 	var overview: String? = nil // A medium-length textual summary of the place.
 }
 
 
-struct Geometry: Codable, Identifiable {
-	var id = UUID()
+struct Geometry: Codable {
+	
 	var location: LatLngLiteral? = nil // See LatLngLiteral for         more information.
 	var viewport: Bounds? = nil // See Bounds for more information.
 }
 
 
-struct LatLngLiteral: Codable, Identifiable {
-	var id = UUID()
+struct LatLngLiteral: Codable {
+	
 	var lat: Double? = nil // Latitude in decimal degrees
 	var lng: Double? = nil // Longitude in decimal degrees
 }
 
 
-struct Bounds: Codable, Identifiable {
-	var id = UUID()
+struct Bounds: Codable {
+	
 	var northeast: LatLngLiteral? = nil // See LatLngLiteral for         more information.
 	var southwest: LatLngLiteral? = nil // See LatLngLiteral for         more information.
 }
 
 
-struct PlaceOpeningHours: Codable, Identifiable {
-	var id = UUID()
+struct PlaceOpeningHours: Codable {
+	
 	var open_now: Bool? = nil // A boolean value indicating if the place is open at the current time.
 	var periods: [PlaceOpeningHoursPeriod]? = nil // 
 	var special_days: [PlaceSpecialDay]? = nil // 
@@ -110,22 +110,22 @@ struct PlaceOpeningHours: Codable, Identifiable {
 }
 
 
-struct PlaceOpeningHoursPeriod: Codable, Identifiable {
-	var id = UUID()
+struct PlaceOpeningHoursPeriod: Codable {
+	
 	var open: PlaceOpeningHoursPeriodDetail? = nil // 
 	var close: PlaceOpeningHoursPeriodDetail? = nil // 
 }
 
 
-struct PlaceSpecialDay: Codable, Identifiable {
-	var id = UUID()
+struct PlaceSpecialDay: Codable {
+	
 	var date: String? = nil // A date expressed in RFC3339 format in the local timezone for the             place, for example 2010-12-31.
 	var exceptional_hours: Bool? = nil // 
 }
 
 
-struct PlaceOpeningHoursPeriodDetail: Codable, Identifiable {
-	var id = UUID()
+struct PlaceOpeningHoursPeriodDetail: Codable {
+	
 	var day: Double? = nil // A number from 0–6, corresponding to the days of the week, starting             on Sunday. For example, 2 means Tuesday.
 	var time: String? = nil // May contain a time of day in 24-hour hhmm format. Values are in the             range 0000–2359. The time will be reported in the place’s time zone.
 	var date: String? = nil // A date expressed in RFC3339 format in the local timezone for the             place, for example 2010-12-31.
@@ -133,8 +133,8 @@ struct PlaceOpeningHoursPeriodDetail: Codable, Identifiable {
 }
 
 
-struct PlacePhoto: Codable, Identifiable {
-	var id = UUID()
+struct PlacePhoto: Codable {
+	
 	var height: Double? = nil // The height of the photo.
 	var html_attributions: [String]? = nil // The HTML attributions for the photo.
 	var photo_reference: String? = nil // A string used to identify the photo when you perform a Photo             request.
@@ -142,15 +142,15 @@ struct PlacePhoto: Codable, Identifiable {
 }
 
 
-struct PlusCode: Codable, Identifiable {
-	var id = UUID()
+struct PlusCode: Codable {
+	
 	var global_code: String? = nil // 
 	var compound_code: String? = nil // 
 }
 
 
-struct PlaceReview: Codable, Identifiable {
-	var id = UUID()
+struct PlaceReview: Codable {
+	
 	var author_name: String? = nil // The name of the user who submitted the review. Anonymous reviews are             attributed to "A Google user".
 	var rating: Double? = nil // The user's overall rating for this place. This is a whole number,             ranging from 1 to 5.
 	var relative_time_description: String? = nil // The time that the review was submitted in text, relative to the             current time.

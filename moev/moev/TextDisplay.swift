@@ -63,7 +63,7 @@ struct TextDisplay: View {
     func updatePossibilities() {
         APIHandler.shared.autocomplete(query: annotation.name) { data, error in
             guard let places = data else {
-                print(error)
+                print("eriojg", error)
                 return
             }
             

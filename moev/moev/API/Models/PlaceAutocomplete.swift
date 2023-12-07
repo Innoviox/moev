@@ -1,6 +1,6 @@
 import Foundation
-struct PlacesAutocompleteResponse: Codable, Identifiable {
-	var id = UUID()
+struct PlacesAutocompleteResponse: Codable {
+    
 	var predictions: [PlaceAutocompletePrediction]? = nil // 
 	var status: PlacesAutocompleteStatus? = nil // 
 	var error_message: String? = nil // 
@@ -16,8 +16,8 @@ extension PlacesAutocompleteResponse {
 
 
 
-struct PlaceAutocompletePrediction: Codable, Identifiable {
-	var id = UUID()
+struct PlaceAutocompletePrediction: Codable {
+	
 	var description: String? = nil // 
 	var matched_substrings: [PlaceAutocompleteMatchedSubstring]? = nil // 
 	var structured_formatting: PlaceAutocompleteStructuredFormat? = nil // 
@@ -29,15 +29,15 @@ struct PlaceAutocompletePrediction: Codable, Identifiable {
 }
 
 
-struct PlaceAutocompleteMatchedSubstring: Codable, Identifiable {
-	var id = UUID()
+struct PlaceAutocompleteMatchedSubstring: Codable {
+	
 	var length: Double? = nil // Length of the matched substring in the prediction result text.
 	var offset: Double? = nil // Start location of the matched substring in the prediction result             text.
 }
 
 
-struct PlaceAutocompleteStructuredFormat: Codable, Identifiable {
-	var id = UUID()
+struct PlaceAutocompleteStructuredFormat: Codable {
+	
 	var main_text: String? = nil // Contains the main text of a prediction, usually the name of the             place.
 	var main_text_matched_substrings: [PlaceAutocompleteMatchedSubstring]? = nil // 
 	var secondary_text: String? = nil // Contains the secondary text of a prediction, usually the location of             the place.
@@ -45,8 +45,8 @@ struct PlaceAutocompleteStructuredFormat: Codable, Identifiable {
 }
 
 
-struct PlaceAutocompleteTerm: Codable, Identifiable {
-	var id = UUID()
+struct PlaceAutocompleteTerm: Codable {
+	
 	var offset: Double? = nil // Defines the start position of this term in the description, measured             in Unicode characters
 	var value: String? = nil // The text of the term.
 }
