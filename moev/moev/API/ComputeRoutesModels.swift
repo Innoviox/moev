@@ -108,8 +108,8 @@ struct RouteLeg: Codable {
 
 
 struct Polyline: Codable {
-    var encodedPolyline: String? = nil
-    var geoJsonLinestring: [String: Any]? = nil
+    var encodedPolyline: String? = nil // The string encoding of the polyline using the polyline encoding algorithm
+    var geoJsonLinestring: [String: Any]? = nil // Specifies a polyline using the GeoJSON LineString format.
 
     enum CodingKeys: String, CodingKey {
         case encodedPolyline
@@ -121,7 +121,7 @@ struct Polyline: Codable {
 
         encodedPolyline = try container.decodeIfPresent(String.self, forKey: .encodedPolyline)
         geoJsonLinestring = try container.decodeIfPresent([String: Any].self, forKey: .geoJsonLinestring)
-    }
+}
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -550,6 +550,28 @@ struct Status: Codable {
     var code: Int? = nil // The status code, which should be an enum value of google.rpc.Code.
     var message: String? = nil // A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the google.rpc.Status.details field, or localized by the client.
     var details: [[String: Any]]? = nil // A list of messages that carry the error details. There is a common set of message types for APIs to use.
+
+    enum CodingKeys: String, CodingKey {
+        case code
+        case message
+        case details
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        code = try container.decodeIfPresent(Int.self, forKey: .code)
+        message = try container.decodeIfPresent(String.self, forKey: .message)
+        details = try container.decodeIfPresent([[String: Any]].self, forKey: .details)
+}
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encodeIfPresent(code, forKey: .code)
+        try container.encodeIfPresent(message, forKey: .message)
+        try container.encodeIfPresent(details, forKey: .details)
+    }
 }
 
 
@@ -598,3 +620,6 @@ struct Waypoint: Codable {
     var placeId: String? = nil // The POI Place ID associated with the waypoint.
     var address: String? = nil // Human readable address or a plus code. See https://plus.codes for details.
 }
+
+
+

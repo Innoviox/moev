@@ -17,10 +17,27 @@ extension KeyedDecodingContainer {
 
         return try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
     }
+    
+    public func decodeIfPresent(_ type: [[String: Any]].Type, forKey key: KeyedDecodingContainer<K>.Key) throws -> [[String: Any]]? {
+        guard let data = try? self.decode(Data.self, forKey: key) else {
+            return nil
+        }
+
+        return try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]]
+    }
 }
 
 extension KeyedEncodingContainer {
     public mutating func encodeIfPresent(_ value: [String: Any]?, forKey key: KeyedEncodingContainer<K>.Key) throws {
+        guard let value = value else {
+            return
+        }
+
+        let data = try JSONSerialization.data(withJSONObject: value, options: [])
+        try self.encode(data, forKey: key)
+    }
+    
+    public mutating func encodeIfPresent(_ value: [[String: Any]]?, forKey key: KeyedEncodingContainer<K>.Key) throws {
         guard let value = value else {
             return
         }
