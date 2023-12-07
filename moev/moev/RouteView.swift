@@ -12,12 +12,10 @@ struct RouteView: View {
     @State public var route: Route
     
     var body: some View {
-        ScrollView(.horizontal) {
-            HStack {
-                ForEach(route.legs ?? []) { leg in
-                    if let steps = leg.steps {
-                        stepsList(steps)
-                    }
+        HStack {
+            ForEach(route.legs ?? []) { leg in
+                if let steps = leg.steps {
+                    stepsList(steps)
                 }
             }
         }

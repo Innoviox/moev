@@ -93,10 +93,15 @@ struct ContentView: View {
                     .opacity(searchingSlowAnimated && !(loadingResults || showingResults) ? 1 : 0)
                     
                     ActivityIndicator(isAnimating: .constant(true), style: .large)
-//                    .offset(CGSize(width: 0.0, height: -geometry.size.height / 2))
+                    .offset(CGSize(width: 0.0, height: -geometry.size.height / 2))
                     .opacity(loadingResults ? 1 : 0)
                     
-                    routesList()
+                    ScrollView(.horizontal) {
+                        VStack {
+                            timeMarks()
+                            routesList()
+                        }
+                    }
                     .offset(CGSize(width: 0.0, height: -geometry.size.height / 2))
                     .opacity(showingResults ? 1 : 0)
                 }
@@ -234,6 +239,14 @@ struct ContentView: View {
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
+    }
+    
+    func timeMarks() -> some View {
+        return HStack {
+            ForEach(1..<6, id: \.self) { i in // todo calculate based on length of route
+                Text(time(plus: i))
+            }
+        }
     }
     
     func routesList() -> some View {
