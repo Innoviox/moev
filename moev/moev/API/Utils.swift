@@ -95,6 +95,19 @@ extension Polyline {
     }
 }
 
+extension CLLocationCoordinate2D {
+    func toWaypoint() -> Waypoint {
+        return Waypoint(
+            location: Location(
+                latLng: LatLng(
+                    latitude: latitude,
+                    longitude: longitude
+                )
+            )
+        )
+    }
+}
+
 // https://developers.google.com/maps/documentation/places/web-service/autocomplete#PlaceAutocompletePrediction
 enum PlacesAutocompleteStatus: String, Codable {
     case OK

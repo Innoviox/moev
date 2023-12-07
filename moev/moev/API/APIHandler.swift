@@ -159,16 +159,3 @@ class APIHandler {
         }
     }
 }
-
-extension CLLocationCoordinate2D {
-    func toWaypoint() -> Waypoint {
-        return Waypoint(
-            location: Location(
-                latLng: LatLng(
-                    latitude: latitude,
-                    longitude: longitude
-                )
-            )
-        )
-    }
-}
