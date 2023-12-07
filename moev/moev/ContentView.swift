@@ -241,21 +241,31 @@ struct ContentView: View {
             List(routes.routes) { route in
                 HStack {
                     ForEach(route.legs!) { leg in
-                        ForEach(leg.stepsOverview!.multiModalSegments!) { seg in
-                            VStack {
-                                if let ni = seg.navigationInstruction?.instructions {
-                                    Text(ni)
-                                }
-                                if let m = seg.navigationInstruction?.maneuver?.rawValue {
-                                    Text(m)
-                                }
-                                if let tm = seg.travelMode?.rawValue {
-                                    Text(tm)
-                                }
+                        HStack {
+                            if let steps = leg.steps {
+                                stepsList(steps)
                             }
                         }
                     }
                 }
+            }
+        }
+    }
+    
+    func stepsList(_ steps: [RouteLegStep]) -> some View {
+        return ForEach(steps) { step in
+            stepsView(step)
+        }
+    }
+    
+    func stepsView(_ step: RouteLegStep) -> some View {
+        return VStack {
+            if let tm = step.travelMode {
+                tm.to_swiftui_image()
+            }
+
+            if let dur = step.staticDuration {
+                Text(dur)
             }
         }
     }

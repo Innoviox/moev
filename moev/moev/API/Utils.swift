@@ -8,6 +8,7 @@
 import Foundation
 import CoreLocation
 import MapKit
+import SwiftUI
 
 extension KeyedDecodingContainer {
     public func decodeIfPresent(_ type: [String: Any].Type, forKey key: KeyedDecodingContainer<K>.Key) throws -> [String: Any]? {
@@ -125,4 +126,19 @@ enum PlacesDetailsStatus: String, Codable {
     case OVER_QUERY_LIMIT
     case REQUEST_DENIED
     case UNKNOWN_ERROR
+}
+
+extension RouteTravelMode {
+    func to_swiftui_image() -> some View {
+        let img = switch self {
+            case .BICYCLE: "bicycle"
+            case .WALK: "figure.walk"
+            case .TRAVEL_MODE_UNSPECIFIED: "questionmark.circle"
+            case .DRIVE: "car"
+            case .TWO_WHEELER: "number" // todo
+            case .TRANSIT: "bus" //todo
+        }
+        
+        return Image(systemName: img)
+    }
 }
