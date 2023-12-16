@@ -87,7 +87,13 @@ class APIHandler {
     func directions(origin: Waypoint, destination: Waypoint, handler: @escaping(ComputeRoutesResponse?, Error?) -> Void) {
         let url = "https://routes.googleapis.com/directions/v2:computeRoutes"
         
-        let body = ComputeRoutesRequest(origin: origin, destination: destination, travelMode: .TRANSIT)
+        let body = ComputeRoutesRequest(
+            origin: origin,
+            destination: destination,
+            travelMode: .TRANSIT,
+            polylineEncoding: .ENCODED_POLYLINE,
+            computeAlternativeRoutes: true
+        )
         
         let fields = [
             "routes.duration",

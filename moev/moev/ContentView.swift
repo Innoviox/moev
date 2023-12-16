@@ -149,6 +149,8 @@ struct ContentView: View {
                 return
             }
             
+            print("FOUND ROUTES", route.routes!.count)
+            
 //            print("GOT ROUTE", route)
             
 //            let polyline = route.polyline.decode()
