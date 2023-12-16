@@ -194,6 +194,10 @@ struct CombinedStep: Identifiable {
         
         polyline = MKMultiPolyline(points)
     }
+    
+    func toString() -> String {
+        return "\(totalDuration) \(travelMode) \(transitDetails)"
+    }
 }
 
 func combineWalks(steps: [RouteLegStep]) -> [CombinedStep] {
@@ -215,6 +219,9 @@ func combineWalks(steps: [RouteLegStep]) -> [CombinedStep] {
     if currentStep.count > 0 {
         newSteps.append(CombinedStep(from: currentStep))
     }
+    
+//    print("combined walks!")
+//    print(newSteps.map { i in i.toString() })
     
     return newSteps
 }

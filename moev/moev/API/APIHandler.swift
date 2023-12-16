@@ -92,14 +92,13 @@ class APIHandler {
             destination: destination,
             travelMode: .TRANSIT,
             polylineEncoding: .ENCODED_POLYLINE,
-            computeAlternativeRoutes: true
+            computeAlternativeRoutes: false // true
         )
         
         let fields = [
             "routes.duration",
             "routes.distanceMeters",
             "routes.polyline.encodedPolyline",
-            // todo this mess
             "routes.legs",
             "routes.travelAdvisory",
             "routes.viewport"

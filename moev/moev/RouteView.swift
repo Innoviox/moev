@@ -25,7 +25,7 @@ struct RouteView: View {
         return HStack {
             ForEach(combineWalks(steps: steps)) { step in
                 stepsView(step)
-                    .offset(x: CGFloat(xposition(for: time(timestamp: step.transitDetails?.stopDetails?.departureTime) ?? 0)))
+                    .offset(x: CGFloat(xposition(for: step)))
             }
         }
     }
@@ -34,7 +34,7 @@ struct RouteView: View {
         return VStack {
             if let tm = step.travelMode {
                 tm.to_swiftui_image()
-                    .frame(width: CGFloat(xposition(for: step.totalDuration)))
+                    .frame(width: CGFloat(width(for: step)))
                     .border(.black, width: 2)
             }
 

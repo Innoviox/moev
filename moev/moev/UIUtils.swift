@@ -66,3 +66,11 @@ func xposition(for time: Int) -> Int {
     // time in seconds from now
     return time / 60 * 2  // 2 pixels per minute
 }
+
+func xposition(for step: CombinedStep) -> Int {
+    return xposition(for: time(timestamp: step.transitDetails?.stopDetails?.departureTime) ?? 0) + width(for: step) / 2
+}
+
+func width(for step: CombinedStep) -> Int {
+    return xposition(for: step.totalDuration)
+}
