@@ -68,9 +68,15 @@ func xposition(for time: Int) -> Int {
 }
 
 func xposition(for step: CombinedStep) -> Int {
-    return xposition(for: time(timestamp: step.transitDetails?.stopDetails?.departureTime) ?? 0) + width(for: step) / 2
+    return xposition(for: time(date: step.departureTime ?? Date.now)) + width(for: step) / 2
 }
 
 func width(for step: CombinedStep) -> Int {
     return xposition(for: step.totalDuration)
+}
+
+func date(from timestamp: String) -> Date? {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+    return formatter.date(from: timestamp)
 }

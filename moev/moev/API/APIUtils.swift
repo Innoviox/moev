@@ -164,6 +164,7 @@ struct CombinedStep: Identifiable {
     var polyline: MKMultiPolyline
     var transitDetails: RouteLegStepTransitDetails?
     var travelMode: RouteTravelMode?
+    var departureTime: Date?
     
     init(from steps: [RouteLegStep]) {
         totalDuration = 0
@@ -178,6 +179,9 @@ struct CombinedStep: Identifiable {
                 travelMode = step.travelMode
                 if let p = step.polyline {
                     points.append(p.decode())
+                }
+                if let t = step.transitDetails?.stopDetails?.departureTime {
+                    departureTime = date(from: t)
                 }
             } else {
                 if startLocation == nil {
@@ -196,21 +200,29 @@ struct CombinedStep: Identifiable {
     }
     
     func toString() -> String {
-        return "\(totalDuration) \(travelMode) \(transitDetails)"
+        return "\(totalDuration) \(travelMode) \(departureTime)"
     }
 }
 
-func combineWalks(steps: [RouteLegStep]) -> [CombinedStep] {
+func combineWalks(steps: [RouteLegStep], route: Route) -> [CombinedStep] {
     var newSteps: [CombinedStep] = []
     
     var currentStep: [RouteLegStep] = []
     for step in steps {
         if step.travelMode != .WALK {
+            var prevStep: CombinedStep?
             if currentStep.count > 0 {
-                newSteps.append(CombinedStep(from: currentStep))
+                prevStep = CombinedStep(from: currentStep)
                 currentStep = []
             }
-            newSteps.append(CombinedStep(from: [step]))
+            let transitStep = CombinedStep(from: [step])
+            if var p = prevStep {
+                if let d = transitStep.departureTime {
+                    p.departureTime = d.addingTimeInterval(-Double(prevStep!.totalDuration))
+                }
+                newSteps.append(p)
+            }
+            newSteps.append(transitStep)
         } else {
             currentStep.append(step)
         }
@@ -220,8 +232,8 @@ func combineWalks(steps: [RouteLegStep]) -> [CombinedStep] {
         newSteps.append(CombinedStep(from: currentStep))
     }
     
-//    print("combined walks!")
-//    print(newSteps.map { i in i.toString() })
+    print("combined walks!")
+    print(newSteps.map { i in i.toString() })
     
     return newSteps
 }

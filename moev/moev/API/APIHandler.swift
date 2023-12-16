@@ -99,9 +99,11 @@ class APIHandler {
             "routes.duration",
             "routes.distanceMeters",
             "routes.polyline.encodedPolyline",
+            "routes.description",
             "routes.legs",
             "routes.travelAdvisory",
-            "routes.viewport"
+            "routes.viewport",
+            "routes.localizedValues"
         ]
         
         let headers: [String: String] = [
