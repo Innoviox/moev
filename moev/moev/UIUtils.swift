@@ -108,13 +108,3 @@ func date(from timestamp: String) -> Date? {
     formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
     return formatter.date(from: timestamp)
 }
-
-
-//https://stackoverflow.com/questions/41180292/negative-number-modulo-in-swift
-infix operator %%
-extension Int {
-    static  func %% (_ left: Int, _ right: Int) -> Int {
-       let mod = left % right
-       return mod >= 0 ? mod : mod + right
-    }
-}
