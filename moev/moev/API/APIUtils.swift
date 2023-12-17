@@ -209,10 +209,13 @@ struct CombinedLeg: Identifiable {
     var steps: [CombinedStep]
 }
 
-struct CombinedRoute {
+struct CombinedRoute: Identifiable {
+    var id = UUID()
+    
     var legs: [CombinedLeg]?
     var durationFromNow: Int
     var startTime: Date
+    var maxDuration: Int
 }
 
 extension Route {
@@ -224,8 +227,25 @@ extension Route {
             startTime = legs![0].steps[0].departureTime!
             d += Int(legs![0].steps[0].departureTime!.timeIntervalSinceNow)
         }
-        return CombinedRoute(legs: legs, durationFromNow: d, startTime: startTime)
+        return CombinedRoute(legs: legs, durationFromNow: d, startTime: startTime, maxDuration: 0)
     }
+}
+
+func combineRoutes(routes: [Route]) -> [CombinedRoute] {
+    var maxDuration = 0
+    var cRoutes = routes.map { route in
+        let c = route.combine()
+        if c.durationFromNow > maxDuration {
+            maxDuration = c.durationFromNow
+        }
+        return c
+    }
+    
+    for i in 0..<cRoutes.count {
+        cRoutes[i].maxDuration = maxDuration
+    }
+    
+    return cRoutes
 }
 
 func combineWalks(steps: [RouteLegStep]) -> [CombinedStep] {

@@ -137,7 +137,7 @@ struct UIPlace: Identifiable {
 
 struct UIRoutes: Identifiable {
     var id: Int
-    var routes: [Route]
+    var routes: [CombinedRoute]
 }
 
 extension Date {

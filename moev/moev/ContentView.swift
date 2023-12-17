@@ -145,7 +145,7 @@ struct ContentView: View {
     }
     
     func updateRoutes(withID id: Int, newRoute: ComputeRoutesResponse) {
-        let r = newRoute.routes!
+        let r = combineRoutes(routes: newRoute.routes!)
         
         for i in routes.indices {
             if routes[i].id == id {
@@ -227,7 +227,7 @@ struct ContentView: View {
     func routesList() -> some View {
         return ForEach(routes) { rs in
             ForEach(rs.routes) { route in
-                RouteView(route: route.combine())
+                RouteView(route: route)
             }
         }
     }

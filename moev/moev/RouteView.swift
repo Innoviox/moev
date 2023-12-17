@@ -27,7 +27,9 @@ struct RouteView: View {
                     .position(x: CGFloat(xposition(for: step)), y: 10)
             }
         }
-        .frame(width: CGFloat(xposition(for: route.durationFromNow)))
+        .frame(width: CGFloat(xposition(for: route.maxDuration)))
+//        .position(x: CGFloat(xposition(for: route.durationFromNow)), y: 10)
+//        .offset(x: CGFloat(xposition(for: time(date: route.startTime))))
     }
     
     func stepsView(_ step: CombinedStep) -> some View {
