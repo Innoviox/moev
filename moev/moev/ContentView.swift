@@ -256,16 +256,6 @@ struct ContentView: View {
     
     func routesList() -> some View {
         return ForEach(routes) { rs in
-//        let x: [Route] = []
-//        if routes.count == 0 {
-//            return             List(x) { route in
-//                RouteView(route: route)
-//                    .listRowBackground(UIColor.Theme.listBackgroundColor)
-//            }
-//            .listStyle(.plain)
-//            .scrollContentBackground(.hidden)
-//        }
-//        return
             List(rs.routes) { route in
                 RouteView(route: route)
                     .listRowBackground(UIColor.Theme.listBackgroundColor)

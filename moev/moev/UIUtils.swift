@@ -21,10 +21,10 @@ func _hm(date: Date, clamp: Bool) -> (Int, Int) {
     var minutes = cal.component(.minute, from: date)
     if clamp {
         if minutes > 30 {
-            hour += 1
-            minutes = 0
-        } else {
+//            hour += 1
             minutes = 30
+        } else {
+            minutes = 0
         }
     }
     return (hour, minutes)
@@ -43,15 +43,16 @@ func time(plus: Int) -> String {
 }
 
 func time(plus: Int) -> Int {
-    let (h1, m1) = _hm(date: Date(), clamp: true)
+    let (h1, m1) = _hm(date: Date(), clamp: false)
     let (h2, m2) = _hm(plus: plus, clamp: true)
+    print(h1, m1, h2, m2, Date.now, plus, xposition(for: (h2 - h1) * 3600 + (m2 - m1) * 60))
     return (h2 - h1) * 3600 + (m2 - m1) * 60
 }
 
 func time(date: Date) -> Int {
     let (h1, m1) = _hm(date: Date.now, clamp: false)
     let (h2, m2) = _hm(date: date, clamp: false)
-    print(h1, m1, h2, m2, Date.now, date, (h2 - h1) * 3600 + (m2 - m1) * 60)
+    print(h1, m1, h2, m2, Date.now, date, xposition(for: (h2 - h1) * 3600 + (m2 - m1) * 60))
     return (h2 - h1) * 3600 + (m2 - m1) * 60
 }
 

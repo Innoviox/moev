@@ -229,7 +229,14 @@ func combineWalks(steps: [RouteLegStep], route: Route) -> [CombinedStep] {
     }
     
     if currentStep.count > 0 {
-        newSteps.append(CombinedStep(from: currentStep))
+        var walkStep = CombinedStep(from: currentStep)
+        if newSteps.count > 0 {
+            let lastStep = newSteps[newSteps.count - 1]
+            if let d = lastStep.departureTime {
+                walkStep.departureTime = d.addingTimeInterval(Double(lastStep.totalDuration))
+            }
+        }
+        newSteps.append(walkStep)
     }
     
     print("combined walks!")
