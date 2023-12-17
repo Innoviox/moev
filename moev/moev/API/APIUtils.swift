@@ -212,16 +212,19 @@ struct CombinedLeg: Identifiable {
 struct CombinedRoute {
     var legs: [CombinedLeg]?
     var durationFromNow: Int
+    var startTime: Date
 }
 
 extension Route {
     func combine() -> CombinedRoute {
         let legs = legs?.map { i in CombinedLeg(steps: combineWalks(steps: i.steps!)) }
         var d = convert_duration(duration)
+        var startTime = Date.now
         if legs?.count ?? 0 > 0 {
+            startTime = legs![0].steps[0].departureTime!
             d += Int(legs![0].steps[0].departureTime!.timeIntervalSinceNow)
         }
-        return CombinedRoute(legs: legs, durationFromNow: d)
+        return CombinedRoute(legs: legs, durationFromNow: d, startTime: startTime)
     }
 }
 

@@ -12,10 +12,11 @@ struct RouteView: View {
     @State public var route: CombinedRoute
     
     var body: some View {
-        ForEach(route.legs ?? []) { leg in
-//            if let steps = leg.steps {
-            stepsList(leg.steps)
-//            }
+        VStack {
+            ForEach(route.legs ?? []) { leg in
+                stepsList(leg.steps)
+            }
+            Text("Leave at \(route.startTime.format("hh:mm"))")
         }
     }
     

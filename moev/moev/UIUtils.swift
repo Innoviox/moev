@@ -75,6 +75,7 @@ func time(plus: Int) -> String {
 func time(plus: Int) -> Int {
     let (h1, m1) = _hm(date: Date(), clamp: false)
     let (h2, m2) = _hm(plus: plus, clamp: true)
+    print(h1, m1, h2, m2, xposition(for: ((h2 - h1) * 3600 + (m2 - m1) * 60) + (h2 < h1 ? 86400 : 0)))
     return ((h2 - h1) * 3600 + (m2 - m1) * 60) + (h2 < h1 ? 86400 : 0)
 }
 
@@ -139,3 +140,10 @@ struct UIRoutes: Identifiable {
     var routes: [Route]
 }
 
+extension Date {
+    func format(_ format: String) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        return dateFormatter.string(from: self)
+    }
+}

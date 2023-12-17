@@ -219,7 +219,7 @@ struct ContentView: View {
         return HStack {
             ForEach(0..<6, id: \.self) { i in // todo calculate based on length of route
                 Text(time(plus: i))
-                    .offset(x: CGFloat(xposition(for: time(plus: i))))
+                    .position(x: CGFloat(xposition(for: time(plus: i))), y: 10)
             }
         }
     }
