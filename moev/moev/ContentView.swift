@@ -100,10 +100,12 @@ struct ContentView: View {
                         VStack {
                             timeMarks()
                             routesList()
+                                .scrollClipDisabled()
                         }
                     }
                     .offset(CGSize(width: 0.0, height: -geometry.size.height / 2))
                     .opacity(showingResults ? 1 : 0)
+                    
                 }
                 .background(UIColor.Theme.listBackgroundColor)
                 .edgesIgnoringSafeArea(.all)
@@ -253,8 +255,18 @@ struct ContentView: View {
     }
     
     func routesList() -> some View {
-        return ForEach(routes) { routes in
-            List(routes.routes) { route in
+        return ForEach(routes) { rs in
+//        let x: [Route] = []
+//        if routes.count == 0 {
+//            return             List(x) { route in
+//                RouteView(route: route)
+//                    .listRowBackground(UIColor.Theme.listBackgroundColor)
+//            }
+//            .listStyle(.plain)
+//            .scrollContentBackground(.hidden)
+//        }
+//        return
+            List(rs.routes) { route in
                 RouteView(route: route)
                     .listRowBackground(UIColor.Theme.listBackgroundColor)
             }
