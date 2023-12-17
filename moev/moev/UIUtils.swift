@@ -52,7 +52,7 @@ func time(plus: Int) -> Int {
 func time(date: Date) -> Int {
     let (h1, m1) = _hm(date: Date.now, clamp: false)
     let (h2, m2) = _hm(date: date, clamp: false)
-    print(h1, m1, h2, m2, Date.now, date, xposition(for: (h2 - h1) * 3600 + (m2 - m1) * 60))
+//    print(h1, m1, h2, m2, Date.now, date, xposition(for: (h2 - h1) * 3600 + (m2 - m1) * 60))
     return (h2 - h1) * 3600 + (m2 - m1) * 60
 }
 
@@ -69,6 +69,7 @@ func xposition(for time: Int) -> Int {
 }
 
 func xposition(for step: CombinedStep) -> Int {
+    print(step.departureTime ?? Date.now, step.totalDuration, xposition(for: time(date: step.departureTime ?? Date.now)) + width(for: step) / 2)
     return xposition(for: time(date: step.departureTime ?? Date.now)) + width(for: step) / 2
 }
 

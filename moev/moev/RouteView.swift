@@ -20,13 +20,14 @@ struct RouteView: View {
     }
     
     func stepsList(_ steps: [RouteLegStep]) -> some View {
-        return HStack {
+        return 
+//        HStack {
             ForEach(combineWalks(steps: steps, route: route)) { step in
                 stepsView(step)
 //                    .offset(x: CGFloat(xposition(for: step)))
                     .position(x: CGFloat(xposition(for: step)), y: 10)
             }
-        }
+//        }
     }
     
     func stepsView(_ step: CombinedStep) -> some View {
