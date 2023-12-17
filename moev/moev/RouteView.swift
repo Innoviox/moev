@@ -9,23 +9,24 @@ import Foundation
 import SwiftUI
 
 struct RouteView: View {
-    @State public var route: Route
+    @State public var route: CombinedRoute
     
     var body: some View {
         ForEach(route.legs ?? []) { leg in
-            if let steps = leg.steps {
-                stepsList(steps)
-            }
+//            if let steps = leg.steps {
+            stepsList(leg.steps)
+//            }
         }
     }
     
-    func stepsList(_ steps: [RouteLegStep]) -> some View {
+    func stepsList(_ steps: [CombinedStep]) -> some View {
         return ZStack {
-            ForEach(combineWalks(steps: steps, route: route)) { step in
+            ForEach(steps) { step in
                 stepsView(step)
                     .position(x: CGFloat(xposition(for: step)), y: 10)
             }
         }
+        .frame(width: CGFloat(xposition(for: route.durationFromNow)))
     }
     
     func stepsView(_ step: CombinedStep) -> some View {

@@ -8,35 +8,6 @@
 import SwiftUI
 import MapKit
 
-struct Annotation: Identifiable {
-    var id: Int
-    
-    var location: CLLocationCoordinate2D?
-    var name: String
-    var placeID: String = ""
-    var placeHolder: String = "Next location..."
-    var justChanged: Bool = false
-}
-
-struct UIPolyline: Identifiable {
-    var id: Int
-    
-    var polyline: MKPolyline
-}
-
-struct UIPlace: Identifiable {
-    var id = UUID()
-    
-    var main_text: String
-    var secondary_text: String
-    var placeID: String
-}
-
-struct UIRoutes: Identifiable {
-    var id: Int
-    var routes: [Route]
-}
-
 struct ContentView: View {
     @State private var selection: UUID?
     
@@ -96,7 +67,7 @@ struct ContentView: View {
                     .offset(CGSize(width: 0.0, height: -geometry.size.height / 2))
                     .opacity(loadingResults ? 1 : 0)
                     
-                    ScrollView(.horizontal) {
+                    ScrollView(.horizontal, showsIndicators: false) {
                         VStack {
                             timeMarks()
                             routesList()
@@ -105,7 +76,6 @@ struct ContentView: View {
                     }
                     .offset(CGSize(width: 0.0, height: -geometry.size.height / 2))
                     .opacity(showingResults ? 1 : 0)
-                    
                 }
                 .background(UIColor.Theme.listBackgroundColor)
                 .edgesIgnoringSafeArea(.all)
@@ -256,12 +226,9 @@ struct ContentView: View {
     
     func routesList() -> some View {
         return ForEach(routes) { rs in
-            List(rs.routes) { route in
-                RouteView(route: route)
-                    .listRowBackground(UIColor.Theme.listBackgroundColor)
+            ForEach(rs.routes) { route in
+                RouteView(route: route.combine())
             }
-            .listStyle(.plain)
-            .scrollContentBackground(.hidden)
         }
     }
     

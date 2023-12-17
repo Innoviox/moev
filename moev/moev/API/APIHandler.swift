@@ -92,7 +92,7 @@ class APIHandler {
             destination: destination,
             travelMode: .TRANSIT,
             polylineEncoding: .ENCODED_POLYLINE,
-            computeAlternativeRoutes: false // true
+            computeAlternativeRoutes: true
         )
         
         let fields = [

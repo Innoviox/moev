@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import MapKit
 
 // https://stackoverflow.com/questions/56874133/use-hex-color-in-swiftui
 extension Color {
@@ -108,3 +109,33 @@ func date(from timestamp: String) -> Date? {
     formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
     return formatter.date(from: timestamp)
 }
+
+struct Annotation: Identifiable {
+    var id: Int
+    
+    var location: CLLocationCoordinate2D?
+    var name: String
+    var placeID: String = ""
+    var placeHolder: String = "Next location..."
+    var justChanged: Bool = false
+}
+
+struct UIPolyline: Identifiable {
+    var id: Int
+    
+    var polyline: MKPolyline
+}
+
+struct UIPlace: Identifiable {
+    var id = UUID()
+    
+    var main_text: String
+    var secondary_text: String
+    var placeID: String
+}
+
+struct UIRoutes: Identifiable {
+    var id: Int
+    var routes: [Route]
+}
+
