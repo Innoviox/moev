@@ -74,14 +74,13 @@ func time(plus: Int) -> String {
 func time(plus: Int) -> Int {
     let (h1, m1) = _hm(date: Date(), clamp: false)
     let (h2, m2) = _hm(plus: plus, clamp: true)
-    print(h1, m1, h2, m2, Date.now, plus, ((h2 - h1) * 3600 + (m2 - m1) * 60), ((h2 - h1) * 3600 + (m2 - m1) * 60) %% 2880)
-    return ((h2 - h1) * 3600 + (m2 - m1) * 60) %% 86400
+    return ((h2 - h1) * 3600 + (m2 - m1) * 60) + (h2 < h1 ? 86400 : 0)
 }
 
 func time(date: Date) -> Int {
     let (h1, m1) = _hm(date: Date.now, clamp: false)
     let (h2, m2) = _hm(date: date, clamp: false)
-    return ((h2 - h1) * 3600 + (m2 - m1) * 60) %% 86400
+    return ((h2 - h1) * 3600 + (m2 - m1) * 60) + (h2 < h1 ? 86400 : 0)
 }
 
 func time(timestamp: String?) -> Int? {
