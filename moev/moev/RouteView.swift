@@ -28,8 +28,6 @@ struct RouteView: View {
             }
         }
         .frame(width: CGFloat(xposition(for: route.maxDuration)))
-//        .position(x: CGFloat(xposition(for: route.durationFromNow)), y: 10)
-//        .offset(x: CGFloat(xposition(for: time(date: route.startTime))))
     }
     
     func stepsView(_ step: CombinedStep) -> some View {
@@ -39,15 +37,15 @@ struct RouteView: View {
                     Text(td.transitLine!.nameShort!)
                         .foregroundColor(Color(hex: td.transitLine!.textColor!)) // Set text color using hex value
                         .lineLimit(1)
-                        .font(.system(size: 12))
+                        .font(.system(size: 24))
                 }
-                .frame(width: CGFloat(width(for: step)))
+                .frame(width: CGFloat(width(for: step)), height: 40)
                 .background(Color(hex: td.transitLine!.color!)) // Set background color using hex value
             }
             else if let tm = step.travelMode {
                 tm.to_swiftui_image()
-                    .frame(width: CGFloat(width(for: step)))
-                    .border(.black, width: 2)
+                    .frame(width: CGFloat(width(for: step)), height: 40)
+                    .background(Color(hex: "c4c4c4"))
             }
         }
     }
