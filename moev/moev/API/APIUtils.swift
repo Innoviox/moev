@@ -252,6 +252,7 @@ func combineWalks(steps: [RouteLegStep]) -> [CombinedStep] {
     var newSteps: [CombinedStep] = []
     
     var currentStep: [RouteLegStep] = []
+    var lastArrival: Date? = nil
     for step in steps {
         if step.travelMode != .WALK {
             var prevStep: CombinedStep?
@@ -261,9 +262,13 @@ func combineWalks(steps: [RouteLegStep]) -> [CombinedStep] {
             }
             let transitStep = CombinedStep(from: [step])
             if var p = prevStep {
-                if let d = transitStep.departureTime {
+                let d = transitStep.departureTime!
+                if let la = lastArrival {
+                    p.departureTime = la
+                } else {
                     p.departureTime = d.addingTimeInterval(-Double(prevStep!.totalDuration))
                 }
+                lastArrival = d.addingTimeInterval(Double(transitStep.totalDuration))
                 newSteps.append(p)
             }
             newSteps.append(transitStep)
