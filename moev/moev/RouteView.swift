@@ -22,6 +22,8 @@ struct RouteView: View {
     
     func stepsList(_ steps: [CombinedStep]) -> some View {
         return ZStack {
+            dots()
+                .position(x: 0, y: 10)
             ForEach(steps) { step in
                 stepsView(step)
                     .position(x: CGFloat(xposition(for: step)), y: 10)
@@ -50,6 +52,17 @@ struct RouteView: View {
                 tm.to_swiftui_image()
                     .frame(width: CGFloat(width(for: step)), height: 40)
                     .background(Color(hex: "c4c4c4"))
+            }
+        }
+    }
+    
+    func dots() -> some View {
+        return HStack(spacing: 10) {
+            ForEach(1...Int(xposition(for: route.durationFromNow) / 100), id:\.self) { i in
+                Circle()
+                    .frame(width: 3, height: 3)
+                    .foregroundColor(Color.blue) // You can change the color as desired
+
             }
         }
     }
