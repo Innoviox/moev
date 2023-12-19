@@ -45,7 +45,7 @@ extension UIColor {
   }
 }
 
-func _hm(date: Date, clamp: Bool) -> (Int, Int) {
+func _hm(date: Date, clamp: Bool) -> (Double, Double) {
     let cal = Calendar.current
     var hour = cal.component(.hour, from: date)
     var minutes = cal.component(.minute, from: date)
@@ -57,10 +57,10 @@ func _hm(date: Date, clamp: Bool) -> (Int, Int) {
             minutes = 0
         }
     }
-    return (hour, minutes)
+    return (Double(hour), Double(minutes))
 }
 
-func _hm(plus: Int, clamp: Bool) -> (Int, Int) {
+func _hm(plus: Int, clamp: Bool) -> (Double, Double) {
     let date = Date(timeIntervalSinceNow: TimeInterval(plus * 30 * 60))
     return _hm(date: date, clamp: clamp)
 }
@@ -72,37 +72,37 @@ func time(plus: Int) -> String {
     return "\(padh)\(hour):\(padm)\(minutes)"
 }
 
-func time(plus: Int) -> Int {
+func time(plus: Int) -> Double {
     let (h1, m1) = _hm(date: Date(), clamp: false)
     let (h2, m2) = _hm(plus: plus, clamp: true)
-    print(h1, m1, h2, m2, xposition(for: ((h2 - h1) * 3600 + (m2 - m1) * 60) + (h2 < h1 ? 86400 : 0)))
+//    print(h1, m1, h2, m2, xposition(for: ((h2 - h1) * 3600 + (m2 - m1) * 60) + (h2 < h1 ? 86400 : 0)))
     return ((h2 - h1) * 3600 + (m2 - m1) * 60) + (h2 < h1 ? 86400 : 0)
 }
 
-func time(date: Date) -> Int {
+func time(date: Date) -> Double {
     let (h1, m1) = _hm(date: Date.now, clamp: false)
     let (h2, m2) = _hm(date: date, clamp: false)
-    print(h1, m1, h2, m2, xposition(for: ((h2 - h1) * 3600 + (m2 - m1) * 60) + (h2 < h1 ? 86400 : 0)))
+//    print(h1, m1, h2, m2, xposition(for: ((h2 - h1) * 3600 + (m2 - m1) * 60) + (h2 < h1 ? 86400 : 0)))
     return ((h2 - h1) * 3600 + (m2 - m1) * 60) + (h2 < h1 ? 86400 : 0)
 }
 
-func time(timestamp: String?) -> Int? {
+func time(timestamp: String?) -> Double? {
     if timestamp == nil {
         return nil
     }
     return time(date: date(from: timestamp!)!)
 }
 
-func xposition(for time: Int) -> Int {
+func xposition(for time: Double) -> Double {
     // time in seconds from now
     return time / 60 * 4  // 4 pixels per minute
 }
 
-func xposition(for step: CombinedStep) -> Int {
+func xposition(for step: CombinedStep) -> Double {
     return xposition(for: time(date: step.departureTime ?? Date.now)) + width(for: step) / 2
 }
 
-func width(for step: CombinedStep) -> Int {
+func width(for step: CombinedStep) -> Double {
     return xposition(for: step.totalDuration)
 }
 

@@ -143,11 +143,11 @@ extension RouteTravelMode {
     }
 }
 
-func convert_duration(_ duration: String?) -> Int {
+func convert_duration(_ duration: String?) -> Double {
     guard let d = duration else {
         return 0
     }
-    return Int(String(d.dropLast()))!
+    return Double(String(d.dropLast()))!
 }
 
 //https://stackoverflow.com/questions/32606989/converting-an-unsafepointer-with-length-to-a-swift-array-type
@@ -158,13 +158,14 @@ func convert<T>(count: Int, data: UnsafeMutablePointer<T>) -> [T] {
 
 struct CombinedStep: Identifiable {
     var id = UUID()
-    var totalDuration: Int
+    var totalDuration: Double
     var startLocation: Location?
     var endLocation: Location?
-    var polyline: MKMultiPolyline
+    var polyline: MKMultiPolyline?
     var transitDetails: RouteLegStepTransitDetails?
     var travelMode: RouteTravelMode?
     var departureTime: Date?
+    var wait: Bool = false
     
     init(from steps: [RouteLegStep]) {
         totalDuration = 0
@@ -199,6 +200,12 @@ struct CombinedStep: Identifiable {
         polyline = MKMultiPolyline(points)
     }
     
+    init(duration: Double, departureTime: Date) {
+        totalDuration = duration
+        self.departureTime = departureTime
+        wait = true
+    }
+    
     func toString() -> String {
         return "\(totalDuration) \(travelMode) \(departureTime)"
     }
@@ -213,9 +220,9 @@ struct CombinedRoute: Identifiable {
     var id = UUID()
     
     var legs: [CombinedLeg]?
-    var durationFromNow: Int
+    var durationFromNow: Double
     var startTime: Date
-    var maxDuration: Int
+    var maxDuration: Double
 }
 
 extension Route {
@@ -225,14 +232,14 @@ extension Route {
         var startTime = Date.now
         if legs?.count ?? 0 > 0 {
             startTime = legs![0].steps[0].departureTime!
-            d += Int(legs![0].steps[0].departureTime!.timeIntervalSinceNow)
+            d += legs![0].steps[0].departureTime!.timeIntervalSinceNow
         }
         return CombinedRoute(legs: legs, durationFromNow: d, startTime: startTime, maxDuration: 0)
     }
 }
 
 func combineRoutes(routes: [Route]) -> [CombinedRoute] {
-    var maxDuration = 0
+    var maxDuration: Double = 0
     var cRoutes = routes.map { route in
         let c = route.combine()
         if c.durationFromNow > maxDuration {
@@ -261,15 +268,21 @@ func combineWalks(steps: [RouteLegStep]) -> [CombinedStep] {
                 currentStep = []
             }
             let transitStep = CombinedStep(from: [step])
+            let d = transitStep.departureTime!
             if var p = prevStep {
-                let d = transitStep.departureTime!
                 if let la = lastArrival {
                     p.departureTime = la
                 } else {
-                    p.departureTime = d.addingTimeInterval(-Double(prevStep!.totalDuration))
+                    p.departureTime = d.addingTimeInterval(-p.totalDuration)
                 }
-                lastArrival = d.addingTimeInterval(Double(transitStep.totalDuration))
+                lastArrival = d.addingTimeInterval(transitStep.totalDuration)
                 newSteps.append(p)
+                let end = p.departureTime!.addingTimeInterval(p.totalDuration)
+                let diff = d.timeIntervalSince(end)
+                print("diff", diff)
+                if diff > 0 {
+                    newSteps.append(CombinedStep(duration: diff, departureTime: end))
+                }
             }
             newSteps.append(transitStep)
         } else {

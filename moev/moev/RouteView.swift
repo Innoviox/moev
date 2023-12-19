@@ -32,7 +32,11 @@ struct RouteView: View {
     
     func stepsView(_ step: CombinedStep) -> some View {
         return VStack {
-            if let td = step.transitDetails {
+            if step.wait {
+                Image(systemName: "clock")
+                    .frame(width: CGFloat(width(for: step)), height: 40)
+                    .background(Color(hex: "c4c4c4"))
+            } else if let td = step.transitDetails {
                 VStack {
                     Text(td.transitLine!.nameShort!)
                         .foregroundColor(Color(hex: td.transitLine!.textColor!)) // Set text color using hex value
