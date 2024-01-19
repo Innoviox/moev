@@ -15,9 +15,15 @@
 		20400EC52B145A6E00CA7D7A /* moevTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20400EC42B145A6E00CA7D7A /* moevTests.swift */; };
 		20400ECF2B145A6E00CA7D7A /* moevUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20400ECE2B145A6E00CA7D7A /* moevUITests.swift */; };
 		20400ED12B145A6E00CA7D7A /* moevUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20400ED02B145A6E00CA7D7A /* moevUITestsLaunchTests.swift */; };
-		206453312B1ECA7F00E288C9 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206453302B1ECA7F00E288C9 /* Colors.swift */; };
+		206453332B1ED6AE00E288C9 /* ActivityMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206453322B1ED6AE00E288C9 /* ActivityMonitor.swift */; };
+		2064533A2B2041F800E288C9 /* ComputeRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206453392B2041F800E288C9 /* ComputeRoutes.swift */; };
+		2064533C2B215D5700E288C9 /* APIUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2064533B2B215D5700E288C9 /* APIUtils.swift */; };
+		2064533E2B2164C200E288C9 /* PlaceAutocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2064533D2B2164C200E288C9 /* PlaceAutocomplete.swift */; };
+		20853EA32B216EEE00D14116 /* PlaceDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20853EA22B216EEE00D14116 /* PlaceDetails.swift */; };
 		20F70B252B1679F100B363FA /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F70B242B1679F100B363FA /* LocationManager.swift */; };
 		20F70B272B16AB8B00B363FA /* TextDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F70B262B16AB8B00B363FA /* TextDisplay.swift */; };
+		20FAC05A2B2265D700D33275 /* RouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20FAC0592B22655700D33275 /* RouteView.swift */; };
+		20FAC05C2B2268C500D33275 /* UIUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20FAC05B2B2268C500D33275 /* UIUtils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,13 +55,19 @@
 		20400ECA2B145A6E00CA7D7A /* moevUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = moevUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		20400ECE2B145A6E00CA7D7A /* moevUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = moevUITests.swift; sourceTree = "<group>"; };
 		20400ED02B145A6E00CA7D7A /* moevUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = moevUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		206453302B1ECA7F00E288C9 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		206453322B1ED6AE00E288C9 /* ActivityMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityMonitor.swift; sourceTree = "<group>"; };
+		206453392B2041F800E288C9 /* ComputeRoutes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComputeRoutes.swift; sourceTree = "<group>"; };
+		2064533B2B215D5700E288C9 /* APIUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIUtils.swift; sourceTree = "<group>"; };
+		2064533D2B2164C200E288C9 /* PlaceAutocomplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceAutocomplete.swift; sourceTree = "<group>"; };
+		20853EA22B216EEE00D14116 /* PlaceDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceDetails.swift; sourceTree = "<group>"; };
 		20A381322B15AECE00172E8A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		20AFC92F2B14ED7700F5B3CC /* API_KEY.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = API_KEY.xcconfig; sourceTree = "<group>"; };
 		20E272432B1791BE00534C2F /* moev.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = moev.xctestplan; sourceTree = "<group>"; };
 		20E272442B1792AA00534C2F /* test.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = test.gpx; path = ../test.gpx; sourceTree = "<group>"; };
 		20F70B242B1679F100B363FA /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		20F70B262B16AB8B00B363FA /* TextDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDisplay.swift; sourceTree = "<group>"; };
+		20FAC0592B22655700D33275 /* RouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteView.swift; sourceTree = "<group>"; };
+		20FAC05B2B2268C500D33275 /* UIUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIUtils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,15 +121,17 @@
 		20400EB22B145A6D00CA7D7A /* moev */ = {
 			isa = PBXGroup;
 			children = (
+				20FAC0592B22655700D33275 /* RouteView.swift */,
+				206453342B2019CF00E288C9 /* API */,
 				20A381322B15AECE00172E8A /* Info.plist */,
 				20400EB32B145A6D00CA7D7A /* moevApp.swift */,
 				20400EB52B145A6D00CA7D7A /* ContentView.swift */,
 				20400EB72B145A6D00CA7D7A /* Assets.xcassets */,
 				20400EB92B145A6D00CA7D7A /* Preview Content */,
-				20202B302B14F0DD007CC8AA /* APIHandler.swift */,
 				20F70B242B1679F100B363FA /* LocationManager.swift */,
 				20F70B262B16AB8B00B363FA /* TextDisplay.swift */,
-				206453302B1ECA7F00E288C9 /* Colors.swift */,
+				206453322B1ED6AE00E288C9 /* ActivityMonitor.swift */,
+				20FAC05B2B2268C500D33275 /* UIUtils.swift */,
 			);
 			path = moev;
 			sourceTree = "<group>";
@@ -145,6 +159,26 @@
 				20400ED02B145A6E00CA7D7A /* moevUITestsLaunchTests.swift */,
 			);
 			path = moevUITests;
+			sourceTree = "<group>";
+		};
+		206453342B2019CF00E288C9 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				20853EA42B21706100D14116 /* Models */,
+				20202B302B14F0DD007CC8AA /* APIHandler.swift */,
+				2064533B2B215D5700E288C9 /* APIUtils.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		20853EA42B21706100D14116 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				206453392B2041F800E288C9 /* ComputeRoutes.swift */,
+				2064533D2B2164C200E288C9 /* PlaceAutocomplete.swift */,
+				20853EA22B216EEE00D14116 /* PlaceDetails.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -278,11 +312,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				20F70B252B1679F100B363FA /* LocationManager.swift in Sources */,
-				206453312B1ECA7F00E288C9 /* Colors.swift in Sources */,
+				2064533E2B2164C200E288C9 /* PlaceAutocomplete.swift in Sources */,
+				2064533A2B2041F800E288C9 /* ComputeRoutes.swift in Sources */,
+				20FAC05A2B2265D700D33275 /* RouteView.swift in Sources */,
+				20853EA32B216EEE00D14116 /* PlaceDetails.swift in Sources */,
 				20202B312B14F0DD007CC8AA /* APIHandler.swift in Sources */,
 				20400EB62B145A6D00CA7D7A /* ContentView.swift in Sources */,
+				2064533C2B215D5700E288C9 /* APIUtils.swift in Sources */,
+				206453332B1ED6AE00E288C9 /* ActivityMonitor.swift in Sources */,
 				20F70B272B16AB8B00B363FA /* TextDisplay.swift in Sources */,
 				20400EB42B145A6D00CA7D7A /* moevApp.swift in Sources */,
+				20FAC05C2B2268C500D33275 /* UIUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
